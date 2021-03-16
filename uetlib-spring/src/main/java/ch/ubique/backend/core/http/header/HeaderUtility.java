@@ -69,7 +69,7 @@ public class HeaderUtility {
      */
     public static <T> ResponseEntity<T> createOKContentRangeResponseEntity(
             T body, int perPage, long totalElements) {
-        return ResponseEntity.ok().header("content-range", "$perPage/$totalElements").body(body);
+        return ResponseEntity.ok().header("content-range", perPage + "/" + totalElements).body(body);
     }
 
     /**
