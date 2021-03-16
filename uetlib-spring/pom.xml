@@ -5,7 +5,7 @@
     <parent>
         <artifactId>backend-jvm-lib</artifactId>
         <groupId>ch.ubique</groupId>
-        <version>0.1.7</version>
+        <version>0.1.8</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -59,11 +59,6 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context-support</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.azure</groupId>
-            <artifactId>azure-storage-blob</artifactId>
-            <version>12.8.0</version>
         </dependency>
     </dependencies>
 
