@@ -5,8 +5,6 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 import javax.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,9 +18,6 @@ public class HeaderUtility {
     /** format Date as String or parse to Date (package-private to enable tests) */
     static final ThreadLocal<SimpleDateFormat> headerDateFormatter = new ThreadLocal<>();
 
-    private static final Logger logger = LoggerFactory.getLogger(HeaderUtility.class);
-
-    // only static
     private HeaderUtility() {}
 
     /**
@@ -69,7 +64,9 @@ public class HeaderUtility {
      */
     public static <T> ResponseEntity<T> createOKContentRangeResponseEntity(
             T body, int perPage, long totalElements) {
-        return ResponseEntity.ok().header("content-range", perPage + "/" + totalElements).body(body);
+        return ResponseEntity.ok()
+                .header("content-range", perPage + "/" + totalElements)
+                .body(body);
     }
 
     /**
