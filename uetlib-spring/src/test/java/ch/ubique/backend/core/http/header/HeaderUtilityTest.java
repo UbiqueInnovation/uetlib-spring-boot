@@ -83,49 +83,6 @@ class HeaderUtilityTest {
     }
 
     @Test
-    void testSetHeaders() {
-        var response = new MockHttpServletResponse();
-
-        var maxAgeSeconds = 60 * 60;
-        var nextRefreshSeconds = 30 * 60;
-        HeaderUtility.setHeaders(response, maxAgeSeconds, nextRefreshSeconds);
-
-        var expectedCacheControl = HeaderUtility.createMaxAgeHeaderValue(maxAgeSeconds);
-        var actualCacheControl = response.getHeader(HeaderUtility.CACHE_CONTROL);
-        assertEquals(expectedCacheControl, actualCacheControl);
-    }
-
-    @Test
-    void testCreateHeaders() throws ParseException {
-        var maxAgeSeconds = 60 * 60;
-        var nextRefreshSeconds = 30 * 60;
-        HttpHeaders headers = HeaderUtility.createHeaders(maxAgeSeconds, nextRefreshSeconds);
-
-        var expectedCacheControl = HeaderUtility.createMaxAgeHeaderValue(maxAgeSeconds);
-        var actualCacheControl = headers.getCacheControl();
-        assertEquals(expectedCacheControl, actualCacheControl);
-
-        var nextRefreshHeaders = headers.get(HeaderUtility.NEXT_REFRESH);
-        assertNotEquals(null, nextRefreshHeaders);
-        assert nextRefreshHeaders != null;
-        assertEquals(1, nextRefreshHeaders.size());
-
-        var actualDate = parseDate(nextRefreshHeaders.get(0));
-        var expectedDate =
-                parseDate(HeaderUtility.createNextRefreshHeaderValue(nextRefreshSeconds));
-
-        // either both dates have equal millis and thus have the same formatted string ...
-        var equalMillisAndEqualString =
-                actualDate.getTime() == expectedDate.getTime()
-                        && formatDate(actualDate).equals(formatDate(expectedDate));
-        // ... or the actual date is before the expected date but at most ten milliseconds earlier
-        var actualIsBeforeAndAtMostTenMillis =
-                actualDate.before(expectedDate)
-                        && expectedDate.getTime() - actualDate.getTime() <= 10L;
-        assertTrue(equalMillisAndEqualString || actualIsBeforeAndAtMostTenMillis);
-    }
-
-    @Test
     void testCreateMaxAgeHeaderValue() {
         var maxAge = "max-age";
         assertEquals(HeaderUtility.MAX_AGE, maxAge);
