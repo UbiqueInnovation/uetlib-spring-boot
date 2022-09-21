@@ -2,12 +2,14 @@ package ch.ubique.backend.core.hibernate.converter;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import javax.imageio.ImageIO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 class Base64ImageConverterTest {
     private final Base64ImageConverter base64ImageConverter = new Base64ImageConverter();
