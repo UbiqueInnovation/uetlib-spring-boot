@@ -3,12 +3,12 @@ package ch.ubique.backend.core.http.response;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 
-import ch.ubique.backend.core.http.response.DeletedResponse;
+import org.junit.jupiter.api.Test;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.junit.jupiter.api.Test;
 
 class DeletedResponseTest {
 
