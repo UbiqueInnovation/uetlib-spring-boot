@@ -111,9 +111,6 @@ class HeaderUtilityTest {
     }
 
     @Test
-    void testCreateNextRefreshHeaderValue() {}
-
-    @Test
     void testGetDate() {
         var millis = 0L;
         var expectedDate = new Date(System.currentTimeMillis() + millis);

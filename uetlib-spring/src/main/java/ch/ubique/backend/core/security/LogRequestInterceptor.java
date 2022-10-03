@@ -11,7 +11,6 @@ import java.util.Optional;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -39,28 +38,20 @@ public class LogRequestInterceptor implements HandlerInterceptor, Filter {
                 Optional.ofNullable(request.getHeader(X_FORWARDED_FOR_HEADER))
                         .orElse(request.getRemoteAddr());
         logger.info(
-                String.format(
-                        "Request: %s | Method: %s | HTTP Status: %d | IP: %s",
-                        request.getRequestURI(),
-                        request.getMethod(),
-                        response.getStatus(),
-                        ipAddress));
+                "Request: {} | Method: {} | HTTP Status: {} | IP: {}",
+                request.getRequestURI(),
+                request.getMethod(),
+                response.getStatus(),
+                ipAddress);
     }
-
-    @Override
-    public void destroy() {}
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
-        if (request instanceof HttpServletRequest && response instanceof HttpServletResponse) {
-            var httpServletRequest = (HttpServletRequest) request;
-            var httpServletResponse = (HttpServletResponse) response;
+        if (request instanceof HttpServletRequest httpServletRequest
+                && response instanceof HttpServletResponse httpServletResponse) {
             log(httpServletRequest, httpServletResponse);
         }
         chain.doFilter(request, response);
     }
-
-    @Override
-    public void init(FilterConfig arg0) throws ServletException {}
 }
