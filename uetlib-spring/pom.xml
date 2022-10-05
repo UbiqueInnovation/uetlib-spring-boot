@@ -48,6 +48,13 @@
             <version>1.15</version>
         </dependency>
 
+        <!-- Checked Exceptions-enabled Java 8+ functional interfaces + adapters -->
+        <dependency>
+            <groupId>com.pivovarit</groupId>
+            <artifactId>throwing-function</artifactId>
+            <version>1.5.1</version>
+        </dependency>
+
         <dependency>
             <groupId>javax.validation</groupId>
             <artifactId>validation-api</artifactId>
