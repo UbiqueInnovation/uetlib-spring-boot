@@ -17,36 +17,36 @@ class DeletedResponseTest {
         DeletedResponse deletedResponse;
 
         // test no entries with varargs interface
-        deletedResponse = DeletedResponse.from();
-        assertEquals(Collections.emptyList(), deletedResponse.getIds());
+        deletedResponse = new DeletedResponse();
+        assertEquals(Collections.emptyList(), deletedResponse.ids());
 
         // test no entries with list interface
-        deletedResponse = DeletedResponse.from(Collections.emptyList());
-        assertEquals(Collections.emptyList(), deletedResponse.getIds());
+        deletedResponse = new DeletedResponse(Collections.emptyList());
+        assertEquals(Collections.emptyList(), deletedResponse.ids());
 
         // test single int
         int id = 1;
-        deletedResponse = DeletedResponse.from(1);
-        assertEquals(id, deletedResponse.getIds().get(0).intValue());
+        deletedResponse = new DeletedResponse(1);
+        assertEquals(id, deletedResponse.ids().get(0).intValue());
 
         // test single Integer
         Integer idBoxed = 1;
-        deletedResponse = DeletedResponse.from(1);
-        assertEquals(idBoxed, deletedResponse.getIds().get(0));
+        deletedResponse = new DeletedResponse(1);
+        assertEquals(idBoxed, deletedResponse.ids().get(0));
 
         // test array of ints with varargs
         int[] ids = {2, 3};
-        deletedResponse = DeletedResponse.from(ids[0], ids[1]);
+        deletedResponse = new DeletedResponse(ids[0], ids[1]);
         assertIterableEquals(
-                Arrays.stream(ids).boxed().collect(Collectors.toList()), deletedResponse.getIds());
+                Arrays.stream(ids).boxed().collect(Collectors.toList()), deletedResponse.ids());
 
         // test list of Integers with varargs
         List<Integer> idsBoxed = Arrays.asList(2, 3);
-        deletedResponse = DeletedResponse.from(idsBoxed.get(0), idsBoxed.get(1));
-        assertIterableEquals(idsBoxed, deletedResponse.getIds());
+        deletedResponse = new DeletedResponse(idsBoxed.get(0), idsBoxed.get(1));
+        assertIterableEquals(idsBoxed, deletedResponse.ids());
 
         // test list of Integers with List interface
-        deletedResponse = DeletedResponse.from(idsBoxed);
-        assertIterableEquals(idsBoxed, deletedResponse.getIds());
+        deletedResponse = new DeletedResponse(idsBoxed);
+        assertIterableEquals(idsBoxed, deletedResponse.ids());
     }
 }
