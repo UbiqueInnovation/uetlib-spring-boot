@@ -3,10 +3,10 @@ package ch.ubique.backend.core.http.header;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
-import java.util.TimeZone;
 
 /** Helper class to generate {@link ResponseEntity} responses and/or request header. */
 public class HeaderUtility {
@@ -15,17 +15,19 @@ public class HeaderUtility {
     public static final String NEXT_REFRESH = "X-Next-Refresh";
     public static final String CONTENT_RANGE = "Content-Range";
     public static final String MAX_AGE = "max-age";
-    /** format Date as String or parse to Date (package-private to enable tests) */
-    static final ThreadLocal<SimpleDateFormat> headerDateFormatter = new ThreadLocal<>();
+
+    private static final DateTimeFormatter HEADER_DATE_FORMATTER =
+            DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss z", Locale.US)
+                    .withZone(ZoneId.of("UTC"));
 
     private HeaderUtility() {}
 
     /**
-     * Create a {@link ResponseEntity<T>} with HTTP-Status 404, not found. Does not contain any body
-     * data.
-     *
+     * @deprecated use ResponseEntity.notFound().build() directly Create a {@link ResponseEntity<T>}
+     *     with HTTP-Status 404, not found. Does not contain any body data.
      * @return {@link ResponseEntity<T>}
      */
+    @Deprecated(since = "0.7.0", forRemoval = true)
     public static <T> ResponseEntity<T> createNotFoundResponseEntity() {
         return ResponseEntity.notFound().build();
     }
@@ -48,11 +50,12 @@ public class HeaderUtility {
     }
 
     /**
-     * Creates a {@link ResponseEntity<T>} with the given body and HTTP-Status 200.
-     *
+     * @deprecated use ResponseEntity.ok(body) directly Creates a {@link ResponseEntity<T>} with the
+     *     given body and HTTP-Status 200.
      * @param body {@link T} The body of the response
      * @return {@link ResponseEntity<T>} with the given body, headers and status OK
      */
+    @Deprecated(since = "0.7.0", forRemoval = true)
     public static <T> ResponseEntity<T> createOKResponseEntity(T body) {
         return ResponseEntity.ok(body);
     }
@@ -70,40 +73,44 @@ public class HeaderUtility {
     }
 
     /**
-     * Creates a {@link ResponseEntity<T>} with the given body and HTTP-Status 500.
-     *
+     * @deprecated use ResponseEntity.internalServerError().body(body) directly Creates a {@link
+     *     ResponseEntity<T>} with the given body and HTTP-Status 500.
      * @param body {@link T} The body of the response
      * @return {@link ResponseEntity<T>} with the given body, headers and status
      *     INTERNAL_SERVER_ERROR
      */
+    @Deprecated(since = "0.7.0", forRemoval = true)
     public static <T> ResponseEntity<T> createInternalServerErrorResponseEntity(T body) {
         return ResponseEntity.internalServerError().body(body);
     }
 
     /**
-     * Creates an empty {@link ResponseEntity<T>} with HTTP-Status 500.
-     *
+     * @deprecated use ResponseEntity.internalServerError().build() directly Creates an empty {@link
+     *     ResponseEntity<T>} with HTTP-Status 500.
      * @return {@link ResponseEntity<T>} with status INTERNAL_SERVER_ERROR
      */
+    @Deprecated(since = "0.7.0", forRemoval = true)
     public static <T> ResponseEntity<T> createInternalServerErrorResponseEntity() {
         return ResponseEntity.internalServerError().build();
     }
 
     /**
-     * Creates a {@link ResponseEntity<T>} with the given body and HTTP-Status 400.
-     *
+     * @deprecated use ResponseEntity.badRequest().body(body) directly Creates a {@link
+     *     ResponseEntity<T>} with the given body and HTTP-Status 400.
      * @param body [T] The body of the response
      * @return [ResponseEntity] with the given body, headers and status 400
      */
+    @Deprecated(since = "0.7.0", forRemoval = true)
     public static <T> ResponseEntity<T> createBadRequestResponseEntity(T body) {
         return ResponseEntity.badRequest().body(body);
     }
 
     /**
-     * Creates an empty {@link ResponseEntity<T>} with HTTP-Status 503.
-     *
+     * @deprecated use ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).build() directly
+     *     Creates an empty {@link ResponseEntity<T>} with HTTP-Status 503.
      * @return {@link ResponseEntity<T>} with the given body, headers and status SERVICE_UNAVAILABLE
      */
+    @Deprecated(since = "0.7.0", forRemoval = true)
     public static <T> ResponseEntity<T> createServiceUnavailableResponseEntity() {
         return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).build();
     }
@@ -141,33 +148,6 @@ public class HeaderUtility {
      * @return X-Next-Refresh string
      */
     public static String createNextRefreshHeaderValue(int nextRefreshSeconds) {
-        return formatHeaderDate(getDate(nextRefreshSeconds * 1000L));
-    }
-
-    /**
-     * Formats the date to a http timestamp. (package-private to enable tests)
-     *
-     * @param date to format
-     * @return formatted date string
-     */
-    static String formatHeaderDate(Date date) {
-        var sdf = headerDateFormatter.get();
-        if (sdf == null) {
-            sdf = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
-            sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-            headerDateFormatter.set(sdf);
-        }
-        return sdf.format(date);
-    }
-
-    /**
-     * Returns the date from now plus the given number of milliseconds. (package-private to enable
-     * tests)
-     *
-     * @param millis Millisecond offset from now
-     * @return {@link Date} with offset millis from now
-     */
-    static Date getDate(long millis) {
-        return new Date(System.currentTimeMillis() + millis);
+        return HEADER_DATE_FORMATTER.format(Instant.now().plusSeconds(nextRefreshSeconds));
     }
 }

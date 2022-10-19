@@ -7,25 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.text.ParseException;
-import java.util.Calendar;
-import java.util.Date;
-
 class HeaderUtilityTest {
-
-    private static int getSeconds(Date date) {
-        var calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        return calendar.get(Calendar.SECOND);
-    }
-
-    private static Date parseDate(String date) throws ParseException {
-        return HeaderUtility.headerDateFormatter.get().parse(date);
-    }
-
-    private static String formatDate(Date date) {
-        return HeaderUtility.headerDateFormatter.get().format(date);
-    }
 
     @Test
     void testCreateNotFoundResponseEntity() {
@@ -108,33 +90,5 @@ class HeaderUtilityTest {
         expectedHeaderValue = maxAge + "=" + maxAgeSeconds;
         actualHeaderValue = HeaderUtility.createMaxAgeHeaderValue(maxAgeSeconds);
         assertEquals(expectedHeaderValue, actualHeaderValue);
-    }
-
-    @Test
-    void testGetDate() {
-        var millis = 0L;
-        var expectedDate = new Date(System.currentTimeMillis() + millis);
-        var actualDate = HeaderUtility.getDate(millis);
-        assertEquals(getSeconds(expectedDate), getSeconds(actualDate));
-
-        millis = -1L;
-        expectedDate = new Date(System.currentTimeMillis() + millis);
-        actualDate = HeaderUtility.getDate(millis);
-        assertEquals(getSeconds(expectedDate), getSeconds(actualDate));
-
-        millis = Long.MAX_VALUE;
-        expectedDate = new Date(System.currentTimeMillis() + millis);
-        actualDate = HeaderUtility.getDate(millis);
-        assertEquals(getSeconds(expectedDate), getSeconds(actualDate));
-
-        millis = Long.MIN_VALUE;
-        expectedDate = new Date(System.currentTimeMillis() + millis);
-        actualDate = HeaderUtility.getDate(millis);
-        assertEquals(getSeconds(expectedDate), getSeconds(actualDate));
-
-        millis = 60 * 60 * 1000L;
-        expectedDate = new Date(System.currentTimeMillis() + millis);
-        actualDate = HeaderUtility.getDate(millis);
-        assertEquals(getSeconds(expectedDate), getSeconds(actualDate));
     }
 }
