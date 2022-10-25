@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /** LogRequestInterceptor for logging user activity. */
+@SuppressWarnings("unused")
 public class LogRequestInterceptor implements HandlerInterceptor, Filter {
 
     private static final String X_FORWARDED_FOR_HEADER = "X-FORWARDED-FOR";
