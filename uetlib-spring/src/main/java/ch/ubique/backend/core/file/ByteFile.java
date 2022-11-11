@@ -2,6 +2,9 @@ package ch.ubique.backend.core.file;
 
 import org.apache.commons.codec.digest.DigestUtils;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+
 public class ByteFile {
 
     private String fileName;
@@ -39,6 +42,10 @@ public class ByteFile {
         this.bytes = bytes;
         this.fileHash = DigestUtils.sha3_512Hex(bytes);
         return this;
+    }
+
+    public InputStream inputStream() {
+        return new ByteArrayInputStream(bytes);
     }
 
     @Override
