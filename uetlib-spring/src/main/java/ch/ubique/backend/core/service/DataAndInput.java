@@ -7,18 +7,18 @@ import java.util.List;
 import java.util.function.Function;
 
 public record DataAndInput<T>(
-        Collection<T> data,
+        T data,
         Collection<ByteFile> inputFiles
 ) {
-    public DataAndInput(Collection<T> data) {
+    public DataAndInput(T data) {
         this(data, List.of());
     }
 
-    public DataAndInput(Collection<T> data, ByteFile inputFile) {
+    public DataAndInput(T data, ByteFile inputFile) {
         this(data, List.of(inputFile));
     }
 
     public <R> DataAndInput<R> map(Function<T, R> mapper) {
-        return new DataAndInput<>(data.stream().map(mapper).toList(), inputFiles);
+        return new DataAndInput<>(mapper.apply(data), inputFiles);
     }
 }
