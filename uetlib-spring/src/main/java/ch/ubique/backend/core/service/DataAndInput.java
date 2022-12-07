@@ -1,24 +1,22 @@
 package ch.ubique.backend.core.service;
 
 import ch.ubique.backend.core.file.ByteFile;
-
+import jakarta.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 
-public record DataAndInput<T>(
-        T data,
-        Collection<ByteFile> inputFiles
-) {
-    public DataAndInput(T data) {
+public record DataAndInput<T>(@NotNull T data, @NotNull Collection<ByteFile> inputFiles) {
+    public DataAndInput(@NotNull final T data) {
         this(data, List.of());
     }
 
-    public DataAndInput(T data, ByteFile inputFile) {
+    public DataAndInput(@NotNull final T data, @NotNull final ByteFile inputFile) {
         this(data, List.of(inputFile));
     }
 
-    public <R> DataAndInput<R> map(Function<T, R> mapper) {
+    @NotNull
+    public <R> DataAndInput<R> map(@NotNull final Function<T, R> mapper) {
         return new DataAndInput<>(mapper.apply(data), inputFiles);
     }
 }
