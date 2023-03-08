@@ -9,7 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotNull;
 import java.io.IOException;
-import java.util.Optional;
+import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -25,17 +25,17 @@ public class LogRequestInterceptor implements HandlerInterceptor, Filter {
 
     @Override
     public void postHandle(
-            @NotNull HttpServletRequest request,
-            @NotNull HttpServletResponse response,
-            @NotNull Object handler,
-            ModelAndView modelAndView) {
+            @NotNull final HttpServletRequest request,
+            @NotNull final HttpServletResponse response,
+            @NotNull final Object handler,
+            final ModelAndView modelAndView) {
         log(request, response);
     }
 
-    private void log(HttpServletRequest request, HttpServletResponse response) {
-        var ipAddress =
-                Optional.ofNullable(request.getHeader(X_FORWARDED_FOR_HEADER))
-                        .orElse(request.getRemoteAddr());
+    private void log(final HttpServletRequest request, final HttpServletResponse response) {
+        final var ipAddress =
+                Objects.requireNonNullElse(
+                        request.getHeader(X_FORWARDED_FOR_HEADER), request.getRemoteAddr());
         logger.info(
                 "Request: {} | Method: {} | HTTP Status: {} | IP: {}",
                 request.getRequestURI(),
@@ -45,7 +45,7 @@ public class LogRequestInterceptor implements HandlerInterceptor, Filter {
     }
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+    public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain)
             throws IOException, ServletException {
         if (request instanceof HttpServletRequest httpServletRequest
                 && response instanceof HttpServletResponse httpServletResponse) {
