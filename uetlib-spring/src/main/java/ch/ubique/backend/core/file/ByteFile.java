@@ -2,6 +2,7 @@ package ch.ubique.backend.core.file;
 
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
+
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.http.MediaType;
 

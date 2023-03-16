@@ -1,10 +1,10 @@
 package ch.ubique.backend.core.http.header;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpStatus;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
 
 class HeaderUtilityTest {
 

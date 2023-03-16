@@ -1,7 +1,9 @@
 package ch.ubique.backend.core.service;
 
 import ch.ubique.backend.core.file.ByteFile;
+
 import jakarta.validation.constraints.NotNull;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
