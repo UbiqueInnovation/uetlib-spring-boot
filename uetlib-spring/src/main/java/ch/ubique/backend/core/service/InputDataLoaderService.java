@@ -1,6 +1,7 @@
 package ch.ubique.backend.core.service;
 
 import jakarta.validation.constraints.NotNull;
+
 import java.io.IOException;
 import java.util.function.Function;
 
