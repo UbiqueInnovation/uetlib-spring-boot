@@ -31,7 +31,7 @@ public class HeaderUtility {
      * @return {@link ResponseEntity<T>} with the given body, headers and status OK
      */
     public static <T> ResponseEntity<T> createOKResponseEntity(
-            T body, int nextRefreshSeconds, int maxAgeSeconds) {
+            final T body, final int nextRefreshSeconds, final int maxAgeSeconds) {
         return ResponseEntity.ok()
                 .header(CACHE_CONTROL, createMaxAgeHeaderValue(maxAgeSeconds))
                 .header(NEXT_REFRESH, createNextRefreshHeaderValue(nextRefreshSeconds))
@@ -46,7 +46,7 @@ public class HeaderUtility {
      * @return {@link ResponseEntity<T>} with the given body, headers and status OK
      */
     public static <T> ResponseEntity<T> createOKContentRangeResponseEntity(
-            T body, int perPage, long totalElements) {
+            final T body, final int perPage, final long totalElements) {
         return ResponseEntity.ok().header(CONTENT_RANGE, perPage + "/" + totalElements).body(body);
     }
 
@@ -58,7 +58,7 @@ public class HeaderUtility {
      * @return {@link ResponseEntity<T>} with the given headers and status NO_CONTENT
      */
     public static <T> ResponseEntity<T> createNoContentResponseEntity(
-            int nextRefreshSeconds, int maxAgeSeconds) {
+            final int nextRefreshSeconds, final int maxAgeSeconds) {
         return ResponseEntity.noContent()
                 .header(CACHE_CONTROL, createMaxAgeHeaderValue(maxAgeSeconds))
                 .header(NEXT_REFRESH, createNextRefreshHeaderValue(nextRefreshSeconds))
@@ -72,7 +72,7 @@ public class HeaderUtility {
      * @param maxAgeSeconds max-age value in seconds
      * @return max-age string
      */
-    public static String createMaxAgeHeaderValue(int maxAgeSeconds) {
+    public static String createMaxAgeHeaderValue(final int maxAgeSeconds) {
         return MAX_AGE + "=" + maxAgeSeconds;
     }
 
@@ -82,7 +82,7 @@ public class HeaderUtility {
      * @param nextRefreshSeconds X-Next-Refresh value in seconds
      * @return X-Next-Refresh string
      */
-    public static String createNextRefreshHeaderValue(int nextRefreshSeconds) {
+    public static String createNextRefreshHeaderValue(final int nextRefreshSeconds) {
         return HEADER_DATE_FORMATTER.format(Instant.now().plusSeconds(nextRefreshSeconds));
     }
 }
