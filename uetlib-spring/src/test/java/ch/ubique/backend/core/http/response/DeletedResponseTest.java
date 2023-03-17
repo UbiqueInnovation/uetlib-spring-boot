@@ -25,23 +25,23 @@ class DeletedResponseTest {
         assertEquals(Collections.emptyList(), deletedResponse.ids());
 
         // test single int
-        int id = 1;
+        final int id = 1;
         deletedResponse = new DeletedResponse(1);
         assertEquals(id, deletedResponse.ids().get(0).intValue());
 
         // test single Integer
-        Integer idBoxed = 1;
+        final Integer idBoxed = 1;
         deletedResponse = new DeletedResponse(1);
         assertEquals(idBoxed, deletedResponse.ids().get(0));
 
         // test array of ints with varargs
-        int[] ids = {2, 3};
+        final int[] ids = {2, 3};
         deletedResponse = new DeletedResponse(ids[0], ids[1]);
         assertIterableEquals(
                 Arrays.stream(ids).boxed().collect(Collectors.toList()), deletedResponse.ids());
 
         // test list of Integers with varargs
-        List<Integer> idsBoxed = Arrays.asList(2, 3);
+        final List<Integer> idsBoxed = Arrays.asList(2, 3);
         deletedResponse = new DeletedResponse(idsBoxed.get(0), idsBoxed.get(1));
         assertIterableEquals(idsBoxed, deletedResponse.ids());
 

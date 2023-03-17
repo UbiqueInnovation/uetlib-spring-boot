@@ -10,15 +10,15 @@ class HeaderUtilityTest {
 
     @Test
     void testCreateNoContentResponseEntity() {
-        var responseEntity = HeaderUtility.createNoContentResponseEntity(3600, 10800);
+        final var responseEntity = HeaderUtility.createNoContentResponseEntity(3600, 10800);
         assertEquals(HttpStatus.NO_CONTENT, responseEntity.getStatusCode());
-        assertEquals(HttpStatus.NO_CONTENT.value(), responseEntity.getStatusCodeValue());
+        assertEquals(HttpStatus.NO_CONTENT.value(), responseEntity.getStatusCode());
         assertNull(responseEntity.getBody());
     }
 
     @Test
     void testCreateMaxAgeHeaderValue() {
-        var maxAge = "max-age";
+        final var maxAge = "max-age";
         assertEquals(HeaderUtility.MAX_AGE, maxAge);
 
         var maxAgeSeconds = 0;
