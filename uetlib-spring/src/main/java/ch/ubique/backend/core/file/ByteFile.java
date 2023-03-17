@@ -21,7 +21,7 @@ public class ByteFile {
         return fileName;
     }
 
-    public ByteFile setFileName(String fileName) {
+    public ByteFile setFileName(final String fileName) {
         this.fileName = fileName;
         return this;
     }
@@ -34,7 +34,7 @@ public class ByteFile {
         return contentType;
     }
 
-    public ByteFile setContentType(String contentType) {
+    public ByteFile setContentType(final String contentType) {
         this.contentType = contentType;
         return this;
     }
@@ -43,7 +43,7 @@ public class ByteFile {
         return bytes;
     }
 
-    public ByteFile setBytes(byte[] bytes) {
+    public ByteFile setBytes(final byte[] bytes) {
         this.bytes = bytes;
         this.fileHash = DigestUtils.sha3_512Hex(bytes);
         return this;

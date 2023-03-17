@@ -16,17 +16,17 @@ class Base64ImageConverterTest {
 
     @Test
     void testImageToImage() throws IOException {
-        var byteArrayIconExpected = byteArrayTestIcon();
-        var base64Icon = base64ImageConverter.convertToEntityAttribute(byteArrayIconExpected);
-        var byteArrayIconActual = base64ImageConverter.convertToDatabaseColumn(base64Icon);
+        final var byteArrayIconExpected = byteArrayTestIcon();
+        final var base64Icon = base64ImageConverter.convertToEntityAttribute(byteArrayIconExpected);
+        final var byteArrayIconActual = base64ImageConverter.convertToDatabaseColumn(base64Icon);
         assertArrayEquals(byteArrayIconExpected, byteArrayIconActual);
     }
 
     @Test
     void testBase64ToBase64() {
-        var base64IconExpected = base64EncodedTestIcon();
-        var byteArrayIcon = base64ImageConverter.convertToDatabaseColumn(base64IconExpected);
-        var base64IconActual = base64ImageConverter.convertToEntityAttribute(byteArrayIcon);
+        final var base64IconExpected = base64EncodedTestIcon();
+        final var byteArrayIcon = base64ImageConverter.convertToDatabaseColumn(base64IconExpected);
+        final var base64IconActual = base64ImageConverter.convertToEntityAttribute(byteArrayIcon);
         Assertions.assertEquals(base64IconExpected, base64IconActual);
     }
 
@@ -35,8 +35,8 @@ class Base64ImageConverterTest {
     }
 
     private byte[] readImageFromPath(final String path) throws IOException {
-        var bImage = ImageIO.read(new ClassPathResource(path).getFile());
-        var bos = new ByteArrayOutputStream();
+        final var bImage = ImageIO.read(new ClassPathResource(path).getFile());
+        final var bos = new ByteArrayOutputStream();
         ImageIO.write(bImage, "png", bos);
         return bos.toByteArray();
     }
