@@ -12,7 +12,6 @@ class HeaderUtilityTest {
     void testCreateNoContentResponseEntity() {
         final var responseEntity = HeaderUtility.createNoContentResponseEntity(3600, 10800);
         assertEquals(HttpStatus.NO_CONTENT, responseEntity.getStatusCode());
-        assertEquals(HttpStatus.NO_CONTENT.value(), responseEntity.getStatusCode());
         assertNull(responseEntity.getBody());
     }
 
