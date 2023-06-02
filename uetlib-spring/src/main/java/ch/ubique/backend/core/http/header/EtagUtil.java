@@ -18,14 +18,10 @@ public class EtagUtil {
 
     private EtagUtil() {}
 
-    /**
-     * generates a weak etag for a list that does not depend on element order
-     *
-     * @param list
-     * @return
-     */
-    public static String getUnsortedListEtag(final boolean asWeakEtag, final List<? extends Object> list) {
-        final var hash = list != null ? list.stream().map(Objects::hash).reduce(0, (a, b) -> a ^ b) : 0;
+    /** generates a weak etag for a list that does not depend on element order */
+    public static String getUnsortedListEtag(final boolean asWeakEtag, final List<?> list) {
+        final var hash =
+                list != null ? list.stream().map(Objects::hash).reduce(0, (a, b) -> a ^ b) : 0;
         final var hashString = String.valueOf(hash);
         return asWeakEtag ? toWeakEtag(hashString) : hashString;
     }
