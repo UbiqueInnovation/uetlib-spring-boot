@@ -47,7 +47,8 @@ public class LogRequestInterceptor implements HandlerInterceptor, Filter {
     }
 
     @Override
-    public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain)
+    public void doFilter(
+            final ServletRequest request, final ServletResponse response, final FilterChain chain)
             throws IOException, ServletException {
         if (request instanceof HttpServletRequest httpServletRequest
                 && response instanceof HttpServletResponse httpServletResponse) {
