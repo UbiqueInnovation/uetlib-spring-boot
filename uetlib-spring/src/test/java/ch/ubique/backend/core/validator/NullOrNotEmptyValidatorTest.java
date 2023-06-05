@@ -9,9 +9,9 @@ import java.util.List;
 class NullOrNotEmptyValidatorTest {
     @Test
     void test() {
-        ValidationUtils.assertIsValid(new Model(null));
-        ValidationUtils.assertIsValid(new Model(List.of(1)));
-        ValidationUtils.assertIsNotValid(new Model(List.of()));
+        ValidationTestUtils.assertIsValid(new Model(null));
+        ValidationTestUtils.assertIsValid(new Model(List.of(1)));
+        ValidationTestUtils.assertIsNotValid(new Model(List.of()));
     }
 
     @Valid
