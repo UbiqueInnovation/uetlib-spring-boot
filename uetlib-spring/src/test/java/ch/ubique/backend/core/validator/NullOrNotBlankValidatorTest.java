@@ -7,12 +7,12 @@ import org.junit.jupiter.api.Test;
 class NullOrNotBlankValidatorTest {
     @Test
     void test() {
-        ValidationUtils.assertIsValid(new Model(null));
-        ValidationUtils.assertIsValid(new Model("aaaa"));
-        ValidationUtils.assertIsValid(new Model(" aaaa "));
-        ValidationUtils.assertIsNotValid(new Model(""));
-        ValidationUtils.assertIsNotValid(new Model("\t"));
-        ValidationUtils.assertIsNotValid(new Model(" "));
+        ValidationTestUtils.assertIsValid(new Model(null));
+        ValidationTestUtils.assertIsValid(new Model("aaaa"));
+        ValidationTestUtils.assertIsValid(new Model(" aaaa "));
+        ValidationTestUtils.assertIsNotValid(new Model(""));
+        ValidationTestUtils.assertIsNotValid(new Model("\t"));
+        ValidationTestUtils.assertIsNotValid(new Model(" "));
     }
 
     @Valid
