@@ -1,9 +1,11 @@
 package ch.ubique.backend.core.http.header;
 
+import static ch.ubique.backend.core.utils.TimeUtils.TIME_UTILS_UTC;
+
 import org.springframework.http.ResponseEntity;
 
-import java.time.Instant;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
@@ -83,6 +85,16 @@ public class HeaderUtility {
      * @return X-Next-Refresh string
      */
     public static String createNextRefreshHeaderValue(final int nextRefreshSeconds) {
-        return HEADER_DATE_FORMATTER.format(Instant.now().plusSeconds(nextRefreshSeconds));
+        return formatHttpHeaderDate(TIME_UTILS_UTC.now().plusSeconds(nextRefreshSeconds));
+    }
+
+    /**
+     * return the given date format for HTTP headers
+     *
+     * @param zonedDateTime date to format
+     * @return formatted date
+     */
+    public static String formatHttpHeaderDate(final ZonedDateTime zonedDateTime) {
+        return HEADER_DATE_FORMATTER.format(zonedDateTime);
     }
 }
