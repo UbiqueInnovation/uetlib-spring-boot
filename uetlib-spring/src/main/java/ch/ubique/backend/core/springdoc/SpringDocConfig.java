@@ -2,8 +2,10 @@ package ch.ubique.backend.core.springdoc;
 
 import static ch.ubique.backend.core.utils.TimeUtils.TIME_UTILS_EUROPE_ZURICH;
 
+import ch.ubique.backend.core.localized.LocalizedValue;
 import ch.ubique.backend.core.utils.TimeUtils;
 
+import io.swagger.v3.oas.models.media.MapSchema;
 import io.swagger.v3.oas.models.media.NumberSchema;
 import io.swagger.v3.oas.models.media.StringSchema;
 
@@ -15,6 +17,7 @@ import java.time.Instant;
 import java.time.LocalTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Map;
 
 public final class SpringDocConfig {
     private SpringDocConfig() {}
@@ -52,6 +55,27 @@ public final class SpringDocConfig {
                                                                 TIME_UTILS_EUROPE_ZURICH
                                                                         .startOfToday(),
                                                                 TIME_UTILS_EUROPE_ZURICH.now())
-                                                        .toMillis())));
+                                                        .toMillis())))
+                .replaceWithSchema(
+                        LocalizedValue.class,
+                        new MapSchema()
+                                ._default(
+                                        Map.ofEntries(
+                                                Map.entry(
+                                                        "de",
+                                                        "de value of the correct type"
+                                                                + " (string/int/etc.)"),
+                                                Map.entry(
+                                                        "it",
+                                                        "it value of the correct type"
+                                                                + " (string/int/etc.)"),
+                                                Map.entry(
+                                                        "fr",
+                                                        "fr value of the correct type"
+                                                                + " (string/int/etc.)"),
+                                                Map.entry(
+                                                        "en",
+                                                        "en value of the correct type"
+                                                                + " (string/int/etc.)"))));
     }
 }
