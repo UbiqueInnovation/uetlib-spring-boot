@@ -2,8 +2,10 @@ package ch.ubique.backend.core.http.header;
 
 import static ch.ubique.backend.core.utils.TimeUtils.TIME_UTILS_UTC;
 
+import org.springframework.http.CacheControl;
 import org.springframework.http.ResponseEntity;
 
+import java.time.Duration;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -12,9 +14,25 @@ import java.util.Locale;
 /** Helper class to generate {@link ResponseEntity} responses and/or request header. */
 public class HeaderUtility {
 
+    /**
+     * @deprecated since v1.5, use {@link org.springframework.http.HttpHeaders#CACHE_CONTROL} or set
+     *     directly in {@link ResponseEntity} using {@code
+     *     ResponseEntity.ok().cacheControl(CacheControl.maxAge(Duration.ofSeconds(maxAgeSeconds))).body(body)}
+     *     or similar.
+     */
+    @Deprecated(since = "1.5", forRemoval = true)
     public static final String CACHE_CONTROL = "Cache-Control";
+
     public static final String NEXT_REFRESH = "X-Next-Refresh";
     public static final String CONTENT_RANGE = "Content-Range";
+
+    /**
+     * @deprecated since v1.5, use {@link CacheControl#maxAge(Duration)} or set directly in {@link
+     *     ResponseEntity} using {@code
+     *     ResponseEntity.ok().cacheControl(CacheControl.maxAge(Duration.ofSeconds(maxAgeSeconds))).body(body)}
+     *     or similar.
+     */
+    @Deprecated(since = "1.5", forRemoval = true)
     public static final String MAX_AGE = "max-age";
 
     private static final DateTimeFormatter HEADER_DATE_FORMATTER =
@@ -35,7 +53,7 @@ public class HeaderUtility {
     public static <T> ResponseEntity<T> createOKResponseEntity(
             final T body, final int nextRefreshSeconds, final int maxAgeSeconds) {
         return ResponseEntity.ok()
-                .header(CACHE_CONTROL, createMaxAgeHeaderValue(maxAgeSeconds))
+                .cacheControl(CacheControl.maxAge(Duration.ofSeconds(maxAgeSeconds)))
                 .header(NEXT_REFRESH, createNextRefreshHeaderValue(nextRefreshSeconds))
                 .body(body);
     }
@@ -62,18 +80,18 @@ public class HeaderUtility {
     public static <T> ResponseEntity<T> createNoContentResponseEntity(
             final int nextRefreshSeconds, final int maxAgeSeconds) {
         return ResponseEntity.noContent()
-                .header(CACHE_CONTROL, createMaxAgeHeaderValue(maxAgeSeconds))
+                .cacheControl(CacheControl.maxAge(Duration.ofSeconds(maxAgeSeconds)))
                 .header(NEXT_REFRESH, createNextRefreshHeaderValue(nextRefreshSeconds))
                 .build();
     }
 
     /**
-     * Creates the max-age header value with the given max-age in seconds (package-private to enable
-     * tests)
-     *
-     * @param maxAgeSeconds max-age value in seconds
-     * @return max-age string
+     * @deprecated since v1.5, use {@link CacheControl#maxAge(Duration)} or set directly in {@link
+     *     ResponseEntity} using {@code
+     *     ResponseEntity.ok().cacheControl(CacheControl.maxAge(Duration.ofSeconds(maxAgeSeconds))).body(body)}
+     *     or similar.
      */
+    @Deprecated(since = "1.5", forRemoval = true)
     public static String createMaxAgeHeaderValue(final int maxAgeSeconds) {
         return MAX_AGE + "=" + maxAgeSeconds;
     }
