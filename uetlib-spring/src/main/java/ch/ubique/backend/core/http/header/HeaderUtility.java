@@ -42,19 +42,26 @@ public class HeaderUtility {
     private HeaderUtility() {}
 
     /**
+     * @deprecated since 1.5, use {@link #createOKResponseEntity(T, Duration, Duration)}
+     */
+    @Deprecated(since = "1.5", forRemoval = true)
+    public static <T> ResponseEntity<T> createOKResponseEntity(
+            final T body, final int nextRefreshSeconds, final int maxAgeSeconds) {
+        return createOKResponseEntity(body, Duration.ofSeconds(nextRefreshSeconds), Duration.ofSeconds(maxAgeSeconds));
+    }
+
+    /**
      * Creates a {@link ResponseEntity<T>} with the given body, HTTP-Status 200, and the max age and
      * next refresh headers.
      *
      * @param body {@link T} The body of the response
-     * @param maxAgeSeconds max-age value in seconds
-     * @param nextRefreshSeconds X-Next-Refresh value in seconds
      * @return {@link ResponseEntity<T>} with the given body, headers and status OK
      */
     public static <T> ResponseEntity<T> createOKResponseEntity(
-            final T body, final int nextRefreshSeconds, final int maxAgeSeconds) {
+            final T body, final Duration nextRefresh, final Duration maxAge) {
         return ResponseEntity.ok()
-                .cacheControl(CacheControl.maxAge(Duration.ofSeconds(maxAgeSeconds)))
-                .header(NEXT_REFRESH, createNextRefreshHeaderValue(nextRefreshSeconds))
+                .cacheControl(CacheControl.maxAge(maxAge))
+                .header(NEXT_REFRESH, createNextRefreshHeaderValue(nextRefresh))
                 .body(body);
     }
 
@@ -71,17 +78,24 @@ public class HeaderUtility {
     }
 
     /**
+     * @deprecated since 1.5, use {@link #createNoContentResponseEntity(Duration, Duration)}
+     */
+    @Deprecated(since = "1.5", forRemoval = true)
+    public static <T> ResponseEntity<T> createNoContentResponseEntity(
+            final int nextRefreshSeconds, final int maxAgeSeconds) {
+        return createNoContentResponseEntity(Duration.ofSeconds(nextRefreshSeconds), Duration.ofSeconds(maxAgeSeconds));
+    }
+
+    /**
      * Returns an empty {@link ResponseEntity<T>} with HTTP-Status 204
      *
-     * @param nextRefreshSeconds X-Next-Refresh value in seconds
-     * @param maxAgeSeconds max-age value in seconds
      * @return {@link ResponseEntity<T>} with the given headers and status NO_CONTENT
      */
     public static <T> ResponseEntity<T> createNoContentResponseEntity(
-            final int nextRefreshSeconds, final int maxAgeSeconds) {
+            final Duration nextRefresh, final Duration maxAge) {
         return ResponseEntity.noContent()
-                .cacheControl(CacheControl.maxAge(Duration.ofSeconds(maxAgeSeconds)))
-                .header(NEXT_REFRESH, createNextRefreshHeaderValue(nextRefreshSeconds))
+                .cacheControl(CacheControl.maxAge(maxAge))
+                .header(NEXT_REFRESH, createNextRefreshHeaderValue(nextRefresh))
                 .build();
     }
 
@@ -97,13 +111,18 @@ public class HeaderUtility {
     }
 
     /**
-     * return the header value for X-Next-Refresh (package-private to enable tests)
-     *
-     * @param nextRefreshSeconds X-Next-Refresh value in seconds
-     * @return X-Next-Refresh string
+     * @deprecated since 1.5, use {@link #createNextRefreshHeaderValue(Duration)}
      */
+    @Deprecated(since = "1.5", forRemoval = true)
     public static String createNextRefreshHeaderValue(final int nextRefreshSeconds) {
-        return formatHttpHeaderDate(TIME_UTILS_UTC.now().plusSeconds(nextRefreshSeconds));
+        return createNextRefreshHeaderValue(Duration.ofSeconds(nextRefreshSeconds));
+    }
+
+    /**
+     * return the header value for X-Next-Refresh (package-private to enable tests)
+     */
+    public static String createNextRefreshHeaderValue(final Duration nextRefresh) {
+        return formatHttpHeaderDate(TIME_UTILS_UTC.now().plus(nextRefresh));
     }
 
     /**
