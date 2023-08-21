@@ -47,7 +47,8 @@ public class HeaderUtility {
     @Deprecated(since = "1.5", forRemoval = true)
     public static <T> ResponseEntity<T> createOKResponseEntity(
             final T body, final int nextRefreshSeconds, final int maxAgeSeconds) {
-        return createOKResponseEntity(body, Duration.ofSeconds(nextRefreshSeconds), Duration.ofSeconds(maxAgeSeconds));
+        return createOKResponseEntity(
+                body, Duration.ofSeconds(nextRefreshSeconds), Duration.ofSeconds(maxAgeSeconds));
     }
 
     /**
@@ -83,7 +84,8 @@ public class HeaderUtility {
     @Deprecated(since = "1.5", forRemoval = true)
     public static <T> ResponseEntity<T> createNoContentResponseEntity(
             final int nextRefreshSeconds, final int maxAgeSeconds) {
-        return createNoContentResponseEntity(Duration.ofSeconds(nextRefreshSeconds), Duration.ofSeconds(maxAgeSeconds));
+        return createNoContentResponseEntity(
+                Duration.ofSeconds(nextRefreshSeconds), Duration.ofSeconds(maxAgeSeconds));
     }
 
     /**
@@ -118,9 +120,7 @@ public class HeaderUtility {
         return createNextRefreshHeaderValue(Duration.ofSeconds(nextRefreshSeconds));
     }
 
-    /**
-     * return the header value for X-Next-Refresh (package-private to enable tests)
-     */
+    /** return the header value for X-Next-Refresh (package-private to enable tests) */
     public static String createNextRefreshHeaderValue(final Duration nextRefresh) {
         return formatHttpHeaderDate(TIME_UTILS_UTC.now().plus(nextRefresh));
     }

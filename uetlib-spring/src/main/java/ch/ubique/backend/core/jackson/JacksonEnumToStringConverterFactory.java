@@ -30,8 +30,7 @@ public class JacksonEnumToStringConverterFactory implements ConverterFactory<Enu
         return new JacksonStringToEnumConverter(objectMapper);
     }
 
-    static class JacksonStringToEnumConverter<T extends Enum>
-            implements Converter<T, String> {
+    static class JacksonStringToEnumConverter<T extends Enum> implements Converter<T, String> {
 
         private final ObjectMapper objectMapper;
 

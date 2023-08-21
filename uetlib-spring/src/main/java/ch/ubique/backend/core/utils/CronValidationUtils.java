@@ -10,16 +10,17 @@ import java.util.stream.Collectors;
 
 public class CronValidationUtils {
 
-    private CronValidationUtils() {}
-
     private static final Logger logger = LoggerFactory.getLogger(CronValidationUtils.class);
 
+    private CronValidationUtils() {}
+
     /**
-     * Tries to get a valid cron expression by removing additional tokens from the end. 
+     * Tries to get a valid cron expression by removing additional tokens from the end.
      *
      * @param cronExpression the cron expression to validate
      * @return the valid cron expression
-     * @throws IllegalArgumentException if the specified cron expression is invalid and could not be fixed.
+     * @throws IllegalArgumentException if the specified cron expression is invalid and could not be
+     *     fixed.
      */
     public static String tryToGetValidCronExpression(final String cronExpression) {
         if (CronExpression.isValidExpression(cronExpression)) {
@@ -33,7 +34,8 @@ public class CronValidationUtils {
                         .collect(Collectors.joining(" "));
         if (CronExpression.isValidExpression(limitToSixTokens)) {
             logger.warn(
-                    "Cron expression {} is invalid. Fixed it by stripping additional tokes from the end. Valid expression is now {}.",
+                    "Cron expression {} is invalid. Fixed it by stripping additional tokes from the"
+                        + " end. Valid expression is now {}.",
                     cronExpression,
                     limitToSixTokens);
             return limitToSixTokens;
