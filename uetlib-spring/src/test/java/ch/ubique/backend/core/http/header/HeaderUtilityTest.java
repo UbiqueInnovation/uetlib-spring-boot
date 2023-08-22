@@ -6,43 +6,16 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
+import java.time.Duration;
+
 class HeaderUtilityTest {
 
     @Test
     void testCreateNoContentResponseEntity() {
-        final var responseEntity = HeaderUtility.createNoContentResponseEntity(3600, 10800);
+        final var responseEntity =
+                HeaderUtility.createNoContentResponseEntity(
+                        Duration.ofHours(1), Duration.ofHours(3));
         assertEquals(HttpStatus.NO_CONTENT, responseEntity.getStatusCode());
         assertNull(responseEntity.getBody());
-    }
-
-    @Test
-    void testCreateMaxAgeHeaderValue() {
-        final var maxAge = "max-age";
-        assertEquals(HeaderUtility.MAX_AGE, maxAge);
-
-        var maxAgeSeconds = 0;
-        var expectedHeaderValue = maxAge + "=" + maxAgeSeconds;
-        var actualHeaderValue = HeaderUtility.createMaxAgeHeaderValue(maxAgeSeconds);
-        assertEquals(expectedHeaderValue, actualHeaderValue);
-
-        maxAgeSeconds = -1;
-        expectedHeaderValue = maxAge + "=" + maxAgeSeconds;
-        actualHeaderValue = HeaderUtility.createMaxAgeHeaderValue(maxAgeSeconds);
-        assertEquals(expectedHeaderValue, actualHeaderValue);
-
-        maxAgeSeconds = 60 * 60;
-        expectedHeaderValue = maxAge + "=" + maxAgeSeconds;
-        actualHeaderValue = HeaderUtility.createMaxAgeHeaderValue(maxAgeSeconds);
-        assertEquals(expectedHeaderValue, actualHeaderValue);
-
-        maxAgeSeconds = Integer.MAX_VALUE;
-        expectedHeaderValue = maxAge + "=" + maxAgeSeconds;
-        actualHeaderValue = HeaderUtility.createMaxAgeHeaderValue(maxAgeSeconds);
-        assertEquals(expectedHeaderValue, actualHeaderValue);
-
-        maxAgeSeconds = Integer.MIN_VALUE;
-        expectedHeaderValue = maxAge + "=" + maxAgeSeconds;
-        actualHeaderValue = HeaderUtility.createMaxAgeHeaderValue(maxAgeSeconds);
-        assertEquals(expectedHeaderValue, actualHeaderValue);
     }
 }
