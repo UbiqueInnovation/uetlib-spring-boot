@@ -1,16 +1,18 @@
 package ch.ubique.backend.core.validator;
 
+import static ch.ubique.backend.core.validator.ExactlyOneNotNull.*;
+
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
-@Target(ElementType.TYPE)
-@Retention(RetentionPolicy.RUNTIME)
+@Target(TYPE)
+@Retention(RUNTIME)
+@Repeatable(List.class)
 @Constraint(validatedBy = ExactlyOneNotNullValidator.class)
 @Documented
 public @interface ExactlyOneNotNull {
@@ -23,4 +25,17 @@ public @interface ExactlyOneNotNull {
 
     /** Fields to validate */
     String[] fields();
+
+    /**
+     * Defines several {@link ExactlyOneNotNull} annotations on the same element.
+     *
+     * @see ExactlyOneNotNull
+     */
+    @Target(TYPE)
+    @Retention(RUNTIME)
+    @Documented
+    @interface List {
+
+        ExactlyOneNotNull[] value();
+    }
 }
