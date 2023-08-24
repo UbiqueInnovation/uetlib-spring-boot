@@ -24,7 +24,7 @@ class AllNullOrAllNotNullValidatorTest {
         ValidationTestUtils.assertIsNotValid(new AnnotatedType(null, 2, 3, 4));
         ValidationTestUtils.assertIsValid(new AnnotatedType(1, 2, 3, 4));
 
-        // the following are non-annotated and thus all valid
+        // the following are non-annotated and thus all valid (sanity check)
         ValidationTestUtils.assertIsValid(new NonAnnotatedType(null, null, null, null));
         ValidationTestUtils.assertIsValid(new NonAnnotatedType(1, null, null, null));
         ValidationTestUtils.assertIsValid(new NonAnnotatedType(null, 2, null, null));
