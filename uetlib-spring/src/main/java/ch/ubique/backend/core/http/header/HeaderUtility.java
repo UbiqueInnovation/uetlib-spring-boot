@@ -24,6 +24,11 @@ public class HeaderUtility {
     public static final String CACHE_CONTROL = "Cache-Control";
 
     public static final String NEXT_REFRESH = "X-Next-Refresh";
+
+    /**
+     * @deprecated since v1.5, use {@link org.springframework.http.HttpHeaders#CONTENT_RANGE}
+     */
+    @Deprecated(since = "1.5", forRemoval = true)
     public static final String CONTENT_RANGE = "Content-Range";
 
     /**
