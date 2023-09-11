@@ -7,8 +7,8 @@ import org.springframework.http.ResponseEntity;
 
 import java.time.Duration;
 import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
 import java.util.Locale;
 
 /** Helper class to generate {@link ResponseEntity} responses and/or request header. */
@@ -35,7 +35,7 @@ public class HeaderUtility {
     @Deprecated(since = "1.5", forRemoval = true)
     public static final String MAX_AGE = "max-age";
 
-    private static final DateTimeFormatter HEADER_DATE_FORMATTER =
+    private static final DateTimeFormatter HTTP_HEADER_DATE_FORMATTER =
             DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss z", Locale.US)
                     .withZone(ZoneId.of("UTC"));
 
@@ -128,10 +128,10 @@ public class HeaderUtility {
     /**
      * return the given date format for HTTP headers
      *
-     * @param zonedDateTime date to format
+     * @param temporalAccessor date to format
      * @return formatted date
      */
-    public static String formatHttpHeaderDate(final ZonedDateTime zonedDateTime) {
-        return HEADER_DATE_FORMATTER.format(zonedDateTime);
+    public static String formatHttpHeaderDate(final TemporalAccessor temporalAccessor) {
+        return HTTP_HEADER_DATE_FORMATTER.format(temporalAccessor);
     }
 }
