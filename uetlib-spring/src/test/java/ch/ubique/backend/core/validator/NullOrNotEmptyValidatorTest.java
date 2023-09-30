@@ -5,13 +5,16 @@ import jakarta.validation.Valid;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Set;
 
 class NullOrNotEmptyValidatorTest {
     @Test
     void test() {
         ValidationTestUtils.assertIsValid(new Model(null));
         ValidationTestUtils.assertIsValid(new Model(List.of(1)));
-        ValidationTestUtils.assertIsNotValid(new Model(List.of()));
+
+        ValidationTestUtils.assertIsNotValid(
+                new Model(List.of()), Set.of("must be null or not empty"));
     }
 
     @Valid

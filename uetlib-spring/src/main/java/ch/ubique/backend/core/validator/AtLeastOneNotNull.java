@@ -17,7 +17,7 @@ import java.lang.annotation.*;
 @Documented
 public @interface AtLeastOneNotNull {
 
-    String message() default "At least one of the provided fields must be non-null";
+    String message() default "At least one of the provided fields must be non-null. Fields: '{fields}'.";
 
     Class<?>[] groups() default {};
 
