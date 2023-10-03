@@ -14,7 +14,7 @@ class NullOrNotEmptyValidatorTest {
         ValidationTestUtils.assertIsValid(new Model(List.of(1)));
 
         ValidationTestUtils.assertIsNotValid(
-                new Model(List.of()), Set.of("must be null or not empty"));
+                new Model(List.of()), Set.of("value '[]' must be null or not empty"));
     }
 
     @Valid
