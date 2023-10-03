@@ -17,7 +17,7 @@ import java.lang.annotation.*;
 @Documented
 public @interface ValidCron {
 
-    String message() default "'${validatedValue}' must be a valid cron expression";
+    String message() default "value '${validatedValue}' must be a valid cron expression";
 
     Class<?>[] groups() default {};
 

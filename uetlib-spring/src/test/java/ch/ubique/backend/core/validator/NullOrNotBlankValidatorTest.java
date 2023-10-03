@@ -13,9 +13,12 @@ class NullOrNotBlankValidatorTest {
         ValidationTestUtils.assertIsValid(new Model("aaaa"));
         ValidationTestUtils.assertIsValid(new Model(" aaaa "));
 
-        ValidationTestUtils.assertIsNotValid(new Model(""), Set.of("must be null or not blank"));
-        ValidationTestUtils.assertIsNotValid(new Model("\t"), Set.of("must be null or not blank"));
-        ValidationTestUtils.assertIsNotValid(new Model(" "), Set.of("must be null or not blank"));
+        ValidationTestUtils.assertIsNotValid(
+                new Model(""), Set.of("value '' must be null or not blank"));
+        ValidationTestUtils.assertIsNotValid(
+                new Model("\t"), Set.of("value '\t' must be null or not blank"));
+        ValidationTestUtils.assertIsNotValid(
+                new Model(" "), Set.of("value ' ' must be null or not blank"));
     }
 
     @Valid

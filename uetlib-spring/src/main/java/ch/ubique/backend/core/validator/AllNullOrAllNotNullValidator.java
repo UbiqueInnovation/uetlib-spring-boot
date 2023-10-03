@@ -8,13 +8,13 @@ import org.springframework.beans.BeanWrapperImpl;
 import java.util.Arrays;
 import java.util.Objects;
 
-public class AllNullOrAllNotNullValidator implements ConstraintValidator<AllNullOrAllNotNull, Object> {
+public class AllNullOrAllNotNullValidator
+        implements ConstraintValidator<AllNullOrAllNotNull, Object> {
 
     private String[] fields;
 
     @Override
-    public void initialize(final AllNullOrAllNotNull allNullOrAllNotNull
-    ) {
+    public void initialize(final AllNullOrAllNotNull allNullOrAllNotNull) {
         fields = allNullOrAllNotNull.fields();
     }
 
@@ -24,8 +24,10 @@ public class AllNullOrAllNotNullValidator implements ConstraintValidator<AllNull
 
         final var beanWrapper = new BeanWrapperImpl(object);
 
-        final var allNull = Arrays.stream(fields).map(beanWrapper::getPropertyValue).allMatch(Objects::isNull);
-        final var allNotNull = Arrays.stream(fields).map(beanWrapper::getPropertyValue).allMatch(Objects::nonNull);
+        final var allNull =
+                Arrays.stream(fields).map(beanWrapper::getPropertyValue).allMatch(Objects::isNull);
+        final var allNotNull =
+                Arrays.stream(fields).map(beanWrapper::getPropertyValue).allMatch(Objects::nonNull);
 
         return allNull || allNotNull;
     }

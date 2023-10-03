@@ -17,7 +17,7 @@ import java.lang.annotation.*;
 @Documented
 public @interface NullOrNotBlank {
 
-    String message() default "must be null or not blank";
+    String message() default "value '${validatedValue}' must be null or not blank";
 
     Class<?>[] groups() default {};
 
