@@ -19,7 +19,7 @@ import java.lang.annotation.*;
 @NotNull
 public @interface AllNullOrAllNotNull {
 
-    String message() default "Either all or exactly none the provided fields must be non-null";
+    String message() default "Either all or exactly none the provided fields must be non-null. Fields: '{fields}'.";
 
     Class<?>[] groups() default {};
 
