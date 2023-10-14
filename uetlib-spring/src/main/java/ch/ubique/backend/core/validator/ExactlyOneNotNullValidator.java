@@ -23,10 +23,11 @@ public class ExactlyOneNotNullValidator implements ConstraintValidator<ExactlyOn
 
         final var beanWrapper = new BeanWrapperImpl(object);
 
-        return Arrays.stream(fields)
+        final var nonNullCount =
+                Arrays.stream(fields)
                         .map(beanWrapper::getPropertyValue)
                         .filter(Objects::nonNull)
-                        .count()
-                == 1;
+                        .count();
+        return nonNullCount == 1;
     }
 }
