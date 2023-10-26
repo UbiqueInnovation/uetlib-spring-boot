@@ -4,6 +4,8 @@ import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.http.MediaType;
 
 import java.io.ByteArrayInputStream;
@@ -16,6 +18,20 @@ public class ByteFile {
     private String fileHash;
     private String contentType;
     private byte[] bytes;
+
+    public static ByteFile fromBytes(
+            @NotNull final byte[] bytes,
+            @Nullable final String fileName,
+            @Nullable final String contentType) {
+
+        final var contentTypeOrOctetStream =
+                Objects.requireNonNullElse(contentType, MediaType.APPLICATION_OCTET_STREAM_VALUE);
+
+        return new ByteFile()
+                .setBytes(bytes)
+                .setFileName(fileName)
+                .setContentType(contentTypeOrOctetStream);
+    }
 
     public String getFileName() {
         return fileName;
@@ -53,29 +69,11 @@ public class ByteFile {
         return new ByteArrayInputStream(bytes);
     }
 
-    public static ByteFile fromBytes(
-            @NotNull final byte[] bytes,
-            @Nullable final String fileName,
-            @Nullable final String contentType) {
-
-        final var contentTypeOrOctetStream =
-                Objects.requireNonNullElse(contentType, MediaType.APPLICATION_OCTET_STREAM_VALUE);
-
-        return new ByteFile()
-                .setBytes(bytes)
-                .setFileName(fileName)
-                .setContentType(contentTypeOrOctetStream);
-    }
-
     @Override
     public String toString() {
-        return "FileDescription{"
-                + "fileName='"
-                + fileName
-                + '\''
-                + ", fileHash='"
-                + fileHash
-                + '\''
-                + '}';
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
+                .append("fileName", fileName)
+                .append("fileHash", fileHash)
+                .toString();
     }
 }
