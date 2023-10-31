@@ -2,7 +2,8 @@ package ch.ubique.backend.core.jackson;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.jetbrains.annotations.NotNull;
+import jakarta.validation.constraints.NotNull;
+
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.convert.converter.ConverterFactory;
 import org.springframework.stereotype.Component;
