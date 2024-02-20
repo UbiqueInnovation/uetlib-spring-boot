@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 class DeletedResponseTest {
 
@@ -25,28 +24,23 @@ class DeletedResponseTest {
         assertEquals(Collections.emptyList(), deletedResponse.ids());
 
         // test single int
-        final int id = 1;
+        final var id = 1;
         deletedResponse = new DeletedResponse(1);
-        assertEquals(id, deletedResponse.ids().get(0).intValue());
+        assertEquals(id, deletedResponse.ids().getFirst().intValue());
 
         // test single Integer
         final Integer idBoxed = 1;
         deletedResponse = new DeletedResponse(1);
-        assertEquals(idBoxed, deletedResponse.ids().get(0));
+        assertEquals(idBoxed, deletedResponse.ids().getFirst());
 
         // test array of ints with varargs
-        final int[] ids = {2, 3};
-        deletedResponse = new DeletedResponse(ids[0], ids[1]);
-        assertIterableEquals(
-                Arrays.stream(ids).boxed().collect(Collectors.toList()), deletedResponse.ids());
-
-        // test list of Integers with varargs
-        final List<Integer> idsBoxed = Arrays.asList(2, 3);
-        deletedResponse = new DeletedResponse(idsBoxed.get(0), idsBoxed.get(1));
-        assertIterableEquals(idsBoxed, deletedResponse.ids());
+        final var idsArray = new Integer[] {2, 3};
+        deletedResponse = new DeletedResponse(idsArray);
+        assertIterableEquals(Arrays.stream(idsArray).toList(), deletedResponse.ids());
 
         // test list of Integers with List interface
-        deletedResponse = new DeletedResponse(idsBoxed);
-        assertIterableEquals(idsBoxed, deletedResponse.ids());
+        final var idsList = List.of(2, 3);
+        deletedResponse = new DeletedResponse(idsList);
+        assertIterableEquals(idsList, deletedResponse.ids());
     }
 }
