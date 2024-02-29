@@ -2,6 +2,9 @@ package ch.ubique.backend.core.springdoc;
 
 import static ch.ubique.backend.core.utils.TimeUtils.TIME_UTILS_EUROPE_ZURICH;
 
+import static java.util.Map.entry;
+import static java.util.Map.ofEntries;
+
 import ch.ubique.backend.core.localized.LocalizedValue;
 import ch.ubique.backend.core.utils.TimeUtils;
 
@@ -17,7 +20,6 @@ import java.time.Instant;
 import java.time.LocalTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Map;
 
 public final class SpringDocConfig {
     private SpringDocConfig() {}
@@ -60,20 +62,20 @@ public final class SpringDocConfig {
                         LocalizedValue.class,
                         new MapSchema()
                                 ._default(
-                                        Map.ofEntries(
-                                                Map.entry(
+                                        ofEntries(
+                                                entry(
                                                         "de",
                                                         "de value of the correct type"
                                                                 + " (string/int/etc.)"),
-                                                Map.entry(
+                                                entry(
                                                         "it",
                                                         "it value of the correct type"
                                                                 + " (string/int/etc.)"),
-                                                Map.entry(
+                                                entry(
                                                         "fr",
                                                         "fr value of the correct type"
                                                                 + " (string/int/etc.)"),
-                                                Map.entry(
+                                                entry(
                                                         "en",
                                                         "en value of the correct type"
                                                                 + " (string/int/etc.)"))));
