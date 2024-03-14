@@ -24,7 +24,6 @@ public class HeaderUtility {
 
     private HeaderUtility() {}
 
-
     /**
      * Creates a {@link ResponseEntity<T>} with the given body, HTTP-Status 200, and the max age and
      * next refresh headers.
@@ -52,7 +51,6 @@ public class HeaderUtility {
         return ResponseEntity.ok().header(CONTENT_RANGE, perPage + "/" + totalElements).body(body);
     }
 
-
     /**
      * Returns an empty {@link ResponseEntity<T>} with HTTP-Status 204
      *
@@ -65,8 +63,6 @@ public class HeaderUtility {
                 .header(NEXT_REFRESH, createNextRefreshHeaderValue(nextRefresh))
                 .build();
     }
-
-
 
     /** return the header value for X-Next-Refresh (package-private to enable tests) */
     public static String createNextRefreshHeaderValue(final Duration nextRefresh) {
