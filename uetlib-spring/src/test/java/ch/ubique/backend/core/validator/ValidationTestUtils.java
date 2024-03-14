@@ -1,10 +1,8 @@
 package ch.ubique.backend.core.validator;
 
 import ch.ubique.backend.core.utils.ValidationUtils;
-import ch.ubique.backend.test.assertion.AssertionUtils;
 
 import jakarta.validation.ConstraintViolation;
-import jakarta.validation.ValidationException;
 
 import org.junit.jupiter.api.Assertions;
 
@@ -32,5 +30,4 @@ public final class ValidationTestUtils {
                 constraintViolationMessages,
                 "Object not valid: " + constraintViolations);
     }
-
 }

@@ -22,32 +22,40 @@ class AtLeastOneNotNullValidatorTest {
         ValidationTestUtils.assertIsNotValid(
                 new AnnotatedType(null, null, null, null),
                 Set.of(
-                        "At least one of the provided fields must be non-null. Fields: '[prop1, prop2]'.",
-                        "At least one of the provided fields must be non-null. Fields: '[prop3, prop4]'."));
+                        "At least one of the provided fields must be non-null. Fields: '[prop1,"
+                            + " prop2]'.",
+                        "At least one of the provided fields must be non-null. Fields: '[prop3,"
+                            + " prop4]'."));
         ValidationTestUtils.assertIsNotValid(
                 new AnnotatedType(1, null, null, null),
                 Set.of(
-                        "At least one of the provided fields must be non-null. Fields: '[prop3, prop4]'."));
+                        "At least one of the provided fields must be non-null. Fields: '[prop3,"
+                            + " prop4]'."));
         ValidationTestUtils.assertIsNotValid(
                 new AnnotatedType(null, 2, null, null),
                 Set.of(
-                        "At least one of the provided fields must be non-null. Fields: '[prop3, prop4]'."));
+                        "At least one of the provided fields must be non-null. Fields: '[prop3,"
+                            + " prop4]'."));
         ValidationTestUtils.assertIsNotValid(
                 new AnnotatedType(null, null, 3, null),
                 Set.of(
-                        "At least one of the provided fields must be non-null. Fields: '[prop1, prop2]'."));
+                        "At least one of the provided fields must be non-null. Fields: '[prop1,"
+                            + " prop2]'."));
         ValidationTestUtils.assertIsNotValid(
                 new AnnotatedType(null, null, null, 4),
                 Set.of(
-                        "At least one of the provided fields must be non-null. Fields: '[prop1, prop2]'."));
+                        "At least one of the provided fields must be non-null. Fields: '[prop1,"
+                            + " prop2]'."));
         ValidationTestUtils.assertIsNotValid(
                 new AnnotatedType(1, 2, null, null),
                 Set.of(
-                        "At least one of the provided fields must be non-null. Fields: '[prop3, prop4]'."));
+                        "At least one of the provided fields must be non-null. Fields: '[prop3,"
+                            + " prop4]'."));
         ValidationTestUtils.assertIsNotValid(
                 new AnnotatedType(null, null, 3, 4),
                 Set.of(
-                        "At least one of the provided fields must be non-null. Fields: '[prop1, prop2]'."));
+                        "At least one of the provided fields must be non-null. Fields: '[prop1,"
+                            + " prop2]'."));
 
         // the following are non-annotated and thus all valid (sanity check)
         ValidationTestUtils.assertIsValid(new NonAnnotatedType(null, null, null, null));

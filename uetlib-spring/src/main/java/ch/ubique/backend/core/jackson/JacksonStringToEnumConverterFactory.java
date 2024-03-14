@@ -38,7 +38,8 @@ public class JacksonStringToEnumConverterFactory implements ConverterFactory<Str
         private final Class<T> enumType;
         private final ObjectMapper objectMapper;
 
-        public JacksonStringToEnumConverter(final Class<T> enumType, final ObjectMapper objectMapper) {
+        public JacksonStringToEnumConverter(
+                final Class<T> enumType, final ObjectMapper objectMapper) {
             this.enumType = enumType;
             this.objectMapper = objectMapper;
         }
