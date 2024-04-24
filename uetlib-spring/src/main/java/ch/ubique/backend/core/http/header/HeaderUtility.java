@@ -2,11 +2,13 @@ package ch.ubique.backend.core.http.header;
 
 import static ch.ubique.backend.core.utils.TimeUtils.TIME_UTILS_UTC;
 
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.http.CacheControl;
 import org.springframework.http.ResponseEntity;
 
 import java.time.Duration;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
 import java.util.Locale;
@@ -77,5 +79,23 @@ public class HeaderUtility {
      */
     public static String formatHttpHeaderDate(final TemporalAccessor temporalAccessor) {
         return HTTP_HEADER_DATE_FORMATTER.format(temporalAccessor);
+    }
+
+    /**
+     * Parse Retry-After HTTP Header which can either be a date in format of {@link
+     * #HTTP_HEADER_DATE_FORMATTER} or a deltaSeconds offset from now
+     *
+     * @param dateOrOffsetHeaderValue date to parse as date or seconds offset from now
+     * @param offsetStart offset start to add offset seconds in the case of the header representing
+     *     a seconds offset
+     * @return parse date
+     */
+    public static ZonedDateTime parseHttpDateOrOffsetHeader(
+            final String dateOrOffsetHeaderValue, final ZonedDateTime offsetStart) {
+        if (NumberUtils.isParsable(dateOrOffsetHeaderValue)) {
+            final var deltaSeconds = Long.parseLong(dateOrOffsetHeaderValue);
+            return offsetStart.plusSeconds(deltaSeconds);
+        }
+        return ZonedDateTime.parse(dateOrOffsetHeaderValue, HTTP_HEADER_DATE_FORMATTER);
     }
 }
