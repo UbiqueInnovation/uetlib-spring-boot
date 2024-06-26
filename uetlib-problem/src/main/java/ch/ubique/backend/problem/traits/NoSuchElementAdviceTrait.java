@@ -12,7 +12,7 @@ import java.util.NoSuchElementException;
 public interface NoSuchElementAdviceTrait extends AdviceTrait {
 
     @ExceptionHandler
-    default ResponseEntity<Problem> handleUnsupportedOperation(
+    default ResponseEntity<Problem> handleNoSuchElement(
             final NoSuchElementException exception, final NativeWebRequest request) {
         return create(Status.NOT_FOUND, exception, request);
     }
