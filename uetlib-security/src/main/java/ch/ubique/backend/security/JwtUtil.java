@@ -13,13 +13,13 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 @SuppressWarnings("unused")
-public class JwtUtil {
+public final class JwtUtil {
 
-    protected JwtUtil() {}
+    private JwtUtil() {}
 
-    protected static Jwt getJwt() {
+    public static Jwt getJwt() {
         if (SecurityContextHolder.getContext().getAuthentication().getPrincipal()
-                instanceof Jwt jwt) {
+                instanceof final Jwt jwt) {
             return jwt;
         }
         throw new BadCredentialsException("Unable to retrieve JWT");
@@ -123,7 +123,7 @@ public class JwtUtil {
     private static <T> List<T> claimAsList(
             final Object claim, final String claimName, final Function<Object, T> claimConverter) {
         //noinspection rawtypes
-        if (claim instanceof List claimList) {
+        if (claim instanceof final List claimList) {
             //noinspection unchecked
             return ((List<Object>) claimList)
                     .stream()
@@ -147,7 +147,7 @@ public class JwtUtil {
 
     private static Long claimAsLong(final Object claimObject) {
         try {
-            return claimObject instanceof String claim
+            return claimObject instanceof final String claim
                     ? Long.parseLong(claim)
                     : ((Number) claimObject).longValue();
         } catch (final NullPointerException | NumberFormatException exception) {
@@ -157,7 +157,7 @@ public class JwtUtil {
 
     private static Double claimAsDouble(final Object claimObject) {
         try {
-            return claimObject instanceof String claim
+            return claimObject instanceof final String claim
                     ? Double.parseDouble(claim)
                     : ((Number) claimObject).doubleValue();
         } catch (final NullPointerException | NumberFormatException exception) {
