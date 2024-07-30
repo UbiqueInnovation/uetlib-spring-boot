@@ -13,9 +13,9 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 @SuppressWarnings("unused")
-public class JwtUtil {
+public final class JwtUtil {
 
-    protected JwtUtil() {}
+    private JwtUtil() {}
 
     public static Jwt getJwt() {
         if (SecurityContextHolder.getContext().getAuthentication().getPrincipal()
