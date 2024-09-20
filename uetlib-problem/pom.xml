@@ -12,6 +12,10 @@
     <artifactId>backend-jvm-lib-problem</artifactId>
     <packaging>jar</packaging>
 
+    <properties>
+        <zalando-problem-spring-version>0.29.1</zalando-problem-spring-version>
+    </properties>
+
     <dependencies>
         <!-- Core -->
         <dependency>
@@ -23,10 +27,9 @@
         <!-- Zalando Problem -->
         <dependency>
             <groupId>org.zalando</groupId>
-            <artifactId>problem-spring-web</artifactId>
+            <artifactId>problem-spring-web-starter</artifactId>
             <version>0.29.1</version>
         </dependency>
-
     </dependencies>
 
     <dependencyManagement>
