@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
  * com.fasterxml.jackson.annotation.JsonCreator}
  */
 @Component
-@SuppressWarnings("rawtypes")
+@SuppressWarnings({"rawtypes", "TypeParameterExtendsFinalClass"})
 public class JacksonEnumToStringConverterFactory implements ConverterFactory<Enum, String> {
 
     private final ObjectMapper objectMapper;
