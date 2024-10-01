@@ -8,7 +8,7 @@ import org.springframework.util.StringUtils;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-public class CronValidationUtils {
+public final class CronValidationUtils {
 
     private static final Logger logger = LoggerFactory.getLogger(CronValidationUtils.class);
 

@@ -11,7 +11,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Objects;
 
-public class EtagUtil {
+@SuppressWarnings("unused") // used in schweizmobil-backend
+public final class EtagUtil {
 
     private static final String WEAK_PREFIX = "W/";
     private static final String SHA_1 = "SHA-1";
