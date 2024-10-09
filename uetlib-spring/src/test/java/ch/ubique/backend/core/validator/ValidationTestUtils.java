@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public final class ValidationTestUtils {
+
     private ValidationTestUtils() {}
 
     public static <T> void assertIsValid(final T object) {
