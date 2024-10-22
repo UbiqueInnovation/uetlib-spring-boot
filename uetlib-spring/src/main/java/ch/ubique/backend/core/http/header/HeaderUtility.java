@@ -2,27 +2,22 @@ package ch.ubique.backend.core.http.header;
 
 import static ch.ubique.backend.core.utils.TimeUtils.TIME_UTILS_UTC;
 
+import static java.time.format.DateTimeFormatter.RFC_1123_DATE_TIME;
+
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.http.CacheControl;
 import org.springframework.http.ResponseEntity;
 
 import java.time.Duration;
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
-import java.util.Locale;
 
 /** Helper class to generate {@link ResponseEntity} responses and/or request header. */
-public class HeaderUtility {
+public final class HeaderUtility {
 
     public static final String NEXT_REFRESH = "X-Next-Refresh";
 
     public static final String CONTENT_RANGE = "Content-Range";
-
-    private static final DateTimeFormatter HTTP_HEADER_DATE_FORMATTER =
-            DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss z", Locale.US)
-                    .withZone(ZoneId.of("UTC"));
 
     private HeaderUtility() {}
 
@@ -78,7 +73,7 @@ public class HeaderUtility {
      * @return formatted date
      */
     public static String formatHttpHeaderDate(final TemporalAccessor temporalAccessor) {
-        return HTTP_HEADER_DATE_FORMATTER.format(temporalAccessor);
+        return RFC_1123_DATE_TIME.format(temporalAccessor);
     }
 
     /**
@@ -96,6 +91,6 @@ public class HeaderUtility {
             final var deltaSeconds = Long.parseLong(dateOrOffsetHeaderValue);
             return offsetStart.plusSeconds(deltaSeconds);
         }
-        return ZonedDateTime.parse(dateOrOffsetHeaderValue, HTTP_HEADER_DATE_FORMATTER);
+        return ZonedDateTime.parse(dateOrOffsetHeaderValue, RFC_1123_DATE_TIME);
     }
 }
