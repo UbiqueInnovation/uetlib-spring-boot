@@ -78,7 +78,7 @@ public final class HeaderUtility {
 
     /**
      * Parse Retry-After HTTP Header which can either be a date in format of {@link
-     * #HTTP_HEADER_DATE_FORMATTER} or a deltaSeconds offset from now
+     * RFC_1123_DATE_TIME} or a deltaSeconds offset from now
      *
      * @param dateOrOffsetHeaderValue date to parse as date or seconds offset from now
      * @param offsetStart offset start to add offset seconds in the case of the header representing
