@@ -1,6 +1,7 @@
 package ch.ubique.backend.core.http.header;
 
 import static ch.ubique.backend.core.utils.TimeUtils.TIME_UTILS_UTC;
+import static ch.ubique.backend.core.utils.TimeUtils.ZONE_ID_UTC;
 
 import static java.time.format.DateTimeFormatter.RFC_1123_DATE_TIME;
 
@@ -9,8 +10,9 @@ import org.springframework.http.CacheControl;
 import org.springframework.http.ResponseEntity;
 
 import java.time.Duration;
+import java.time.Instant;
 import java.time.ZonedDateTime;
-import java.time.temporal.TemporalAccessor;
+import java.time.temporal.Temporal;
 
 /** Helper class to generate {@link ResponseEntity} responses and/or request header. */
 public final class HeaderUtility {
@@ -69,11 +71,12 @@ public final class HeaderUtility {
     /**
      * return the given date format for HTTP headers
      *
-     * @param temporalAccessor date to format
+     * @param temporal date to format
      * @return formatted date
      */
-    public static String formatHttpHeaderDate(final TemporalAccessor temporalAccessor) {
-        return RFC_1123_DATE_TIME.format(temporalAccessor);
+    public static String formatHttpHeaderDate(final Temporal temporal) {
+        return RFC_1123_DATE_TIME.format(
+                temporal instanceof final Instant instant ? instant.atZone(ZONE_ID_UTC) : temporal);
     }
 
     /**
