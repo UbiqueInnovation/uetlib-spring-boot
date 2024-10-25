@@ -17,6 +17,10 @@
         <!-- Versions -->
         <spring-boot-version>3.3.4</spring-boot-version>
         <jacoco-version>0.8.12</jacoco-version>
+        <!-- Sonar-->
+        <sonar.projectKey>UbiqueInnovation_uetlib-spring</sonar.projectKey>
+        <sonar.organization>ubiqueinnovation</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     </properties>
 
     <modules>
