@@ -15,7 +15,7 @@
 
     <properties>
         <!-- Versions -->
-        <spring-boot-version>3.3.4</spring-boot-version>
+        <spring-boot-version>3.3.5</spring-boot-version>
         <!-- Sonar-->
         <sonar.projectKey>UbiqueInnovation_uetlib-spring</sonar.projectKey>
         <sonar.organization>ubiqueinnovation</sonar.organization>
