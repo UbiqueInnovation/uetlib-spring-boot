@@ -6,7 +6,7 @@
     <parent>
         <groupId>ch.ubique</groupId>
         <artifactId>uetlib-bom</artifactId>
-        <version>1.0.0-alpha.2</version>
+        <version>1.0.0-alpha.7</version>
     </parent>
 
     <artifactId>uetlib-spring-parent</artifactId>
