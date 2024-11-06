@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>ch.ubique</groupId>
         <artifactId>uetlib-bom</artifactId>
-        <version>1.0.0-alpha.7</version>
+        <version>1.0.0-alpha.14</version>
     </parent>
 
     <artifactId>uetlib-spring-parent</artifactId>
@@ -14,8 +14,6 @@
     <packaging>pom</packaging>
 
     <properties>
-        <!-- Versions -->
-        <spring-boot-version>3.3.5</spring-boot-version>
         <!-- Sonar-->
         <sonar.projectKey>UbiqueInnovation_uetlib-spring</sonar.projectKey>
         <sonar.organization>ubiqueinnovation</sonar.organization>
@@ -35,17 +33,4 @@
             <url>https://artifactory.ubique.ch/artifactory/backend</url>
         </repository>
     </distributionManagement>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-dependencies</artifactId>
-                <type>pom</type>
-                <version>${spring-boot-version}</version>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
 </project>
