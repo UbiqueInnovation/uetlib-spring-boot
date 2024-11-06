@@ -20,7 +20,7 @@ jobs:
     deploy-artifactory:
         name: Deploy Project to Artifactory
         needs: [ build ]
-        uses: UbiqueInnovation/workflows-backend/.github/workflows/mvn_package_deploy.yml@main
+        uses: UbiqueInnovation/workflows-backend/.github/workflows/mvn_package_deploy.yml@feature/alt-deployment-repository
         with:
             ref_name: ${{ github.ref_name }}
             parent_pom: pom.xml
