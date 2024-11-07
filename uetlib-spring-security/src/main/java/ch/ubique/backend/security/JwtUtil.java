@@ -169,7 +169,7 @@ public final class JwtUtil {
         return getJwt().getTokenValue();
     }
 
-    protected static Supplier<AccessDeniedException> throwClaimNotFound(final String claimName) {
+    private static Supplier<AccessDeniedException> throwClaimNotFound(final String claimName) {
         return () -> {
             throw new AccessDeniedException("Claim '" + claimName + "' not found in JWT");
         };
