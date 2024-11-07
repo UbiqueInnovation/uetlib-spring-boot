@@ -20,12 +20,19 @@ import java.time.Instant;
 import java.time.LocalTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.function.Consumer;
 
 @SuppressWarnings("unused")
 public final class SpringDocConfig {
     private SpringDocConfig() {}
 
+    @SuppressWarnings("unused")
     public static void setDefaultConfig() {
+        setDefaultConfigWith(customizer -> {});
+    }
+
+    public static void setDefaultConfigWith(final Consumer<SpringDocUtils> customizer) {
+
         final var nowEuZh = TIME_UTILS_EUROPE_ZURICH.now();
         final var nowEuZhMillis = BigDecimal.valueOf(toMillis(nowEuZh));
         final var nowEuZhLocalTimeFormatted = nowEuZh.format(DateTimeFormatter.ISO_LOCAL_TIME);
@@ -34,37 +41,44 @@ public final class SpringDocConfig {
                         Duration.between(TIME_UTILS_EUROPE_ZURICH.startOfToday(), nowEuZh)
                                 .toMillis());
 
-        SpringDocUtils.getConfig()
-                // Instant as millis
-                .replaceWithSchema(Instant.class, new NumberSchema()._default(nowEuZhMillis))
-                // ZonedDateTime as millis
-                .replaceWithSchema(ZonedDateTime.class, new NumberSchema()._default(nowEuZhMillis))
-                // LocalTime as ISO HH:mm:ss and optionally nanos
-                .replaceWithSchema(
-                        LocalTime.class, new StringSchema()._default(nowEuZhLocalTimeFormatted))
-                // Duration as millis
-                .replaceWithSchema(Duration.class, new NumberSchema()._default(durationToday))
-                // Duration as Map<String, String> with description
-                .replaceWithSchema(
-                        LocalizedValue.class,
-                        new MapSchema()
-                                ._default(
-                                        ofEntries(
-                                                entry(
-                                                        "de",
-                                                        "de value of the correct type"
-                                                                + " (string/int/object/etc.)"),
-                                                entry(
-                                                        "it",
-                                                        "it value of the correct type"
-                                                                + " (string/int/object/etc.)"),
-                                                entry(
-                                                        "fr",
-                                                        "fr value of the correct type"
-                                                                + " (string/int/object/etc.)"),
-                                                entry(
-                                                        "en",
-                                                        "en value of the correct type"
-                                                                + " (string/int/object/etc.)"))));
+        final var config =
+                SpringDocUtils.getConfig()
+                        // Instant as millis
+                        .replaceWithSchema(
+                                Instant.class, new NumberSchema()._default(nowEuZhMillis))
+                        // ZonedDateTime as millis
+                        .replaceWithSchema(
+                                ZonedDateTime.class, new NumberSchema()._default(nowEuZhMillis))
+                        // LocalTime as ISO HH:mm:ss and optionally nanos
+                        .replaceWithSchema(
+                                LocalTime.class,
+                                new StringSchema()._default(nowEuZhLocalTimeFormatted))
+                        // Duration as millis
+                        .replaceWithSchema(
+                                Duration.class, new NumberSchema()._default(durationToday))
+                        // Duration as Map<String, String> with description
+                        .replaceWithSchema(
+                                LocalizedValue.class,
+                                new MapSchema()
+                                        ._default(
+                                                ofEntries(
+                                                        entry(
+                                                                "de",
+                                                                "de value of the correct type"
+                                                                        + " (string/int/object/etc.)"),
+                                                        entry(
+                                                                "it",
+                                                                "it value of the correct type"
+                                                                        + " (string/int/object/etc.)"),
+                                                        entry(
+                                                                "fr",
+                                                                "fr value of the correct type"
+                                                                        + " (string/int/object/etc.)"),
+                                                        entry(
+                                                                "en",
+                                                                "en value of the correct type"
+                                                                        + " (string/int/object/etc.)"))));
+
+        customizer.accept(config);
     }
 }
