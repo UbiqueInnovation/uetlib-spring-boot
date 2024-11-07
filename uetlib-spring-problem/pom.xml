@@ -27,5 +27,12 @@
             <artifactId>problem-spring-web-starter</artifactId>
             <version>0.29.1</version>
         </dependency>
+
+        <dependency>
+            <groupId>ch.ubique</groupId>
+            <artifactId>uetlib-test</artifactId>
+            <version>1.0.0-alpha.13</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 </project>
