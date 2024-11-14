@@ -50,8 +50,8 @@ public class LogRequestInterceptor implements HandlerInterceptor, Filter {
     public void doFilter(
             final ServletRequest request, final ServletResponse response, final FilterChain chain)
             throws IOException, ServletException {
-        if (request instanceof HttpServletRequest httpServletRequest
-                && response instanceof HttpServletResponse httpServletResponse) {
+        if (request instanceof final HttpServletRequest httpServletRequest
+                && response instanceof final HttpServletResponse httpServletResponse) {
             log(httpServletRequest, httpServletResponse);
         }
         chain.doFilter(request, response);
