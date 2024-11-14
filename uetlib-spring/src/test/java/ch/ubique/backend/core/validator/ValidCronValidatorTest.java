@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Set;
 
 class ValidCronValidatorTest {
+
     @Test
     void test() {
         ValidationTestUtils.assertIsValid(new Model(null));
