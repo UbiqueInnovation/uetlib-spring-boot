@@ -7,6 +7,7 @@ import static java.time.format.DateTimeFormatter.RFC_1123_DATE_TIME;
 
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.http.CacheControl;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.time.Duration;
@@ -60,6 +61,20 @@ public final class HeaderUtility {
         return ResponseEntity.noContent()
                 .cacheControl(CacheControl.maxAge(maxAge))
                 .header(NEXT_REFRESH, createNextRefreshHeaderValue(nextRefresh))
+                .build();
+    }
+
+    /**
+     * Returns an empty {@link ResponseEntity<T>} with HTTP-Status 304
+     *
+     * @return {@link ResponseEntity<T>} with the given headers and status NOT_MODIFIED
+     */
+    public static <T> ResponseEntity<T> createNotModifiedResponseEntity(
+            final Duration nextRefresh, final Duration maxAge) {
+        return ResponseEntity.status(HttpStatus.NOT_MODIFIED)
+                .header(NEXT_REFRESH,
+                        createNextRefreshHeaderValue(                                nextRefresh))
+                .cacheControl(CacheControl.maxAge(maxAge))
                 .build();
     }
 
