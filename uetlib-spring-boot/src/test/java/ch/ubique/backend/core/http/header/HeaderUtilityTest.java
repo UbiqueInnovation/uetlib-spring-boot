@@ -2,6 +2,7 @@ package ch.ubique.backend.core.http.header;
 
 import static ch.ubique.backend.core.http.header.HeaderUtility.formatHttpHeaderDate;
 import static ch.ubique.backend.core.http.header.HeaderUtility.parseHttpDateOrOffsetHeader;
+import static ch.ubique.backend.core.utils.TimeUtils.ZONE_ID_EUROPE_ZURICH;
 import static ch.ubique.backend.core.utils.TimeUtils.ZONE_ID_UTC;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -40,6 +41,14 @@ class HeaderUtilityTest {
     void testFormatHttpHeaderDate() {
         final var lastSecond1999 = ZonedDateTime.of(1999, 12, 31, 23, 59, 59, 0, ZONE_ID_UTC);
         assertEquals("Fri, 31 Dec 1999 23:59:59 GMT", formatHttpHeaderDate(lastSecond1999));
+
+        // make sure day of month is 0 padded
+        final var fifthOfMarch2025 = ZonedDateTime.of(2025, 3, 5, 15, 3, 7, 0, ZONE_ID_UTC);
+        assertEquals("Wed, 05 Mar 2025 15:03:07 GMT", formatHttpHeaderDate(fifthOfMarch2025));
+
+        // test zoned date time with time zone other than UTC
+        final var notUtc = ZonedDateTime.of(2025, 3, 5, 16, 3, 7, 0, ZONE_ID_EUROPE_ZURICH);
+        assertEquals("Wed, 05 Mar 2025 15:03:07 GMT", formatHttpHeaderDate(notUtc));
     }
 
     @Test

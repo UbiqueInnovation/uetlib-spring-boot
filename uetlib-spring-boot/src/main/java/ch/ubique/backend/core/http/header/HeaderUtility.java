@@ -3,8 +3,6 @@ package ch.ubique.backend.core.http.header;
 import static ch.ubique.backend.core.utils.TimeUtils.TIME_UTILS_UTC;
 import static ch.ubique.backend.core.utils.TimeUtils.ZONE_ID_UTC;
 
-import static java.time.format.DateTimeFormatter.RFC_1123_DATE_TIME;
-
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
@@ -12,8 +10,11 @@ import org.springframework.http.ResponseEntity;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.Temporal;
+import java.util.Locale;
 
 /** Helper class to generate {@link ResponseEntity} responses and/or request header. */
 public final class HeaderUtility {
@@ -21,6 +22,10 @@ public final class HeaderUtility {
     public static final String NEXT_REFRESH = "X-Next-Refresh";
 
     public static final String CONTENT_RANGE = "Content-Range";
+
+    private static final DateTimeFormatter HTTP_HEADER_DATE_FORMATTER =
+            DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss z", Locale.US)
+                    .withZone(ZoneId.of("GMT"));
 
     private HeaderUtility() {}
 
@@ -72,8 +77,7 @@ public final class HeaderUtility {
     public static <T> ResponseEntity<T> createNotModifiedResponseEntity(
             final Duration nextRefresh, final Duration maxAge) {
         return ResponseEntity.status(HttpStatus.NOT_MODIFIED)
-                .header(NEXT_REFRESH,
-                        createNextRefreshHeaderValue(                                nextRefresh))
+                .header(NEXT_REFRESH, createNextRefreshHeaderValue(nextRefresh))
                 .cacheControl(CacheControl.maxAge(maxAge))
                 .build();
     }
@@ -90,13 +94,13 @@ public final class HeaderUtility {
      * @return formatted date
      */
     public static String formatHttpHeaderDate(final Temporal temporal) {
-        return RFC_1123_DATE_TIME.format(
+        return HTTP_HEADER_DATE_FORMATTER.format(
                 temporal instanceof final Instant instant ? instant.atZone(ZONE_ID_UTC) : temporal);
     }
 
     /**
      * Parse Retry-After HTTP Header which can either be a date in format of {@link
-     * RFC_1123_DATE_TIME} or a deltaSeconds offset from now
+     * #HTTP_HEADER_DATE_FORMATTER} or a deltaSeconds offset from now
      *
      * @param dateOrOffsetHeaderValue date to parse as date or seconds offset from now
      * @param offsetStart offset start to add offset seconds in the case of the header representing
@@ -109,6 +113,7 @@ public final class HeaderUtility {
             final var deltaSeconds = Long.parseLong(dateOrOffsetHeaderValue);
             return offsetStart.plusSeconds(deltaSeconds);
         }
-        return ZonedDateTime.parse(dateOrOffsetHeaderValue, RFC_1123_DATE_TIME);
+        return ZonedDateTime.parse(dateOrOffsetHeaderValue, HTTP_HEADER_DATE_FORMATTER)
+                .withZoneSameInstant(ZONE_ID_UTC);
     }
 }
