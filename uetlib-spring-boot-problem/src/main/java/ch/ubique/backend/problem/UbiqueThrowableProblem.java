@@ -19,4 +19,13 @@ public interface UbiqueThrowableProblem<E extends ProblemErrorType> extends Prob
     default int errorCode() {
         return errorType().code();
     }
+
+    /**
+     * optional error id that helps the client identify which handler and potentially which action
+     * should be taken.
+     */
+    @JsonProperty
+    default String errorId() {
+        return null;
+    }
 }
