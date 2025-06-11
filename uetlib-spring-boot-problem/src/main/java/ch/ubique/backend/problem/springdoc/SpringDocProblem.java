@@ -14,7 +14,7 @@ import org.zalando.problem.Problem;
  *
  * @param <E>
  */
-@SuppressWarnings("NullableProblems")
+@SuppressWarnings("unused")
 public interface SpringDocProblem<E extends Enum<E> & ProblemErrorType> extends Problem {
 
     @Nullable
