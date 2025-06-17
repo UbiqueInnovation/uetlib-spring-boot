@@ -8,10 +8,13 @@ import static java.util.Map.ofEntries;
 
 import ch.ubique.backend.core.localized.LocalizedValue;
 
+import com.github.zafarkhaja.semver.Version;
+
 import io.swagger.v3.oas.models.media.MapSchema;
 import io.swagger.v3.oas.models.media.NumberSchema;
 import io.swagger.v3.oas.models.media.StringSchema;
 
+import org.apache.commons.lang3.RandomUtils;
 import org.springdoc.core.utils.SpringDocUtils;
 
 import java.math.BigDecimal;
@@ -31,6 +34,7 @@ public final class SpringDocConfig {
         setDefaultConfigWith(customizer -> {});
     }
 
+    @SuppressWarnings({"deprecation", "AccessStaticViaInstance"})
     public static void setDefaultConfigWith(final Consumer<SpringDocUtils> customizer) {
 
         final var nowEuZh = TIME_UTILS_EUROPE_ZURICH.now();
@@ -40,6 +44,8 @@ public final class SpringDocConfig {
                 BigDecimal.valueOf(
                         Duration.between(TIME_UTILS_EUROPE_ZURICH.startOfToday(), nowEuZh)
                                 .toMillis());
+
+        final var random = RandomUtils.insecure();
 
         final var config =
                 SpringDocUtils.getConfig()
@@ -56,7 +62,7 @@ public final class SpringDocConfig {
                         // Duration as millis
                         .replaceWithSchema(
                                 Duration.class, new NumberSchema()._default(durationToday))
-                        // Duration as Map<String, String> with description
+                        // LocalizedValue as Map<String, String> with description
                         .replaceWithSchema(
                                 LocalizedValue.class,
                                 new MapSchema()
@@ -77,7 +83,16 @@ public final class SpringDocConfig {
                                                         entry(
                                                                 "en",
                                                                 "en value of the correct type"
-                                                                        + " (string/int/object/etc.)"))));
+                                                                        + " (string/int/object/etc.)"))))
+                        .replaceWithSchema(
+                                Version.class,
+                                new StringSchema()
+                                        ._default(
+                                                random.nextInt(0, 10)
+                                                        + "."
+                                                        + random.nextInt(1, 100)
+                                                        + "."
+                                                        + random.nextInt(1, 10)));
 
         customizer.accept(config);
     }
