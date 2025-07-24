@@ -1,4 +1,4 @@
-package ch.ubique.backend.validation;
+package ch.ubique.backend.spring.validation;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.ConstraintViolation;
