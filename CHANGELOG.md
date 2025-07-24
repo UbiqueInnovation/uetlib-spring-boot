@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## 1.4.0
+
+### New Features
+
+- New `uetlib-spring-boot-validation` module for automatic response validation using Jakarta Bean Validation
+  - Provides `@ValidateResponse` annotation to enable validation on controller methods or classes
+  - Automatic validation of HTTP response bodies before serialization
+  - Performance monitoring with validation timing logs
+  - Comprehensive error handling with `ResponseValidationException`
+
+
 ## 1.3.0
 
 ### Improvements
