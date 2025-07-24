@@ -60,8 +60,10 @@ public class ResponseValidationAdvice implements ResponseBodyAdvice<Object> {
         if (body != null) {
             final var start = Instant.now();
             final var violations = validator.validate(body);
-            logger.info(
-                    "validation took: {}ms", Duration.between(start, Instant.now()).toMillis());
+            if (logger.isDebugEnabled()) {
+                logger.debug(
+                        "validation took: {}ms", Duration.between(start, Instant.now()).toMillis());
+            }
             if (!violations.isEmpty()) {
                 switch (action) {
                     case LOG -> logger.atLevel(logLevel).log(
