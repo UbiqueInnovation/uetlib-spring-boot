@@ -1,4 +1,4 @@
-package ch.ubique.backend.validation;
+package ch.ubique.backend.spring.validation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
