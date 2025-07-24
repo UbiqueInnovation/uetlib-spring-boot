@@ -117,17 +117,6 @@ Controls what action to take when response validation fails.
   - `LOG`: Log validation failures without throwing exceptions
   - `THROW`: Throw `ResponseValidationException` when validation fails
 
-```yaml
-# application.yml
-ch:
-  ubique:
-    backend:
-      spring:
-        validation:
-          response:
-            fail:
-              action: THROW  # Enable validation with exception throwing
-```
 
 ```properties
 # application.properties
@@ -141,18 +130,6 @@ Controls the log level used when validation fails (only applicable when action i
 - **Default**: `WARN`
 - **Possible values**: `TRACE`, `DEBUG`, `INFO`, `WARN`, `ERROR`
 
-```yaml
-# application.yml
-ch:
-  ubique:
-    backend:
-      spring:
-        validation:
-          response:
-            fail:
-              action: LOG
-              log-level: ERROR  # Log validation failures as errors
-```
 
 ```properties
 # application.properties
@@ -163,40 +140,22 @@ ch.ubique.backend.spring.validation.response.fail.log-level=ERROR
 ### Configuration Examples
 
 #### Development Environment (Strict Validation)
-```yaml
-ch:
-  ubique:
-    backend:
-      spring:
-        validation:
-          response:
-            fail:
-              action: THROW  # Fail fast in development
+```properties
+# application.properties
+ch.ubique.backend.spring.validation.response.fail.action=THROW
 ```
 
 #### Production Environment (Logging Only)
-```yaml
-ch:
-  ubique:
-    backend:
-      spring:
-        validation:
-          response:
-            fail:
-              action: LOG
-              log-level: WARN  # Log validation issues for monitoring
+```properties
+# application.properties
+ch.ubique.backend.spring.validation.response.fail.action=LOG
+ch.ubique.backend.spring.validation.response.fail.log-level=WARN
 ```
 
 #### Performance-Critical Environment (Disabled)
-```yaml
-ch:
-  ubique:
-    backend:
-      spring:
-        validation:
-          response:
-            fail:
-              action: DISABLE  # No validation overhead
+```properties
+# application.properties
+ch.ubique.backend.spring.validation.response.fail.action=DISABLE
 ```
 
 ## Performance Considerations
