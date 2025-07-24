@@ -8,7 +8,7 @@ import java.util.Set;
 public class ResponseValidationException extends RuntimeException {
 
     @JsonIgnore
-    private final transient  Set<ConstraintViolation<Object>> violations;
+    private final transient Set<ConstraintViolation<Object>> violations;
     private final Class<?> responseType;
 
     public ResponseValidationException(
