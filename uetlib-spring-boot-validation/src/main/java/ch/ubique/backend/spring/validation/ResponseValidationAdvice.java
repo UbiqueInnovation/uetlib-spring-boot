@@ -41,7 +41,7 @@ public class ResponseValidationAdvice implements ResponseBodyAdvice<Object> {
     @Override
     public boolean supports(
             @NotNull MethodParameter returnType, @NotNull Class<? extends HttpMessageConverter<?>> converterType) {
-        if (ResponseValidationAction.DISABLE.equals(action)) {
+        if (ResponseValidationAction.DISABLE == action) {
             return false;
         }
         // Check if method or class is annotated with @ValidateResponse
