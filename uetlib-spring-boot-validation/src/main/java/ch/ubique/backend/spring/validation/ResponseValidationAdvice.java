@@ -18,15 +18,47 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 import java.time.Duration;
 import java.time.Instant;
 
+/**
+ * Automatically validates HTTP response objects using Jakarta Bean Validation.
+ * <p>
+ * Intercepts responses from controllers annotated with {@link ValidateResponse}
+ * and performs validation based on configured {@link ResponseValidationAction}.
+ * Logs validation execution time at DEBUG level for performance monitoring.
+ * 
+ * @see ValidateResponse
+ * @see ResponseValidationException
+ * @see ResponseValidationAction
+ * 
+ * @author Ubique Innovation AG
+ * @since 1.4.0
+ */
 @RestControllerAdvice
 public class ResponseValidationAdvice implements ResponseBodyAdvice<Object> {
 
     private static final Logger logger = LoggerFactory.getLogger(ResponseValidationAdvice.class);
 
+    /**
+     * The Jakarta Bean Validation validator used to validate response objects.
+     */
     private final Validator validator;
+    
+    /**
+     * The log level to use when logging validation failures (only used when action is LOG).
+     */
     private final Level logLevel;
+    
+    /**
+     * The action to take when validation fails.
+     */
     private final ResponseValidationAction action;
 
+    /**
+     * Constructs ResponseValidationAdvice with configuration from application properties.
+     * 
+     * @param validator the Jakarta Bean Validation validator
+     * @param logLevel the log level for validation failures (default: WARN)
+     * @param action the action when validation fails (default: DISABLE)
+     */
     public ResponseValidationAdvice(
             final Validator validator,
             @Value("${ch.ubique.backend.spring.validation.response.fail.log-level:WARN}")
@@ -38,6 +70,14 @@ public class ResponseValidationAdvice implements ResponseBodyAdvice<Object> {
         this.action = action;
     }
 
+    /**
+     * Determines if validation should be applied based on {@link ValidateResponse} annotation
+     * and configured action.
+     * 
+     * @param returnType the return type of the controller method
+     * @param converterType the selected converter type for the response
+     * @return {@code true} if this advice should be applied, {@code false} otherwise
+     */
     @Override
     public boolean supports(
             @NotNull MethodParameter returnType, @NotNull Class<? extends HttpMessageConverter<?>> converterType) {
@@ -49,6 +89,19 @@ public class ResponseValidationAdvice implements ResponseBodyAdvice<Object> {
                 || returnType.getContainingClass().isAnnotationPresent(ValidateResponse.class);
     }
 
+    /**
+     * Validates response body using Jakarta Bean Validation and takes configured action.
+     * Logs validation time at DEBUG level for performance monitoring.
+     * 
+     * @param body the response body to validate (may be {@code null})
+     * @param returnType the return type of the controller method
+     * @param selectedContentType the content type selected for the response
+     * @param selectedConverterType the converter type selected for the response
+     * @param request the current HTTP request
+     * @param response the current HTTP response
+     * @return the original response body (unchanged)
+     * @throws ResponseValidationException if validation fails and action is {@link ResponseValidationAction#THROW}
+     */
     @Override
     public Object beforeBodyWrite(
             Object body,
