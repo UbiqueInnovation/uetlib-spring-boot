@@ -97,48 +97,107 @@ public class ValidationExceptionHandler {
 }
 ```
 
-## Components
-
-### @ValidateResponse
-
-A marker annotation that can be applied to:
-- **Controller classes**: Enables validation for all methods in the class
-- **Controller methods**: Enables validation for the specific method
-
-```java
-@Target({ElementType.METHOD, ElementType.TYPE})
-@Retention(RetentionPolicy.RUNTIME)
-public @interface ValidateResponse {}
-```
-
-### ResponseValidationAdvice
-
-The core component that intercepts HTTP responses and performs validation. It:
-- Implements Spring's `ResponseBodyAdvice` interface
-- Checks for the presence of `@ValidateResponse` annotation
-- Validates response objects using Jakarta Bean Validation
-- Logs validation performance metrics
-- Throws `ResponseValidationException` when validation fails
-
-### ResponseValidationException
-
-A runtime exception thrown when response validation fails. It provides:
-- **Constraint violations**: Detailed information about validation failures
-- **Response type**: The class type that failed validation
-- **Error message**: Descriptive error message
-
-```java
-public class ResponseValidationException extends RuntimeException {
-    public Set<ConstraintViolation<Object>> getViolations();
-    public Class<?> getResponseType();
-}
-```
-
 ## Configuration
 
 The module automatically configures itself when included in your Spring Boot application. It requires:
 - A `Validator` bean (typically provided by Spring Boot's validation starter)
 - Spring Web MVC (for the `ResponseBodyAdvice` functionality)
+
+### Configuration Properties
+
+You can customize the behavior of the validation module using the following application properties:
+
+#### `ch.ubique.backend.spring.validation.response.fail.action`
+
+Controls what action to take when response validation fails.
+
+- **Default**: `DISABLE`
+- **Possible values**:
+  - `DISABLE`: Validation is completely disabled (default for performance reasons)
+  - `LOG`: Log validation failures without throwing exceptions
+  - `THROW`: Throw `ResponseValidationException` when validation fails
+
+```yaml
+# application.yml
+ch:
+  ubique:
+    backend:
+      spring:
+        validation:
+          response:
+            fail:
+              action: THROW  # Enable validation with exception throwing
+```
+
+```properties
+# application.properties
+ch.ubique.backend.spring.validation.response.fail.action=THROW
+```
+
+#### `ch.ubique.backend.spring.validation.response.fail.log-level`
+
+Controls the log level used when validation fails (only applicable when action is `LOG`).
+
+- **Default**: `WARN`
+- **Possible values**: `TRACE`, `DEBUG`, `INFO`, `WARN`, `ERROR`
+
+```yaml
+# application.yml
+ch:
+  ubique:
+    backend:
+      spring:
+        validation:
+          response:
+            fail:
+              action: LOG
+              log-level: ERROR  # Log validation failures as errors
+```
+
+```properties
+# application.properties
+ch.ubique.backend.spring.validation.response.fail.action=LOG
+ch.ubique.backend.spring.validation.response.fail.log-level=ERROR
+```
+
+### Configuration Examples
+
+#### Development Environment (Strict Validation)
+```yaml
+ch:
+  ubique:
+    backend:
+      spring:
+        validation:
+          response:
+            fail:
+              action: THROW  # Fail fast in development
+```
+
+#### Production Environment (Logging Only)
+```yaml
+ch:
+  ubique:
+    backend:
+      spring:
+        validation:
+          response:
+            fail:
+              action: LOG
+              log-level: WARN  # Log validation issues for monitoring
+```
+
+#### Performance-Critical Environment (Disabled)
+```yaml
+ch:
+  ubique:
+    backend:
+      spring:
+        validation:
+          response:
+            fail:
+              action: DISABLE  # No validation overhead
+```
 
 ## Performance Considerations
 
