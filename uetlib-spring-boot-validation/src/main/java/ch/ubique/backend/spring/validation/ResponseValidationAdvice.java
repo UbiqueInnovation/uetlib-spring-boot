@@ -5,8 +5,6 @@ import jakarta.validation.Validator;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.event.Level;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -20,15 +18,14 @@ import java.time.Instant;
 
 /**
  * Automatically validates HTTP response objects using Jakarta Bean Validation.
- * <p>
- * Intercepts responses from controllers annotated with {@link ValidateResponse}
- * and performs validation based on configured {@link ResponseValidationAction}.
- * Logs validation execution time at DEBUG level for performance monitoring.
- * 
+ *
+ * <p>Intercepts responses from controllers annotated with {@link ValidateResponse} and performs
+ * validation based on configured {@link ResponseValidationAction}. Logs validation execution time
+ * at DEBUG level for performance monitoring.
+ *
  * @see ValidateResponse
  * @see ResponseValidationException
  * @see ResponseValidationAction
- * 
  * @author Ubique Innovation AG
  * @since 1.4.0
  */
@@ -37,51 +34,36 @@ public class ResponseValidationAdvice implements ResponseBodyAdvice<Object> {
 
     private static final Logger logger = LoggerFactory.getLogger(ResponseValidationAdvice.class);
 
-    /**
-     * The Jakarta Bean Validation validator used to validate response objects.
-     */
+    /** The Jakarta Bean Validation validator used to validate response objects. */
     private final Validator validator;
-    
-    /**
-     * The log level to use when logging validation failures (only used when action is LOG).
-     */
-    private final Level logLevel;
-    
-    /**
-     * The action to take when validation fails.
-     */
-    private final ResponseValidationAction action;
+
+    /** Response validation properties to define log level and action. */
+    private final ResponseValidationProperties properties;
 
     /**
      * Constructs ResponseValidationAdvice with configuration from application properties.
-     * 
+     *
      * @param validator the Jakarta Bean Validation validator
-     * @param logLevel the log level for validation failures (default: WARN)
-     * @param action the action when validation fails (default: DISABLE)
      */
     public ResponseValidationAdvice(
-            final Validator validator,
-            @Value("${ch.ubique.backend.spring.validation.response.fail.log-level:WARN}")
-                    final Level logLevel,
-            @Value("${ch.ubique.backend.spring.validation.response.fail.action:DISABLE}")
-                    final ResponseValidationAction action) {
+            final Validator validator, ResponseValidationProperties properties) {
         this.validator = validator;
-        this.logLevel = logLevel;
-        this.action = action;
+        this.properties = properties;
     }
 
     /**
-     * Determines if validation should be applied based on {@link ValidateResponse} annotation
-     * and configured action.
-     * 
+     * Determines if validation should be applied based on {@link ValidateResponse} annotation and
+     * configured action.
+     *
      * @param returnType the return type of the controller method
      * @param converterType the selected converter type for the response
      * @return {@code true} if this advice should be applied, {@code false} otherwise
      */
     @Override
     public boolean supports(
-            @NotNull MethodParameter returnType, @NotNull Class<? extends HttpMessageConverter<?>> converterType) {
-        if (ResponseValidationAction.DISABLE == action) {
+            @NotNull MethodParameter returnType,
+            @NotNull Class<? extends HttpMessageConverter<?>> converterType) {
+        if (ResponseValidationAction.DISABLE == properties.getAction()) {
             return false;
         }
         // Check if method or class is annotated with @ValidateResponse
@@ -90,9 +72,9 @@ public class ResponseValidationAdvice implements ResponseBodyAdvice<Object> {
     }
 
     /**
-     * Validates response body using Jakarta Bean Validation and takes configured action.
-     * Logs validation time at DEBUG level for performance monitoring.
-     * 
+     * Validates response body using Jakarta Bean Validation and takes configured action. Logs
+     * validation time at DEBUG level for performance monitoring.
+     *
      * @param body the response body to validate (may be {@code null})
      * @param returnType the return type of the controller method
      * @param selectedContentType the content type selected for the response
@@ -100,7 +82,8 @@ public class ResponseValidationAdvice implements ResponseBodyAdvice<Object> {
      * @param request the current HTTP request
      * @param response the current HTTP response
      * @return the original response body (unchanged)
-     * @throws ResponseValidationException if validation fails and action is {@link ResponseValidationAction#THROW}
+     * @throws ResponseValidationException if validation fails and action is {@link
+     *     ResponseValidationAction#THROW}
      */
     @Override
     public Object beforeBodyWrite(
@@ -118,21 +101,21 @@ public class ResponseValidationAdvice implements ResponseBodyAdvice<Object> {
                         "validation took: {}ms", Duration.between(start, Instant.now()).toMillis());
             }
             if (!violations.isEmpty()) {
-                switch (action) {
-                    case LOG -> logger.atLevel(logLevel).log(
-                            "Response validation failed for {}: {}",
-                            body.getClass().getName(),
-                            violations);
+                switch (properties.getAction()) {
+                    case LOG ->
+                            logger.atLevel(properties.getLogLevel())
+                                    .log(
+                                            "Response validation failed for {}: {}",
+                                            body.getClass().getName(),
+                                            violations);
                     case THROW ->
                             throw new ResponseValidationException(violations, body.getClass());
                     case DISABLE -> {
                         // Do nothing, just skip validation
                     }
-
                 }
             }
         }
         return body;
     }
 }
-
