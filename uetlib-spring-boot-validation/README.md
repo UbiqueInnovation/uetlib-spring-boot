@@ -13,18 +13,6 @@ The `uetlib-spring-boot-validation` module enables automatic validation of HTTP 
 - **Performance Monitoring**: Logs validation execution time for performance monitoring
 - **Detailed Error Information**: Provides comprehensive error details when validation fails
 
-## Installation
-
-Add the dependency to your `pom.xml`:
-
-```xml
-<dependency>
-    <groupId>ch.ubique</groupId>
-    <artifactId>uetlib-spring-boot-validation</artifactId>
-    <version>${uetlib.version}</version>
-</dependency>
-```
-
 ## Usage
 
 ### Basic Usage
