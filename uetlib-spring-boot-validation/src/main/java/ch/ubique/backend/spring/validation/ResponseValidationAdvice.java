@@ -49,7 +49,7 @@ public class ResponseValidationAdvice implements ResponseBodyAdvice<Object> {
      * @param validator the Jakarta Bean Validation validator
      */
     public ResponseValidationAdvice(
-            final Validator validator, ResponseValidationProperties properties) {
+            final Validator validator, final ResponseValidationProperties properties) {
         this.validator = validator;
         this.properties = properties;
     }
@@ -64,18 +64,18 @@ public class ResponseValidationAdvice implements ResponseBodyAdvice<Object> {
      */
     @Override
     public boolean supports(
-            @NotNull MethodParameter returnType,
-            @NotNull Class<? extends HttpMessageConverter<?>> converterType) {
+            @NotNull final MethodParameter returnType,
+            @NotNull final Class<? extends HttpMessageConverter<?>> converterType) {
         if (ResponseValidationAction.DISABLE == properties.action()) {
             return false;
         }
-        // Check if method or class is annotated with @ValidateResponse
+        // Check if the method or class is annotated with @ValidateResponse
         return returnType.hasMethodAnnotation(ValidateResponse.class)
                 || returnType.getContainingClass().isAnnotationPresent(ValidateResponse.class);
     }
 
     /**
-     * Validates response body using Jakarta Bean Validation and takes configured action. Logs
+     * Validates the response body using Jakarta Bean Validation and takes configured action. Logs
      * validation time at DEBUG level for performance monitoring.
      *
      * @param body the response body to validate (may be {@code null})
@@ -90,12 +90,12 @@ public class ResponseValidationAdvice implements ResponseBodyAdvice<Object> {
      */
     @Override
     public Object beforeBodyWrite(
-            Object body,
-            @NotNull MethodParameter returnType,
-            @NotNull MediaType selectedContentType,
-            @NotNull Class<? extends HttpMessageConverter<?>> selectedConverterType,
-            @NotNull ServerHttpRequest request,
-            @NotNull ServerHttpResponse response) {
+            final Object body,
+            @NotNull final MethodParameter returnType,
+            @NotNull final MediaType selectedContentType,
+            @NotNull final Class<? extends HttpMessageConverter<?>> selectedConverterType,
+            @NotNull final ServerHttpRequest request,
+            @NotNull final ServerHttpResponse response) {
         if (body != null) {
             final var start = Instant.now();
             final var violations = validate(body);
