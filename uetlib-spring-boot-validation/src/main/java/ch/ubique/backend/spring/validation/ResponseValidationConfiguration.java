@@ -24,7 +24,7 @@ public class ResponseValidationConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public ResponseValidationAdvice responseValidationAdvice(
-            Validator validator, ResponseValidationProperties properties) {
+            final Validator validator, final ResponseValidationProperties properties) {
         return new ResponseValidationAdvice(validator, properties);
     }
 }
