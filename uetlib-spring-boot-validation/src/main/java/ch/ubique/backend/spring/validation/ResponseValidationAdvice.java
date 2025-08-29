@@ -66,7 +66,7 @@ public class ResponseValidationAdvice implements ResponseBodyAdvice<Object> {
     public boolean supports(
             @NotNull MethodParameter returnType,
             @NotNull Class<? extends HttpMessageConverter<?>> converterType) {
-        if (ResponseValidationAction.DISABLE == properties.getAction()) {
+        if (ResponseValidationAction.DISABLE == properties.action()) {
             return false;
         }
         // Check if method or class is annotated with @ValidateResponse
@@ -104,16 +104,16 @@ public class ResponseValidationAdvice implements ResponseBodyAdvice<Object> {
                         "validation took: {}ms", Duration.between(start, Instant.now()).toMillis());
             }
             if (!violations.isEmpty()) {
-                if (properties.getAction() == ResponseValidationAction.LOG
-                        || properties.getAction() == ResponseValidationAction.THROW) {
-                    logger.atLevel(properties.getLogLevel())
+                if (properties.action() == ResponseValidationAction.LOG
+                        || properties.action() == ResponseValidationAction.THROW) {
+                    logger.atLevel(properties.logLevel())
                             .log(
                                     "Response validation failed for {}: {}",
                                     body.getClass().getName(),
                                     violations);
                 }
 
-                if (properties.getAction() == ResponseValidationAction.THROW) {
+                if (properties.action() == ResponseValidationAction.THROW) {
                     throw new ResponseValidationException(violations, body.getClass());
                 }
 
@@ -127,16 +127,16 @@ public class ResponseValidationAdvice implements ResponseBodyAdvice<Object> {
         try {
             return validator.validate(body);
         } catch (final IllegalArgumentException | ValidationException exception) {
-            if (properties.getAction() == ResponseValidationAction.LOG
-                    || properties.getAction() == ResponseValidationAction.THROW) {
-                logger.atLevel(properties.getLogLevel())
+            if (properties.action() == ResponseValidationAction.LOG
+                    || properties.action() == ResponseValidationAction.THROW) {
+                logger.atLevel(properties.logLevel())
                         .log(
                                 "Response validation throws an exception for {}:",
                                 body.getClass().getName(),
                                 exception);
             }
 
-            if (properties.getAction() == ResponseValidationAction.THROW) {
+            if (properties.action() == ResponseValidationAction.THROW) {
                 throw exception;
             }
 
