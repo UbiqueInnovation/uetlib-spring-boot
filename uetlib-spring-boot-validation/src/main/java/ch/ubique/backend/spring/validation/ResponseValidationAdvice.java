@@ -101,19 +101,20 @@ public class ResponseValidationAdvice implements ResponseBodyAdvice<Object> {
                         "validation took: {}ms", Duration.between(start, Instant.now()).toMillis());
             }
             if (!violations.isEmpty()) {
-                switch (properties.getAction()) {
-                    case LOG ->
-                            logger.atLevel(properties.getLogLevel())
-                                    .log(
-                                            "Response validation failed for {}: {}",
-                                            body.getClass().getName(),
-                                            violations);
-                    case THROW ->
-                            throw new ResponseValidationException(violations, body.getClass());
-                    case DISABLE -> {
-                        // Do nothing, just skip validation
-                    }
+                if (properties.getAction() == ResponseValidationAction.LOG
+                        || properties.getAction() == ResponseValidationAction.THROW) {
+                    logger.atLevel(properties.getLogLevel())
+                            .log(
+                                    "Response validation failed for {}: {}",
+                                    body.getClass().getName(),
+                                    violations);
                 }
+
+                if (properties.getAction() == ResponseValidationAction.THROW) {
+                    throw new ResponseValidationException(violations, body.getClass());
+                }
+
+                // In case of DISABLE, do nothing, just skip validation
             }
         }
         return body;
