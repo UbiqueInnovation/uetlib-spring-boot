@@ -1,5 +1,7 @@
 package ch.ubique.backend.spring.validation;
 
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ValidationException;
 import jakarta.validation.Validator;
 
 import org.jetbrains.annotations.NotNull;
@@ -15,6 +17,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Set;
 
 /**
  * Automatically validates HTTP response objects using Jakarta Bean Validation.
@@ -95,7 +98,7 @@ public class ResponseValidationAdvice implements ResponseBodyAdvice<Object> {
             @NotNull ServerHttpResponse response) {
         if (body != null) {
             final var start = Instant.now();
-            final var violations = validator.validate(body);
+            final var violations = validate(body);
             if (logger.isDebugEnabled()) {
                 logger.debug(
                         "validation took: {}ms", Duration.between(start, Instant.now()).toMillis());
@@ -118,5 +121,28 @@ public class ResponseValidationAdvice implements ResponseBodyAdvice<Object> {
             }
         }
         return body;
+    }
+
+    private Set<ConstraintViolation<Object>> validate(final Object body) {
+        try {
+            return validator.validate(body);
+        } catch (final IllegalArgumentException | ValidationException exception) {
+            if (properties.getAction() == ResponseValidationAction.LOG
+                    || properties.getAction() == ResponseValidationAction.THROW) {
+                logger.atLevel(properties.getLogLevel())
+                        .log(
+                                "Response validation throws an exception for {}:",
+                                body.getClass().getName(),
+                                exception);
+            }
+
+            if (properties.getAction() == ResponseValidationAction.THROW) {
+                throw exception;
+            }
+
+            // In case of DISABLE, do nothing, just ignore the error
+
+            return Set.of();
+        }
     }
 }
