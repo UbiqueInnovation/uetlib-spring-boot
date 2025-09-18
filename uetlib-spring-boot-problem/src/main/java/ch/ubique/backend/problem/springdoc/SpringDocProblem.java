@@ -1,5 +1,6 @@
 package ch.ubique.backend.problem.springdoc;
 
+import ch.ubique.backend.problem.UbiqueThrowableProblem;
 import ch.ubique.backend.problem.errortype.ProblemErrorType;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -7,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 
+import org.zalando.problem.AbstractThrowableProblem;
 import org.zalando.problem.Problem;
 
 /**
@@ -15,7 +17,10 @@ import org.zalando.problem.Problem;
  * @param <E>
  */
 @SuppressWarnings("unused")
-public interface SpringDocProblem<E extends Enum<E> & ProblemErrorType> extends Problem {
+public interface SpringDocProblem<
+                E extends Enum<E> & ProblemErrorType,
+                P extends AbstractThrowableProblem & UbiqueThrowableProblem<E>>
+        extends Problem {
 
     @Nullable
     @JsonProperty
