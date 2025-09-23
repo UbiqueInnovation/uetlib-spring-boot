@@ -5,6 +5,8 @@ import ch.ubique.backend.problem.errortype.ProblemErrorType;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 
@@ -31,10 +33,11 @@ public interface SpringDocProblem<
     Integer errorCode();
 
     /**
-     * This is just for Springdoc to show a required `int` for `status` instead of the `StatusType`
-     * model
+     * This is just for Springdoc to show a required `int` for `status` instead of the optional
+     * `StatusType` model
      */
     @NotNull
     @JsonProperty
+    @Schema(example = "400")
     int status();
 }
