@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @EnableConfigurationProperties(ResponseValidationProperties.class)
-public class ResponseValidationConfiguration {
+public class ResponseValidationAutoConfiguration {
 
     /**
      * Defines the ResponseValidationAdvice bean if not already present.
