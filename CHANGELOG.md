@@ -5,7 +5,7 @@
 ### New Features
 
 - Add new `MoreJwtValidators` with `MoreJwtValidators#issuerAndAudienceValidatingJwtDecoder(String, List<String>)` that
-  validates the issuer and allowerd audienced of a JWT.
+  validates the issuer and allowed audiences of a JWT.
 
 ## 1.4.5
 
