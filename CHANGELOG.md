@@ -1,8 +1,18 @@
 # CHANGELOG
 
+## 1.4.8
+
+### New Features
+
+#### uetlib-spring-boot-security
+
+- add `ResourceIndicatorClientCredentialsRequestConverter` for RFC-8707 support
+
 ## 1.4.7
 
 ### New Features
+
+#### uetlib-spring-boot-security
 
 - Add new `MoreJwtValidators` with `MoreJwtValidators#issuerAndAudienceValidatingJwtDecoder(String, List<String>)` that
   validates the issuer and allowed audiences of a JWT.
@@ -11,17 +21,23 @@
 
 ### New Features
 
+#### uetlib-spring-boot
+
 - Moved `VersionToStringConverter` and `StringToVersionConverter` from `infobox-model` to `uetlib-spring-boot`.
 
 ## 1.4.4
 
 ### Improvements
 
+#### uetlib-spring-boot-validation
+
 - Add missing `Autoconfiguration.imports` file in `META-INF` for the auto configuration to actually work.
 
 ## 1.4.0
 
 ### New Features
+
+#### uetlib-spring-boot-validation
 
 - New `uetlib-spring-boot-validation` module for automatic response validation using Jakarta Bean Validation
     - Provides `@ValidateResponse` annotation to enable validation on controller methods or classes
