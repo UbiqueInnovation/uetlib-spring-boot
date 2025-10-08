@@ -1,6 +1,6 @@
 package ch.ubique.backend.security.oauth2;
 
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 import jakarta.annotation.Nullable;
 
@@ -36,7 +36,7 @@ public class ResourceIndicatorClientCredentialsRequestConverter
             final OAuth2ClientCredentialsGrantRequest tokenRequest) {
         final var registrationId = tokenRequest.getClientRegistration().getRegistrationId();
         final var resource = clientResource.get(registrationId);
-        if (!isNotBlank(resource)) {
+        if (isBlank(resource)) {
             return null;
         }
 
