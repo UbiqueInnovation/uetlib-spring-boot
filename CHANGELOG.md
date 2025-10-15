@@ -1,5 +1,11 @@
 # CHANGELOG
 
+# 1.4.9
+
+## Improvements
+
+- Use timing-attack-proof api key comparison for `ApiKeyAuthenticationFilter`
+
 ## 1.4.8
 
 ### New Features
