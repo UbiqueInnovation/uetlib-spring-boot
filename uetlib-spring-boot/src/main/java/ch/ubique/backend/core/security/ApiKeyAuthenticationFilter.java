@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.security.MessageDigest;
 import java.text.MessageFormat;
 
 /**
@@ -32,7 +33,7 @@ public class ApiKeyAuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         final var requestApiKey = request.getHeader("X-API-KEY");
-        if (appApiKey.equals(requestApiKey)) {
+        if (MessageDigest.isEqual(appApiKey.getBytes(), requestApiKey.getBytes())) {
             logger.debug(
                     MessageFormat.format(
                             "Authorized for servletPath: {0}", request.getServletPath()));
