@@ -1,19 +1,14 @@
 package ch.ubique.backend.core.http.header;
 
-import static ch.ubique.backend.core.utils.TimeUtils.TIME_UTILS_GMT;
-import static ch.ubique.backend.core.utils.TimeUtils.ZONE_ID_GMT;
+import ch.ubique.backend.core.utils.HttpHeaderUtils;
 
-import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.time.Duration;
-import java.time.Instant;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.Temporal;
-import java.util.Locale;
 
 /** Helper class to generate {@link ResponseEntity} responses and/or request header. */
 public final class HeaderUtility {
@@ -21,10 +16,6 @@ public final class HeaderUtility {
     public static final String NEXT_REFRESH = "X-Next-Refresh";
 
     public static final String CONTENT_RANGE = "Content-Range";
-
-    private static final DateTimeFormatter HTTP_HEADER_DATE_FORMATTER =
-            DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss z", Locale.US)
-                    .withZone(ZONE_ID_GMT);
 
     private HeaderUtility() {}
 
@@ -81,38 +72,32 @@ public final class HeaderUtility {
                 .build();
     }
 
-    /** return the header value for X-Next-Refresh (package-private to enable tests) */
+    /**
+     * @deprecated since 1.5, will be removed in 2.0. Use {@link
+     *     HttpHeaderUtils#createNextRefreshHeaderValue(Duration)} in uetlib-core >= 1.3.3
+     */
+    @Deprecated(since = "1.5", forRemoval = true)
     public static String createNextRefreshHeaderValue(final Duration nextRefresh) {
-        return formatHttpHeaderDate(TIME_UTILS_GMT.now().plus(nextRefresh));
+        return HttpHeaderUtils.createNextRefreshHeaderValue(nextRefresh);
     }
 
     /**
-     * return the given date format for HTTP headers
-     *
-     * @param temporal date to format
-     * @return formatted date
+     * @deprecated since 1.5, will be removed in 2.0. Use {@link
+     *     HttpHeaderUtils#formatHttpHeaderDate(Temporal)} in uetlib-core >= 1.3.3
      */
+    @Deprecated(since = "1.5", forRemoval = true)
     public static String formatHttpHeaderDate(final Temporal temporal) {
-        return HTTP_HEADER_DATE_FORMATTER.format(
-                temporal instanceof final Instant instant ? instant.atZone(ZONE_ID_GMT) : temporal);
+        return HttpHeaderUtils.formatHttpHeaderDate(temporal);
     }
 
     /**
-     * Parse Retry-After HTTP Header which can either be a date in format of {@link
-     * #HTTP_HEADER_DATE_FORMATTER} or a deltaSeconds offset from now
-     *
-     * @param dateOrOffsetHeaderValue date to parse as date or seconds offset from now
-     * @param offsetStart offset start to add offset seconds in the case of the header representing
-     *     a seconds offset
-     * @return parse date
+     * @deprecated since 1.5, will be removed in 2.0. Use {@link
+     *     HttpHeaderUtils#parseHttpDateOrOffsetHeader(String, ZonedDateTime)} in uetlib-core >=
+     *     1.3.3
      */
+    @Deprecated(since = "1.5", forRemoval = true)
     public static ZonedDateTime parseHttpDateOrOffsetHeader(
             final String dateOrOffsetHeaderValue, final ZonedDateTime offsetStart) {
-        if (NumberUtils.isParsable(dateOrOffsetHeaderValue)) {
-            final var deltaSeconds = Long.parseLong(dateOrOffsetHeaderValue);
-            return offsetStart.plusSeconds(deltaSeconds);
-        }
-        return ZonedDateTime.parse(dateOrOffsetHeaderValue, HTTP_HEADER_DATE_FORMATTER)
-                .withZoneSameInstant(ZONE_ID_GMT);
+        return HttpHeaderUtils.parseHttpDateOrOffsetHeader(dateOrOffsetHeaderValue, offsetStart);
     }
 }
