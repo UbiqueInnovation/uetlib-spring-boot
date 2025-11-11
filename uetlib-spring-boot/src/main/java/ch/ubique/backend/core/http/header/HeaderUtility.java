@@ -1,7 +1,7 @@
 package ch.ubique.backend.core.http.header;
 
-import static ch.ubique.backend.core.utils.TimeUtils.TIME_UTILS_UTC;
-import static ch.ubique.backend.core.utils.TimeUtils.ZONE_ID_UTC;
+import static ch.ubique.backend.core.utils.TimeUtils.TIME_UTILS_GMT;
+import static ch.ubique.backend.core.utils.TimeUtils.ZONE_ID_GMT;
 
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.http.CacheControl;
@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.Temporal;
@@ -25,7 +24,7 @@ public final class HeaderUtility {
 
     private static final DateTimeFormatter HTTP_HEADER_DATE_FORMATTER =
             DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss z", Locale.US)
-                    .withZone(ZoneId.of("GMT"));
+                    .withZone(ZONE_ID_GMT);
 
     private HeaderUtility() {}
 
@@ -84,7 +83,7 @@ public final class HeaderUtility {
 
     /** return the header value for X-Next-Refresh (package-private to enable tests) */
     public static String createNextRefreshHeaderValue(final Duration nextRefresh) {
-        return formatHttpHeaderDate(TIME_UTILS_UTC.now().plus(nextRefresh));
+        return formatHttpHeaderDate(TIME_UTILS_GMT.now().plus(nextRefresh));
     }
 
     /**
@@ -95,7 +94,7 @@ public final class HeaderUtility {
      */
     public static String formatHttpHeaderDate(final Temporal temporal) {
         return HTTP_HEADER_DATE_FORMATTER.format(
-                temporal instanceof final Instant instant ? instant.atZone(ZONE_ID_UTC) : temporal);
+                temporal instanceof final Instant instant ? instant.atZone(ZONE_ID_GMT) : temporal);
     }
 
     /**
@@ -114,6 +113,6 @@ public final class HeaderUtility {
             return offsetStart.plusSeconds(deltaSeconds);
         }
         return ZonedDateTime.parse(dateOrOffsetHeaderValue, HTTP_HEADER_DATE_FORMATTER)
-                .withZoneSameInstant(ZONE_ID_UTC);
+                .withZoneSameInstant(ZONE_ID_GMT);
     }
 }
