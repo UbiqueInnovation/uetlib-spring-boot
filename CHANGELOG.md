@@ -1,11 +1,12 @@
 # CHANGELOG
 
-# 1.5.0
+# 1.5.1
 
 ## Improvements
 
-- New `SpringDocRfc9457Problem` with optional type RFC-9457.
-- Keep `type` as optional in `SpringDocProblem` as the Ubique-specific extension of RFC-9457.
+- Make `type` and `status` optional in `SpringDocProblem` in accordance with RFC-9457.
+- Explicitly set `type`/`status`/`errorCode`/`errorType` as required in `UbiqueThrowableProblem`, as our explicit
+  problems will always have these set.
 
 # 1.4.11
 
