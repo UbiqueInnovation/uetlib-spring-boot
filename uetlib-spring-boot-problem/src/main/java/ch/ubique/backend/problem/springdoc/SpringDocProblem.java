@@ -11,13 +11,17 @@ import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 
 import org.zalando.problem.AbstractThrowableProblem;
-import org.zalando.problem.Problem;
 
 import java.net.URI;
 
 /**
- * This interface only exists for springdoc documentation purposes, do not use it in actual code
+ * This interface only exists for springdoc documentation purposes, do not use it in actual code.
  *
+ * <p>This extends the specification for RFC-9457 problem details with ubique-specific extensions:
+ * `errorType` and `errorCode`
+ *
+ * @see SpringDocRfc9457Problem
+ * @see <a href="https://datatracker.ietf.org/doc/html/rfc9457">RFC-9457</a>
  * @param <E>
  */
 @Schema(
@@ -25,12 +29,12 @@ import java.net.URI;
                 """
                         Base documentation interface for all Ubique problems.
                         Each (`errorCode`) has to represent an application-wide 1:1 mapping to (`type`, `errorType`).
-                        Meaning, `errorCode` is unique application-wide, but `errorType` will only be unique for this `type`/problem""")
+                        Meaning, `errorCode` is unique application-wide, but `errorType` will only be unique for this problem `type`""")
 @SuppressWarnings("unused")
 public interface SpringDocProblem<
                 E extends Enum<E> & ProblemErrorType,
                 P extends AbstractThrowableProblem & UbiqueThrowableProblem<E>>
-        extends Problem {
+        extends SpringDocRfc9457Problem {
 
     @NotNull
     @JsonProperty(required = true)
@@ -49,13 +53,4 @@ public interface SpringDocProblem<
             description =
                     "Corresponds 1:1 to an equivalent errorType for this specific Problem. Non-null iff errorType is set")
     Integer errorCode();
-
-    /**
-     * This is just for Springdoc to show a required `int` for `status` instead of the optional
-     * `StatusType` model
-     */
-    @NotNull
-    @JsonProperty(required = true)
-    @Schema(example = "400")
-    int status();
 }

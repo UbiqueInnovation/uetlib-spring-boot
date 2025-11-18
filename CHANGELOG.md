@@ -1,5 +1,12 @@
 # CHANGELOG
 
+# 1.5.0
+
+## Improvements
+
+- New `SpringDocRfc9457Problem` with optional type RFC-9457.
+- Keep `type` as optional in `SpringDocProblem` as the Ubique-specific extension of RFC-9457.
+
 # 1.4.11
 
 ## Improvements
