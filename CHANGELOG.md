@@ -1,5 +1,12 @@
 # CHANGELOG
 
+# 1.4.11
+
+## Improvements
+
+- Fix `GMT` usage in header date formatter string in `HeaderUtility`
+- Deprecate methods in `HeaderUtility` in favour of `HttpHeaderUtils` in `uetlib-core`
+
 # 1.4.9
 
 ## Improvements
