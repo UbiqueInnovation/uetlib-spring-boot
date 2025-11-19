@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotNull;
 
 import org.zalando.problem.Problem;
+import org.zalando.problem.StatusType;
 
 import java.net.URI;
 
@@ -19,10 +20,15 @@ public interface UbiqueThrowableProblem<E extends ProblemErrorType> extends Prob
 
     @NotNull
     @JsonProperty(required = true)
-    URI type();
+    default URI type() {
+        return getType();
+    }
 
+    @NotNull
     @JsonProperty(required = true)
-    int status();
+    default StatusType status() {
+        return getStatus();
+    }
 
     @JsonProperty(required = true)
     @NotNull
