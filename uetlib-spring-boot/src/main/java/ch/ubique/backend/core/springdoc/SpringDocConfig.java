@@ -83,7 +83,9 @@ public final class SpringDocConfig {
                                                         entry(
                                                                 "en",
                                                                 "en value of the correct type"
-                                                                        + " (string/int/object/etc.)"))))
+                                                                        + " (string/int/object/etc.)")))
+                                        .$comment(
+                                                "UB LocalizedValue: Can only be null or non-empty (check the actual type usage), but never empty!"))
                         .replaceWithSchema(
                                 Version.class,
                                 new StringSchema()
