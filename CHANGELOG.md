@@ -1,5 +1,23 @@
 # CHANGELOG
 
+# 1.5.2
+
+## Improvements
+
+- Add new `SpringDocRfc9457Problem` with all fields marked as optional and without `errorType` and `errorCode`.
+- Mark `type`, `status`, `title`, `detail`, `errorType` and `errorCode` as required in `SpringDocProblem` and make it
+  extend `SpringDocRfc9457Problem`.
+
+## Breaking Changes
+
+- Necessary changes to the SpringDocConfig:
+  ```diff
+    SpringDocConfig.setDefaultConfigWith(
+                  customizer ->
+  -                       customizer.replaceWithClass(Problem.class, SpringDocProblem.class));
+  +                       customizer.replaceWithClass(Problem.class, SpringDocRfc9457Problem.class));
+  ```
+
 # 1.5.1
 
 ## Improvements
