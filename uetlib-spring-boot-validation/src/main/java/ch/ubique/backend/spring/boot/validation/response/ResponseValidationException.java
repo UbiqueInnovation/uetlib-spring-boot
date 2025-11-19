@@ -1,4 +1,4 @@
-package ch.ubique.backend.spring.validation;
+package ch.ubique.backend.spring.boot.validation.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 

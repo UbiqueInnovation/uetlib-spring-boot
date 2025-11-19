@@ -1,4 +1,4 @@
-package ch.ubique.backend.spring.validation;
+package ch.ubique.backend.spring.boot.validation.response;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ValidationException;

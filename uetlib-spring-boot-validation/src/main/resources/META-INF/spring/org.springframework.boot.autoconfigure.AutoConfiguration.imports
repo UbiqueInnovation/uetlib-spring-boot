@@ -1,1 +1,1 @@
-ch.ubique.backend.spring.validation.ResponseValidationAutoConfiguration
+ch.ubique.backend.spring.boot.validation.response.UetlibSpringBootValidationResponseValidationAutoConfiguration
