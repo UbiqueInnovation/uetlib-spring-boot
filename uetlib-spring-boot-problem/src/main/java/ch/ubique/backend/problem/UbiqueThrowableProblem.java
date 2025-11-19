@@ -30,6 +30,18 @@ public interface UbiqueThrowableProblem<E extends ProblemErrorType> extends Prob
         return getStatus();
     }
 
+    @NotNull
+    @JsonProperty(required = true)
+    default String title() {
+        return getTitle();
+    }
+
+    @NotNull
+    @JsonProperty(required = true)
+    default String detail() {
+        return getDetail();
+    }
+
     @JsonProperty(required = true)
     @NotNull
     E errorType();
