@@ -1,4 +1,4 @@
-package ch.ubique.backend.spring.validation.response;
+package ch.ubique.backend.spring.validation;
 
 import jakarta.validation.Validator;
 
