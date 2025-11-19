@@ -1,4 +1,4 @@
-package ch.ubique.backend.spring.boot.validation.response;
+package ch.ubique.backend.spring.validation.response;
 
 /**
  * Actions to take when response validation fails.

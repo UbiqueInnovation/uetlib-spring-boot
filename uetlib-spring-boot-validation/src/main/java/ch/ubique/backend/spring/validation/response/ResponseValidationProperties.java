@@ -1,4 +1,4 @@
-package ch.ubique.backend.spring.boot.validation.response;
+package ch.ubique.backend.spring.validation.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
