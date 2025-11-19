@@ -1,6 +1,30 @@
 # CHANGELOG
 
-# 1.5.2
+# 1.6.0
+
+## Improvements
+
+- Add auto-configuration to `uetlib-spring-boot` for springdoc default config.
+- Add auto-configuration to `uetlib-spring-boot-problem` for springdoc default config for problem related types.
+
+## Breaking Changes
+
+- Remove spring doc config in project base config. This is now both configured via the new auto configurations in
+  `uetlib-spring-boot` and `uetlib-spring-boot-problem`:
+  ```diff
+  - static {
+  -       SpringDocConfig.setDefaultConfig();
+  - }
+  ```
+  or
+  ```diff
+  - static {
+  -       SpringDocConfig.setDefaultConfigWith(
+  -               customizer -> customizer.replaceWithClass(Problem.class, SpringDocProblem.class));
+  - }
+  ```
+
+# 1.5.3
 
 ## Improvements
 
