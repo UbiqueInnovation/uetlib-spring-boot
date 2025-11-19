@@ -1,4 +1,4 @@
-package ch.ubique.backend.spring.validation;
+package ch.ubique.backend.spring.boot.validation.response;
 
 import jakarta.validation.Validator;
 
@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @EnableConfigurationProperties(ResponseValidationProperties.class)
-public class ResponseValidationAutoConfiguration {
+public class UetlibSpringBootValidationResponseValidationAutoConfiguration {
 
     /**
      * Defines the ResponseValidationAdvice bean if not already present.
