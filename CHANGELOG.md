@@ -1,5 +1,11 @@
 # CHANGELOG
 
+# 1.6.3
+
+## Improvements
+
+- Add optional backoff header option to `HeaderUtility` methods in `uetlib-spring-boot`.
+
 # 1.6.0
 
 ## Improvements
