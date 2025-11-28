@@ -5,6 +5,8 @@ import ch.ubique.backend.core.utils.HttpHeaderUtils;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.ResponseEntity.BodyBuilder;
+import org.springframework.http.ResponseEntity.HeadersBuilder;
 
 import java.time.Duration;
 import java.time.ZonedDateTime;
@@ -14,6 +16,7 @@ import java.time.temporal.Temporal;
 public final class HeaderUtility {
 
     public static final String NEXT_REFRESH = "X-Next-Refresh";
+    public static final String BACKOFF = "X-Backoff";
 
     public static final String CONTENT_RANGE = "Content-Range";
 
@@ -28,10 +31,29 @@ public final class HeaderUtility {
      */
     public static <T> ResponseEntity<T> createOKResponseEntity(
             final T body, final Duration nextRefresh, final Duration maxAge) {
-        return ResponseEntity.ok()
-                .cacheControl(CacheControl.maxAge(maxAge))
-                .header(NEXT_REFRESH, createNextRefreshHeaderValue(nextRefresh))
-                .body(body);
+        return createOKResponseEntity(body, nextRefresh, maxAge, null);
+    }
+
+    /**
+     * Creates a {@link ResponseEntity<T>} with the given body, HTTP-Status 200, and the max age,
+     * next refresh and backoff headers.
+     *
+     * @param body {@link T} The body of the response
+     * @return {@link ResponseEntity<T>} with the given body, headers and status OK
+     */
+    public static <T> ResponseEntity<T> createOKResponseEntity(
+            final T body,
+            final Duration nextRefresh,
+            final Duration maxAge,
+            final Duration backoff) {
+        final BodyBuilder builder =
+                ResponseEntity.ok()
+                        .cacheControl(CacheControl.maxAge(maxAge))
+                        .header(NEXT_REFRESH, createNextRefreshHeaderValue(nextRefresh));
+        if (backoff != null) {
+            builder.header(BACKOFF, String.valueOf(backoff.getSeconds()));
+        }
+        return builder.body(body);
     }
 
     /**
@@ -53,10 +75,24 @@ public final class HeaderUtility {
      */
     public static <T> ResponseEntity<T> createNoContentResponseEntity(
             final Duration nextRefresh, final Duration maxAge) {
-        return ResponseEntity.noContent()
-                .cacheControl(CacheControl.maxAge(maxAge))
-                .header(NEXT_REFRESH, createNextRefreshHeaderValue(nextRefresh))
-                .build();
+        return createNoContentResponseEntity(nextRefresh, maxAge, null);
+    }
+
+    /**
+     * Returns an empty {@link ResponseEntity<T>} with HTTP-Status 204
+     *
+     * @return {@link ResponseEntity<T>} with the given headers and status NO_CONTENT
+     */
+    public static <T> ResponseEntity<T> createNoContentResponseEntity(
+            final Duration nextRefresh, final Duration maxAge, final Duration backoff) {
+        final HeadersBuilder<?> builder =
+                ResponseEntity.noContent()
+                        .cacheControl(CacheControl.maxAge(maxAge))
+                        .header(NEXT_REFRESH, createNextRefreshHeaderValue(nextRefresh));
+        if (backoff != null) {
+            builder.header(BACKOFF, String.valueOf(backoff.getSeconds()));
+        }
+        return builder.build();
     }
 
     /**
@@ -66,10 +102,24 @@ public final class HeaderUtility {
      */
     public static <T> ResponseEntity<T> createNotModifiedResponseEntity(
             final Duration nextRefresh, final Duration maxAge) {
-        return ResponseEntity.status(HttpStatus.NOT_MODIFIED)
-                .header(NEXT_REFRESH, createNextRefreshHeaderValue(nextRefresh))
-                .cacheControl(CacheControl.maxAge(maxAge))
-                .build();
+        return createNotModifiedResponseEntity(nextRefresh, maxAge, null);
+    }
+
+    /**
+     * Returns an empty {@link ResponseEntity<T>} with HTTP-Status 304
+     *
+     * @return {@link ResponseEntity<T>} with the given headers and status NOT_MODIFIED
+     */
+    public static <T> ResponseEntity<T> createNotModifiedResponseEntity(
+            final Duration nextRefresh, final Duration maxAge, final Duration backoff) {
+        final BodyBuilder builder =
+                ResponseEntity.status(HttpStatus.NOT_MODIFIED)
+                        .header(NEXT_REFRESH, createNextRefreshHeaderValue(nextRefresh))
+                        .cacheControl(CacheControl.maxAge(maxAge));
+        if (backoff != null) {
+            builder.header(BACKOFF, String.valueOf(backoff.getSeconds()));
+        }
+        return builder.build();
     }
 
     /**
