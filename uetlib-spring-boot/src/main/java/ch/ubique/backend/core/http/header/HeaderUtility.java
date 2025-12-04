@@ -1,16 +1,12 @@
 package ch.ubique.backend.core.http.header;
 
-import ch.ubique.backend.core.utils.HttpHeaderUtils;
+import static ch.ubique.backend.core.utils.HttpHeaderUtils.createNextRefreshHeaderValue;
 
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.ResponseEntity.BodyBuilder;
-import org.springframework.http.ResponseEntity.HeadersBuilder;
 
 import java.time.Duration;
-import java.time.ZonedDateTime;
-import java.time.temporal.Temporal;
 
 /** Helper class to generate {@link ResponseEntity} responses and/or request header. */
 public final class HeaderUtility {
@@ -46,7 +42,7 @@ public final class HeaderUtility {
             final Duration nextRefresh,
             final Duration maxAge,
             final Duration backoff) {
-        final BodyBuilder builder =
+        final var builder =
                 ResponseEntity.ok()
                         .cacheControl(CacheControl.maxAge(maxAge))
                         .header(NEXT_REFRESH, createNextRefreshHeaderValue(nextRefresh));
@@ -85,7 +81,7 @@ public final class HeaderUtility {
      */
     public static <T> ResponseEntity<T> createNoContentResponseEntity(
             final Duration nextRefresh, final Duration maxAge, final Duration backoff) {
-        final HeadersBuilder<?> builder =
+        final var builder =
                 ResponseEntity.noContent()
                         .cacheControl(CacheControl.maxAge(maxAge))
                         .header(NEXT_REFRESH, createNextRefreshHeaderValue(nextRefresh));
@@ -112,7 +108,7 @@ public final class HeaderUtility {
      */
     public static <T> ResponseEntity<T> createNotModifiedResponseEntity(
             final Duration nextRefresh, final Duration maxAge, final Duration backoff) {
-        final BodyBuilder builder =
+        final var builder =
                 ResponseEntity.status(HttpStatus.NOT_MODIFIED)
                         .header(NEXT_REFRESH, createNextRefreshHeaderValue(nextRefresh))
                         .cacheControl(CacheControl.maxAge(maxAge));
@@ -120,34 +116,5 @@ public final class HeaderUtility {
             builder.header(BACKOFF, String.valueOf(backoff.getSeconds()));
         }
         return builder.build();
-    }
-
-    /**
-     * @deprecated since 1.5, will be removed in 2.0. Use {@link
-     *     HttpHeaderUtils#createNextRefreshHeaderValue(Duration)} in uetlib-core >= 1.3.3
-     */
-    @Deprecated(since = "1.5", forRemoval = true)
-    public static String createNextRefreshHeaderValue(final Duration nextRefresh) {
-        return HttpHeaderUtils.createNextRefreshHeaderValue(nextRefresh);
-    }
-
-    /**
-     * @deprecated since 1.5, will be removed in 2.0. Use {@link
-     *     HttpHeaderUtils#formatHttpHeaderDate(Temporal)} in uetlib-core >= 1.3.3
-     */
-    @Deprecated(since = "1.5", forRemoval = true)
-    public static String formatHttpHeaderDate(final Temporal temporal) {
-        return HttpHeaderUtils.formatHttpHeaderDate(temporal);
-    }
-
-    /**
-     * @deprecated since 1.5, will be removed in 2.0. Use {@link
-     *     HttpHeaderUtils#parseHttpDateOrOffsetHeader(String, ZonedDateTime)} in uetlib-core >=
-     *     1.3.3
-     */
-    @Deprecated(since = "1.5", forRemoval = true)
-    public static ZonedDateTime parseHttpDateOrOffsetHeader(
-            final String dateOrOffsetHeaderValue, final ZonedDateTime offsetStart) {
-        return HttpHeaderUtils.parseHttpDateOrOffsetHeader(dateOrOffsetHeaderValue, offsetStart);
     }
 }
