@@ -96,30 +96,36 @@ public class ResponseValidationAdvice implements ResponseBodyAdvice<Object> {
             @NotNull final Class<? extends HttpMessageConverter<?>> selectedConverterType,
             @NotNull final ServerHttpRequest request,
             @NotNull final ServerHttpResponse response) {
-        if (body != null) {
-            final var start = Instant.now();
-            final var violations = validate(body);
-            if (logger.isDebugEnabled()) {
-                logger.debug(
-                        "validation took: {}ms", Duration.between(start, Instant.now()).toMillis());
-            }
-            if (!violations.isEmpty()) {
-                if (properties.action() == ResponseValidationAction.LOG
-                        || properties.action() == ResponseValidationAction.THROW) {
-                    logger.atLevel(properties.logLevel())
-                            .log(
-                                    "Response validation failed for {}: {}",
-                                    body.getClass().getName(),
-                                    violations);
-                }
-
-                if (properties.action() == ResponseValidationAction.THROW) {
-                    throw new ResponseValidationException(violations, body.getClass());
-                }
-
-                // In case of DISABLE, do nothing, just skip validation
-            }
+        if (body == null) {
+            return null;
         }
+
+        final var start = Instant.now();
+        final var violations = validate(body);
+        if (logger.isDebugEnabled()) {
+            logger.debug(
+                    "validation took: {}ms", Duration.between(start, Instant.now()).toMillis());
+        }
+
+        if (violations.isEmpty()) {
+            return body;
+        }
+
+        if (properties.action() == ResponseValidationAction.LOG
+                || properties.action() == ResponseValidationAction.THROW) {
+            logger.atLevel(properties.logLevel())
+                    .log(
+                            "Response validation failed on {}. Body: {}. Violations: {}",
+                            body.getClass().getName(),
+                            body,
+                            violations);
+        }
+
+        if (properties.action() == ResponseValidationAction.THROW) {
+            throw new ResponseValidationException(violations, body.getClass());
+        }
+
+        // In case of DISABLE, do nothing, just skip validation
         return body;
     }
 
@@ -131,8 +137,9 @@ public class ResponseValidationAdvice implements ResponseBodyAdvice<Object> {
                     || properties.action() == ResponseValidationAction.THROW) {
                 logger.atLevel(properties.logLevel())
                         .log(
-                                "Response validation throws an exception for {}:",
+                                "Response validation throws an exception on {}. Body {}. Exception:",
                                 body.getClass().getName(),
+                                body,
                                 exception);
             }
 
