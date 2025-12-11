@@ -1,8 +1,7 @@
-package ch.ubique.backend.core.spring;
+package ch.ubique.backend.core.spring.http;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import ch.ubique.backend.core.spring.http.RestClientUtils;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
