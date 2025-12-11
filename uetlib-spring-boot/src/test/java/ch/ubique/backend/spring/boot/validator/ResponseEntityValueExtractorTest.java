@@ -1,4 +1,4 @@
-package ch.ubique.backend.core.spring.boot.validator;
+package ch.ubique.backend.spring.boot.validator;
 
 import static org.junit.jupiter.api.Assertions.*;
 
