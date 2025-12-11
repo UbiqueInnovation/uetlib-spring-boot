@@ -1,4 +1,4 @@
-package ch.ubique.backend.spring.boot.validation;
+package ch.ubique.backend.spring.boot.validator;
 
 import jakarta.validation.valueextraction.ExtractedValue;
 import jakarta.validation.valueextraction.ValueExtractor;
