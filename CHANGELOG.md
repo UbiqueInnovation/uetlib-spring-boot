@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 1.7.1
+
+### Bugfixes
+
+- Fix an NPE in the auto-configured springdoc open api customizer
+
 ## 1.7.0
 
 ### Improvements
