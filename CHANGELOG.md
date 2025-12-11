@@ -4,7 +4,7 @@
 
 ### Bugfixes
 
-- Fix an NPE in the auto-configured springdoc open api customizer
+- Fix an NPE in the autoconfigured springdoc open api customizer
 
 ## 1.7.0
 
@@ -17,14 +17,14 @@
 
 ### Improvements
 
-- Add optional backoff header option to `HeaderUtility` methods in `uetlib-spring-boot`.
+- Add an optional backoff header option to `HeaderUtility` methods in `uetlib-spring-boot`.
 
 ## 1.6.0
 
 ### Improvements
 
-- Add auto-configuration to `uetlib-spring-boot` for springdoc default config.
-- Add auto-configuration to `uetlib-spring-boot-problem` for springdoc default config for problem related types.
+- Add autoconfiguration to `uetlib-spring-boot` for springdoc default config.
+- Add autoconfiguration to `uetlib-spring-boot-problem` for springdoc default config for problem related types.
 
 ### Breaking Changes
 
