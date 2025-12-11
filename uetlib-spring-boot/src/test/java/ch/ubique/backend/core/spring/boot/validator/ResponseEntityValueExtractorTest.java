@@ -1,8 +1,8 @@
-package ch.ubique.backend.core.spring.boot.validation;
+package ch.ubique.backend.core.spring.boot.validator;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import ch.ubique.backend.spring.boot.validation.ResponseEntityValueExtractor;
+import ch.ubique.backend.spring.boot.validator.ResponseEntityValueExtractor;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Valid;

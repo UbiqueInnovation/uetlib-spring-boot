@@ -1,1 +1,1 @@
-ch.ubique.backend.spring.boot.validation.ResponseEntityValueExtractor
+ch.ubique.backend.spring.boot.validator.ResponseEntityValueExtractor
