@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 1.7.0
+
+### Improvements
+
+- New auto-registered validation for `ResponseEntity<Body>`, so we can do validation on the generic type, e.g.:
+  `ResponseEntity<@NotEmpty List<Foo>>` can now be validated.
+
 # 1.6.3
 
 ## Improvements
