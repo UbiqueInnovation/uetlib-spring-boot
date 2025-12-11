@@ -7,20 +7,20 @@
 - New auto-registered validation for `ResponseEntity<Body>`, so we can do validation on the generic type, e.g.:
   `ResponseEntity<@NotEmpty List<Foo>>` can now be validated.
 
-# 1.6.3
+## 1.6.3
 
-## Improvements
+### Improvements
 
 - Add optional backoff header option to `HeaderUtility` methods in `uetlib-spring-boot`.
 
-# 1.6.0
+## 1.6.0
 
-## Improvements
+### Improvements
 
 - Add auto-configuration to `uetlib-spring-boot` for springdoc default config.
 - Add auto-configuration to `uetlib-spring-boot-problem` for springdoc default config for problem related types.
 
-## Breaking Changes
+### Breaking Changes
 
 - Remove spring doc config in project base config. This is now both configured via the new auto configurations in
   `uetlib-spring-boot` and `uetlib-spring-boot-problem`:
@@ -37,15 +37,15 @@
   - }
   ```
 
-# 1.5.3
+## 1.5.3
 
-## Improvements
+### Improvements
 
 - Add new `SpringDocRfc9457Problem` with all fields marked as optional and without `errorType` and `errorCode`.
 - Mark `type`, `status`, `title`, `detail`, `errorType` and `errorCode` as required in `SpringDocProblem` and make it
   extend `SpringDocRfc9457Problem`.
 
-## Breaking Changes
+### Breaking Changes
 
 - Necessary changes to the SpringDocConfig:
   ```diff
@@ -55,24 +55,24 @@
   +                       customizer.replaceWithClass(Problem.class, SpringDocRfc9457Problem.class));
   ```
 
-# 1.5.1
+## 1.5.1
 
-## Improvements
+### Improvements
 
 - Make `type` and `status` optional in `SpringDocProblem` in accordance with RFC-9457.
 - Explicitly set `type`/`status`/`errorCode`/`errorType` as required in `UbiqueThrowableProblem`, as our explicit
   problems will always have these set.
 
-# 1.4.11
+## 1.4.11
 
-## Improvements
+### Improvements
 
 - Fix `GMT` usage in header date formatter string in `HeaderUtility`
 - Deprecate methods in `HeaderUtility` in favour of `HttpHeaderUtils` in `uetlib-core`
 
-# 1.4.9
+## 1.4.9
 
-## Improvements
+### Improvements
 
 - Use timing-attack-proof api key comparison for `ApiKeyAuthenticationFilter`
 
