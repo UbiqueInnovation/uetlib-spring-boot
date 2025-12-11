@@ -33,12 +33,5 @@
             <artifactId>reflections</artifactId>
             <version>0.10.2</version>
         </dependency>
-
-        <dependency>
-            <groupId>ch.ubique</groupId>
-            <artifactId>uetlib-test</artifactId>
-            <version>1.2.0</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 </project>
