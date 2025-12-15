@@ -95,7 +95,7 @@ public class UetlibSpringBootProblemSpringDocProblemOpenApiCustomizer implements
                     // openApi.getComponents().getSchemas() only contains all the schemas that are
                     // actually documented on some @Operation annotation and not all problemClasses
                     // are necessarily contained in there
-                    return;
+                    continue;
                 }
 
                 // set 'type' example value to 'typeValue' and also the only possible value
