@@ -1,7 +1,6 @@
 package ch.ubique.backend.spring.problem.springdoc;
 
-import ch.ubique.backend.problem.errortype.ProblemErrorType;
-import ch.ubique.backend.problem.springdoc.SpringDocProblem;
+import ch.ubique.backend.spring.problem.errortype.ProblemErrorType;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.media.IntegerSchema;
@@ -13,7 +12,6 @@ import org.reflections.scanners.Scanners;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springdoc.core.customizers.OpenApiCustomizer;
-import org.zalando.problem.AbstractThrowableProblem;
 
 import java.lang.reflect.ParameterizedType;
 import java.net.URI;
@@ -22,19 +20,20 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Customizes the OpenAPI specification for the application by dynamically adding example values for
- * the `type` property in schemas of classes implementing the {@link SpringDocProblem} interface.
+ * Customises the OpenAPI specification for the application by dynamically adding example values for
+ * the `type` property in schemas of classes implementing the {@link UetlibSpringDocProblem}
+ * interface.
  *
  * <p>This method:
  *
  * <ul>
- *   <li>Scans all classes in the project that implement {@link SpringDocProblem}.
+ *   <li>Scans all classes in the project that implement {@link UetlibSpringDocProblem}.
  *   <li>For each class, it extracts the second generic type (which is expected to have a {@code
  *       public static final URI TYPE} field).
  *   <li>If the second generic type has a `TYPE` field of type {@link URI}, it extracts its value
  *       and adds it as the {@code example} for the `type` property in the OpenAPI schema.
  *   <li>Uses reflection to modify the OpenAPI schema dynamically to include the example values for
- *       any classes implementing {@link SpringDocProblem} that meet the criteria.
+ *       any classes implementing {@link UetlibSpringDocProblem} that meet the criteria.
  * </ul>
  *
  * The {@link OpenApiCustomizer} is invoked during the Spring Boot application startup to ensure the
@@ -49,8 +48,8 @@ import java.util.Set;
  * generated OpenAPI schema.
  *
  * <p>This class is useful for dynamically adjusting the OpenAPI documentation without the need for
- * manually specifying examples for each class, and is particularly helpful when dealing with a
- * large number of problem types that share common patterns (e.g., using static fields for common
+ * manually specifying examples for each class. It is particularly helpful when dealing with a large
+ * number of problem types that share common patterns (e.g. using static fields for common
  * constants).
  */
 public class UetlibSpringBootProblemSpringDocProblemOpenApiCustomizer implements OpenApiCustomizer {
@@ -135,12 +134,12 @@ public class UetlibSpringBootProblemSpringDocProblemOpenApiCustomizer implements
 
     // Use Reflections to find all SpringDocProblem implementations
     @SuppressWarnings("rawtypes")
-    private Set<Class<? extends SpringDocProblem>> findAllSpringDocProblemClasses() {
+    private Set<Class<? extends UetlibSpringDocProblem>> findAllSpringDocProblemClasses() {
         // Initialize Reflections to scan for types implementing SpringDocProblem in your package
         final var reflections = new Reflections("ch.post", Scanners.SubTypes);
 
         // Return all types that implement SpringDocProblem
-        return reflections.getSubTypesOf(SpringDocProblem.class);
+        return reflections.getSubTypesOf(UetlibSpringDocProblem.class);
     }
 
     // Extract the first generic type (the related error type) from the class
@@ -149,14 +148,14 @@ public class UetlibSpringBootProblemSpringDocProblemOpenApiCustomizer implements
     }
 
     // Extract the second generic type (the related exception) from the class
-    private Class<AbstractThrowableProblem> getExceptionGenericType(final Class<?> problemClass) {
+    private Class<RuntimeException> getExceptionGenericType(final Class<?> problemClass) {
         return getNthGenericType(problemClass, 1);
     }
 
     // Extract the second generic type (the related exception) from the class
     @SuppressWarnings("unchecked")
     private <T> Class<T> getNthGenericType(final Class<?> problemClass, final int genericIndex) {
-        // Check if the class is parameterized (i.e. has generics)
+        // Check if the class is parameterised (i.e. has generics)
         final var genericInterfaces = problemClass.getGenericInterfaces();
         for (final var genericInterface : genericInterfaces) {
             if (genericInterface instanceof final ParameterizedType parameterizedType) {
