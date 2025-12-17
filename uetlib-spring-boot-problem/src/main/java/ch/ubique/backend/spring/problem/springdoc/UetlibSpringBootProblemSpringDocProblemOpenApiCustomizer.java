@@ -91,6 +91,13 @@ public class UetlibSpringBootProblemSpringDocProblemOpenApiCustomizer implements
                 final var problemSchema =
                         openApi.getComponents().getSchemas().get(problemClass.getSimpleName());
 
+                if (problemSchema == null) {
+                    // openApi.getComponents().getSchemas() only contains all the schemas that are
+                    // actually documented on some @Operation annotation and not all problemClasses
+                    // are necessarily contained in there
+                    continue;
+                }
+
                 // set 'type' example value to 'typeValue' and also the only possible value
                 final var typeFieldSchema = (Schema) problemSchema.getProperties().get("type");
                 problemSchema.addProperty(
