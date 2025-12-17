@@ -27,6 +27,29 @@
         <module>uetlib-spring-boot-coverage</module>
     </modules>
 
+    <dependencies>
+        <dependency>
+            <groupId>ch.ubique</groupId>
+            <artifactId>uetlib-test</artifactId>
+            <version>1.2.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <repositories>
+        <repository>
+            <id>ubique-artifactory</id>
+            <name>backend</name>
+            <url>https://artifactory.ubique.ch/artifactory/backend</url>
+        </repository>
+    </repositories>
+
     <distributionManagement>
         <repository>
             <id>ubique-artifactory</id>

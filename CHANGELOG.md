@@ -1,11 +1,5 @@
 # CHANGELOG
 
-# 1.6.3
-
-## Improvements
-
-- Add optional backoff header option to `HeaderUtility` methods in `uetlib-spring-boot`.
-
 ## 2.0.0
 
 ### Improvements
@@ -13,14 +7,33 @@
 - Spring Boot 4 compatibility
 - Remove deprecated in `HeaderUtyility`, use methods in `HttpHeaderUtils` in `uetlib-core`
 
-## 1.6.0
+## 1.7.1
+
+### Bugfixes
+
+- Fix an NPE in the autoconfigured springdoc open api customizer
+
+## 1.7.0
 
 ### Improvements
 
-- Add auto-configuration to `uetlib-spring-boot` for springdoc default config.
-- Add auto-configuration to `uetlib-spring-boot-problem` for springdoc default config for problem related types.
+- New auto-registered validation for `ResponseEntity<Body>`, so we can do validation on the generic type, e.g.:
+  `ResponseEntity<@NotEmpty List<Foo>>` can now be validated.
 
-### Breaking Changes
+## 1.6.3
+
+### Improvements
+
+- Add an optional backoff header option to `HeaderUtility` methods in `uetlib-spring-boot`.
+
+# 1.6.0
+
+### Improvements
+
+- Add autoconfiguration to `uetlib-spring-boot` for springdoc default config.
+- Add autoconfiguration to `uetlib-spring-boot-problem` for springdoc default config for problem related types.
+
+## Breaking Changes
 
 - Remove spring doc config in project base config. This is now both configured via the new auto configurations in
   `uetlib-spring-boot` and `uetlib-spring-boot-problem`:
