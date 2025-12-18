@@ -68,12 +68,12 @@ public class UetlibExceptionHandler extends ResponseEntityExceptionHandler {
             final NoSuchElementException ex, final HttpHeaders headers, final WebRequest request) {
         final var status = HttpStatus.NOT_FOUND;
         final var body =
-                createProblemDetail(ex, status, status.getReasonPhrase(), null, null, request);
+                createProblemDetail(ex, status, ex.getLocalizedMessage(), null, null, request);
         return handleExceptionInternal(ex, body, headers, status, request);
     }
 
     /**
-     * Customize the handling of {@link NoSuchElementException}.
+     * Customize the handling of {@link HttpStatusCodeException}.
      *
      * <p>By default, this method creates a {@link ProblemDetail} with the status and a short detail
      * message, and also looks up an override for the detail via {@link MessageSource}, before
