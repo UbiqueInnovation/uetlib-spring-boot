@@ -8,7 +8,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @SuppressWarnings("unused")
 @NullMarked
-public class UetlibExceptionAdvice extends ResponseEntityExceptionHandler
+public class UetlibExceptionHandler extends ResponseEntityExceptionHandler
         implements ResponseEntityExceptionSkeleton,
                 ThrowableProblemAdviceTrait,
                 MoreExceptionsExceptionAdviceTrait,

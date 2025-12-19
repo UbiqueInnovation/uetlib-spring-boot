@@ -22,7 +22,7 @@ class UbiqueExceptionAdviceTest {
 
     @Test
     void handleUetlibThrowableProblem_returnsProblemDetailWithExpectedFields() {
-        final var handler = new UetlibExceptionAdvice();
+        final var handler = new UetlibExceptionHandler();
         final var problem = new TestProblem(TestErrorType.TEST);
 
         final var pd = handler.handleThrowableProblems(problem, newRequest());
@@ -43,7 +43,7 @@ class UbiqueExceptionAdviceTest {
 
     @Test
     void handleNoSuchElementException_mapsTo404ProblemDetail() throws Exception {
-        final var handler = new UetlibExceptionAdvice();
+        final var handler = new UetlibExceptionHandler();
         final var ex = new NoSuchElementException("Element 17 not found");
 
         final var response = handler.handleMoreExceptions(ex, newRequest());
@@ -61,7 +61,7 @@ class UbiqueExceptionAdviceTest {
 
     @Test
     void handleOtherException_isRethrown() {
-        final var handler = new UetlibExceptionAdvice();
+        final var handler = new UetlibExceptionHandler();
         final var ex = new IllegalArgumentException("boom");
 
         assertThrows(
