@@ -7,7 +7,12 @@ import org.springframework.context.annotation.Configuration;
 public class UetlibSpringBootProblemSpringDocAutoConfiguration {
 
     @Bean
-    UetlibSpringBootProblemSpringDocProblemOpenApiCustomizer customOpenApi() {
+    UetlibSpringBootProblemProblemDetailOpenApiCustomizer problemDetailOpenApiCustomizer() {
+        return new UetlibSpringBootProblemProblemDetailOpenApiCustomizer();
+    }
+
+    @Bean
+    UetlibSpringBootProblemSpringDocProblemOpenApiCustomizer springDocProblemOpenApiCustomizer() {
         return new UetlibSpringBootProblemSpringDocProblemOpenApiCustomizer();
     }
 }
