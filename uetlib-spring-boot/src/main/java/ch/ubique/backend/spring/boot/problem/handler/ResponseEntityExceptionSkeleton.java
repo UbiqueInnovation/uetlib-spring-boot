@@ -7,9 +7,9 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 /**
  * To implement exception advice traits that can extend the functionality of the {@link
- * UetlibExceptionAdvice} in other modules, we define this interface that has the methods from
+ * UetlibExceptionHandler} in other modules, we define this interface that has the methods from
  * {@link ResponseEntityExceptionHandler}. We have to reimplement the methods in {@link
- * UetlibExceptionAdvice} because they are {@code protected} in {@link
+ * UetlibExceptionHandler} because they are {@code protected} in {@link
  * ResponseEntityExceptionHandler} and interfaces only know {@code public} methods. I wish I could
  * make the traits extend {@link ResponseEntityExceptionHandler} directly, but Java does not allow
  * multiple inheritance, hence all advice traits have to be interfaces.

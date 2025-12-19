@@ -10,7 +10,7 @@ import java.util.Arrays;
 /**
  * Tests for {@link ResponseEntityExceptionSkeleton} to ensure compatibility with {@link
  * ResponseEntityExceptionHandler} and that it is correctly implemented by {@link
- * UetlibExceptionAdvice}.
+ * UetlibExceptionHandler}.
  */
 class ResponseEntityExceptionSkeletonTest {
 
@@ -47,12 +47,12 @@ class ResponseEntityExceptionSkeletonTest {
     }
 
     /**
-     * Confirms that {@link UetlibExceptionAdvice} explicitly implements {@link
+     * Confirms that {@link UetlibExceptionHandler} explicitly implements {@link
      * ResponseEntityExceptionSkeleton}.
      */
     @Test
-    void testUetlibExceptionAdviceImplementsSkeleton() {
-        assertThat(UetlibExceptionAdvice.class)
+    void testUetlibExceptionHandlerImplementsSkeleton() {
+        assertThat(UetlibExceptionHandler.class)
                 .isAssignableTo(ResponseEntityExceptionSkeleton.class);
     }
 }
