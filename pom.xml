@@ -21,7 +21,6 @@
 
     <modules>
         <module>uetlib-spring-boot</module>
-        <module>uetlib-spring-boot-problem</module>
         <module>uetlib-spring-boot-security</module>
         <module>uetlib-spring-boot-validation</module>
         <module>uetlib-spring-boot-coverage</module>

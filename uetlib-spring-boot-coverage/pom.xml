@@ -21,11 +21,6 @@
         </dependency>
         <dependency>
             <groupId>ch.ubique</groupId>
-            <artifactId>uetlib-spring-boot-problem</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>ch.ubique</groupId>
             <artifactId>uetlib-spring-boot-security</artifactId>
             <version>${project.version}</version>
         </dependency>

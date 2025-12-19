@@ -1,0 +1,58 @@
+package ch.ubique.backend.spring.boot.problem.handler;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
+import java.util.Arrays;
+
+/**
+ * Tests for {@link ResponseEntityExceptionSkeleton} to ensure compatibility with {@link
+ * ResponseEntityExceptionHandler} and that it is correctly implemented by {@link
+ * UetlibExceptionAdvice}.
+ */
+class ResponseEntityExceptionSkeletonTest {
+
+    /**
+     * Verifies that {@link ResponseEntityExceptionHandler} contains all methods defined in {@link
+     * ResponseEntityExceptionSkeleton} with matching signatures and return types. This ensures that
+     * the skeleton remains synchronized with the Spring Framework's base exception handler.
+     */
+    @Test
+    void testResponseEntityExceptionHandlerHasSkeletonMethods() {
+        for (final var interfaceMethod : ResponseEntityExceptionSkeleton.class.getMethods()) {
+            final var classMethod =
+                    Arrays.stream(ResponseEntityExceptionHandler.class.getDeclaredMethods())
+                            .filter(m -> m.getName().equals(interfaceMethod.getName()))
+                            .filter(
+                                    m ->
+                                            Arrays.equals(
+                                                    m.getParameterTypes(),
+                                                    interfaceMethod.getParameterTypes()))
+                            .findFirst()
+                            .orElseThrow(
+                                    () ->
+                                            new AssertionError(
+                                                    "Method "
+                                                            + interfaceMethod.getName()
+                                                            + " with parameters "
+                                                            + Arrays.toString(
+                                                                    interfaceMethod
+                                                                            .getParameterTypes())
+                                                            + " not found in ResponseEntityExceptionHandler"));
+
+            assertThat(classMethod.getReturnType()).isEqualTo(interfaceMethod.getReturnType());
+        }
+    }
+
+    /**
+     * Confirms that {@link UetlibExceptionAdvice} explicitly implements {@link
+     * ResponseEntityExceptionSkeleton}.
+     */
+    @Test
+    void testUetlibExceptionAdviceImplementsSkeleton() {
+        assertThat(UetlibExceptionAdvice.class)
+                .isAssignableTo(ResponseEntityExceptionSkeleton.class);
+    }
+}
