@@ -1,8 +1,10 @@
-package ch.ubique.backend.problem;
+package ch.ubique.backend.spring.boot.problem.handler;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import ch.ubique.backend.spring.problem.handler.UetlibExceptionHandler;
+import ch.ubique.backend.problem.TestErrorType;
+import ch.ubique.backend.problem.TestProblem;
+import ch.ubique.backend.spring.problem.handler.UetlibExceptionAdvice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.http.ProblemDetail;
@@ -13,7 +15,7 @@ import org.springframework.web.context.request.WebRequest;
 
 import java.util.NoSuchElementException;
 
-class UbiqueExceptionHandlerTest {
+class UbiqueExceptionAdviceTest {
 
     private WebRequest newRequest() {
         return new ServletWebRequest(new MockHttpServletRequest());
@@ -21,10 +23,10 @@ class UbiqueExceptionHandlerTest {
 
     @Test
     void handleUetlibThrowableProblem_returnsProblemDetailWithExpectedFields() {
-        final var handler = new UetlibExceptionHandler();
+        final var handler = new UetlibExceptionAdvice();
         final var problem = new TestProblem(TestErrorType.TEST);
 
-        final var pd = handler.handleMoreExceptions(problem, newRequest());
+        final var pd = handler.handleThrowableProblems(problem, newRequest());
 
         // Basic fields
         assertEquals(TestProblem.TYPE, pd.getType());
@@ -43,8 +45,8 @@ class UbiqueExceptionHandlerTest {
 
     @Test
     void handleNoSuchElementException_mapsTo404ProblemDetail() throws Exception {
-        final var handler = new UetlibExceptionHandler();
-        final var ex = new NoSuchElementException("missing");
+        final var handler = new UetlibExceptionAdvice();
+        final var ex = new NoSuchElementException("Element 17 not found");
 
         final var response = handler.handleMoreExceptions(ex, newRequest());
 
@@ -55,17 +57,16 @@ class UbiqueExceptionHandlerTest {
         final var body = response.getBody();
         final var problemDetail = assertInstanceOf(ProblemDetail.class, body);
         assertEquals(404, problemDetail.getStatus());
-        assertEquals("Not Found", problemDetail.getDetail());
+        assertEquals("Element 17 not found", problemDetail.getDetail());
         // Do not assert title/type as they are framework-defined defaults.
     }
 
     @Test
     void handleOtherException_isRethrown() {
-        final var handler = new UetlibExceptionHandler();
+        final var handler = new UetlibExceptionAdvice();
         final var ex = new IllegalArgumentException("boom");
 
         assertThrows(
-                IllegalArgumentException.class,
-                () -> handler.handleMoreExceptions(ex, newRequest()));
+                IllegalArgumentException.class, () -> handler.handleException(ex, newRequest()));
     }
 }
