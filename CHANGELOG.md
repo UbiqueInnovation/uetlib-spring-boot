@@ -7,6 +7,28 @@
 - Spring Boot 4 compatibility
 - Remove deprecated in `HeaderUtyility`, use methods in `HttpHeaderUtils` in `uetlib-core`
 
+### Breaking Changes
+
+- Merged module `uetlib-spring-boot-problem` into `uetlib-spring-boot` and removed the old module.
+    - Removed dependency on `zalando/problem` and replaced it all with custom implementations
+    - Replace these imports:
+      ```diff
+      - import ch.ubique.backend.problem.errortype.ProblemErrorType;
+      + import ch.ubique.backend.spring.boot.problem.errortype.ProblemErrorType;
+
+      - import ch.ubique.backend.problem.springdoc.SpringDocProblem;
+      + import ch.ubique.backend.spring.boot.problem.springdoc.UetlibSpringDocProblem;
+      ```
+    - Make custom problem extend `ch.ubique.backend.spring.boot.problem.AbstractUetlibThrowableProblem` instead of
+      zalando's `AbstractThrowableProblem`.
+    - To document a response that returns a generic `ProblemDetail`, use
+      `@Schema(implementation = ProblemDetail.class)` directly instead of
+      `@Schema(implementation = SpringDocRfc9457Problem.class)` or similar.
+    - Replace any `SpringDocConfig.setDefaultConfigWith()`, unless you have some custom overrides, as this applied
+      via autoconfiguration anyway.
+    - Remove **ANY** dependency on `zalando/problem*` in your project. All the functionality is now provided by
+      `uetlib-spring-boot`.
+
 ## 1.7.1
 
 ### Bugfixes
