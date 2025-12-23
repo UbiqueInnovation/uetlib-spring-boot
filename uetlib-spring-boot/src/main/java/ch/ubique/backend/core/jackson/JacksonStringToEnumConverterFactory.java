@@ -1,6 +1,6 @@
 package ch.ubique.backend.core.jackson;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 
 import jakarta.validation.constraints.NotNull;
 
