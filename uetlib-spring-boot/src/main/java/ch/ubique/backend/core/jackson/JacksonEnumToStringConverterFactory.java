@@ -1,6 +1,6 @@
 package ch.ubique.backend.core.jackson;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 
 import org.jetbrains.annotations.NotNull;
 import org.springframework.core.convert.converter.Converter;
