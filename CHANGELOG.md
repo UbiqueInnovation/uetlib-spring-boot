@@ -5,7 +5,7 @@
 ### Improvements
 
 - Spring Boot 4 compatibility
-- Remove deprecated in `HeaderUtyility`, use methods in `HttpHeaderUtils` in `uetlib-core`
+- Remove deprecated in `HeaderUtility`, use methods in `HttpHeaderUtils` in `uetlib-core`
 
 ### Breaking Changes
 
