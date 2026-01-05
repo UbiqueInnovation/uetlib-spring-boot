@@ -1,27 +1,34 @@
 package ch.ubique.backend.core.utils.retry;
 
-import org.springframework.retry.support.RetryTemplate;
+import org.springframework.core.retry.RetryPolicy;
+import org.springframework.core.retry.RetryTemplate;
+import org.springframework.util.backoff.ExponentialBackOff;
 
 import java.time.Duration;
 import java.util.Collection;
 
-public class RetryUtils {
+public final class RetryUtils {
+
+    private static final Duration HALF_A_SECOND = Duration.ofMillis(500);
+    private static final Duration HALF_A_MINUTE = Duration.ofSeconds(30);
 
     private RetryUtils() {}
 
     public static RetryTemplate createDefaultRetryTemplate() {
-        return RetryTemplate.builder()
-                .maxAttempts(5)
-                .exponentialBackoff(Duration.ofMillis(500), 2, Duration.ofSeconds(30))
-                .withListener(new LoggingRetryListener())
-                .build();
+        final var retryTemplate =
+                new RetryTemplate(
+                        RetryPolicy.builder()
+                                .maxRetries(5)
+                                .backOff(new ExponentialBackOff(HALF_A_SECOND.toMillis(), 2))
+                                .maxDelay(HALF_A_MINUTE)
+                                .build());
+        retryTemplate.setRetryListener(new LoggingRetryListener());
+        return retryTemplate;
     }
 
     public static RetryTemplate createDefaultRetryTemplate(final Collection<String> basePackages) {
-        return RetryTemplate.builder()
-                .maxAttempts(5)
-                .exponentialBackoff(Duration.ofMillis(500), 2, Duration.ofSeconds(30))
-                .withListener(new LoggingRetryListener(basePackages))
-                .build();
+        final var retryTemplate = createDefaultRetryTemplate();
+        retryTemplate.setRetryListener(new LoggingRetryListener(basePackages));
+        return retryTemplate;
     }
 }
