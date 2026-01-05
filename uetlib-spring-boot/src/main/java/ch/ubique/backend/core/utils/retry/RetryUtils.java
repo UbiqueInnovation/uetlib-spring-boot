@@ -18,7 +18,7 @@ public final class RetryUtils {
         final var retryTemplate =
                 new RetryTemplate(
                         RetryPolicy.builder()
-                                .maxRetries(5)
+                                .maxRetries(4)
                                 .backOff(new ExponentialBackOff(HALF_A_SECOND.toMillis(), 2))
                                 .maxDelay(HALF_A_MINUTE)
                                 .build());
