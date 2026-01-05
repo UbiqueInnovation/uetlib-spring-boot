@@ -2,7 +2,6 @@ package ch.ubique.backend.core.utils.retry;
 
 import org.springframework.core.retry.RetryPolicy;
 import org.springframework.core.retry.RetryTemplate;
-import org.springframework.util.backoff.ExponentialBackOff;
 
 import java.time.Duration;
 import java.util.Collection;
@@ -19,8 +18,10 @@ public final class RetryUtils {
                 new RetryTemplate(
                         RetryPolicy.builder()
                                 .maxRetries(4)
-                                .backOff(new ExponentialBackOff(HALF_A_SECOND.toMillis(), 2))
+                                .delay(HALF_A_SECOND)
                                 .maxDelay(HALF_A_MINUTE)
+                                .multiplier(2)
+                                .jitter(Duration.ofSeconds(1))
                                 .build());
         retryTemplate.setRetryListener(new LoggingRetryListener());
         return retryTemplate;
