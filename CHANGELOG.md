@@ -6,7 +6,6 @@
 
 - Spring Boot 4 compatibility
 - Remove deprecated in `HeaderUtility`, use methods in `HttpHeaderUtils` in `uetlib-core`
-- Add `BuildPropertiesEnvironmentPostProcessor` to `uetlib-spring-boot`
 
 ### Breaking Changes
 
