@@ -21,19 +21,18 @@ import java.util.Set;
 
 /**
  * Customises the OpenAPI specification for the application by dynamically adding example values for
- * the `type` property in schemas of classes implementing the {@link UetlibSpringDocProblem}
- * interface.
+ * the `type` property in schemas of classes implementing the {@link SpringDocProblem} interface.
  *
  * <p>This method:
  *
  * <ul>
- *   <li>Scans all classes in the project that implement {@link UetlibSpringDocProblem}.
+ *   <li>Scans all classes in the project that implement {@link SpringDocProblem}.
  *   <li>For each class, it extracts the second generic type (which is expected to have a {@code
  *       public static final URI TYPE} field).
  *   <li>If the second generic type has a `TYPE` field of type {@link URI}, it extracts its value
  *       and adds it as the {@code example} for the `type` property in the OpenAPI schema.
  *   <li>Uses reflection to modify the OpenAPI schema dynamically to include the example values for
- *       any classes implementing {@link UetlibSpringDocProblem} that meet the criteria.
+ *       any classes implementing {@link SpringDocProblem} that meet the criteria.
  * </ul>
  *
  * The {@link OpenApiCustomizer} is invoked during the Spring Boot application startup to ensure the
@@ -134,12 +133,12 @@ public class UetlibSpringBootProblemSpringDocProblemOpenApiCustomizer implements
 
     // Use Reflections to find all SpringDocProblem implementations
     @SuppressWarnings("rawtypes")
-    private Set<Class<? extends UetlibSpringDocProblem>> findAllSpringDocProblemClasses() {
+    private Set<Class<? extends SpringDocProblem>> findAllSpringDocProblemClasses() {
         // Initialize Reflections to scan for types implementing SpringDocProblem in your package
         final var reflections = new Reflections("ch.post", Scanners.SubTypes);
 
         // Return all types that implement SpringDocProblem
-        return reflections.getSubTypesOf(UetlibSpringDocProblem.class);
+        return reflections.getSubTypesOf(SpringDocProblem.class);
     }
 
     // Extract the first generic type (the related error type) from the class
