@@ -12,7 +12,7 @@ import java.net.URI;
  * This interface exists solely because a generic class cannot extend {@link RuntimeException}. Do
  * not use anywhere else apart from the existing usage in this module. Please.
  */
-public interface BaseUetlibThrowableProblem {
+public interface BaseThrowableProblem {
 
     @NonNull URI type();
 

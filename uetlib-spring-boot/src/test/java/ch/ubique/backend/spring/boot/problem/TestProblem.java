@@ -7,8 +7,8 @@ import org.springframework.http.HttpStatus;
 
 import java.net.URI;
 
-public class TestProblem extends AbstractUetlibThrowableProblem
-        implements UetlibThrowableProblem<TestErrorType> {
+public class TestProblem extends AbstractThrowableProblem
+        implements ThrowableProblem<TestErrorType> {
 
     public static final URI TYPE = URI.create("urn:ch:uetlib:spring:boot:problem:test");
 

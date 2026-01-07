@@ -1,7 +1,7 @@
 package ch.ubique.backend.spring.boot.problem.springdoc;
 
-import ch.ubique.backend.spring.boot.problem.AbstractUetlibThrowableProblem;
-import ch.ubique.backend.spring.boot.problem.UetlibThrowableProblem;
+import ch.ubique.backend.spring.boot.problem.AbstractThrowableProblem;
+import ch.ubique.backend.spring.boot.problem.ThrowableProblem;
 import ch.ubique.backend.spring.boot.problem.errortype.ProblemErrorType;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -20,22 +20,22 @@ import java.net.URI;
  *
  * <p>
  *
- * {@snippet lang=java :
+ * {@snippet lang=java:
  * public abstract class ExampleProblem
- *         extends UetlibSpringDocProblem<ExampleErrorType, ExampleException> {}
+ *         extends SpringDocProblem<ExampleErrorType, ExampleException> {}
  * }
  *
  * Then, use this class in the controller, not {@link ProblemDetail}, to have {@link #type()},
  * {@link #status()}, {@link #title()}, {@link #detail()}, {@link #errorType()} and {@link
  * #errorCode()} documented as required. This class represents the documentation equivalent of all
- * exceptions extending {@link AbstractUetlibThrowableProblem}. SpringDoc renders the correct error
- * types using the customizer {@link UetlibSpringBootProblemSpringDocProblemOpenApiCustomizer} as
+ * exceptions extending {@link AbstractThrowableProblem}. SpringDoc renders the correct error types
+ * using the customizer {@link UetlibSpringBootProblemSpringDocProblemOpenApiCustomizer} as
  * auto-registered in {@link UetlibSpringBootProblemSpringDocAutoConfiguration}
  *
  * <p>This extends the specification for RFC-9457 problem details with uetlib-specific extensions:
  * `errorType` and `errorCode` and marks most fields as required.
  *
- * @see UetlibThrowableProblem
+ * @see ThrowableProblem
  * @see <a href="https://datatracker.ietf.org/doc/html/rfc9457">RFC-9457</a>
  * @param <E>
  */
@@ -46,9 +46,8 @@ import java.net.URI;
                         Each (`errorCode`) has to represent an application-wide 1:1 mapping to (`type`, `errorType`).
                         Meaning, `errorCode` is unique application-wide, but `errorType` will only be unique for this problem `type`""")
 @SuppressWarnings("unused")
-public interface UetlibSpringDocProblem<
-        E extends Enum<E> & ProblemErrorType,
-        P extends RuntimeException & UetlibThrowableProblem<E>> {
+public interface SpringDocProblem<
+        E extends Enum<E> & ProblemErrorType, P extends RuntimeException & ThrowableProblem<E>> {
 
     @NotNull
     @JsonProperty(required = true)

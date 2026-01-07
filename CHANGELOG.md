@@ -17,9 +17,9 @@
       + import ch.ubique.backend.spring.boot.problem.errortype.ProblemErrorType;
 
       - import ch.ubique.backend.problem.springdoc.SpringDocProblem;
-      + import ch.ubique.backend.spring.boot.problem.springdoc.UetlibSpringDocProblem;
+      + import ch.ubique.backend.spring.boot.problem.springdoc.SpringDocProblem;
       ```
-    - Make custom problem extend `ch.ubique.backend.spring.boot.problem.AbstractUetlibThrowableProblem` instead of
+    - Make custom problem extend `ch.ubique.backend.spring.boot.problem.AbstractThrowableProblem` instead of
       zalando's `AbstractThrowableProblem`.
     - To document a response that returns a generic `ProblemDetail`, use
       `@Schema(implementation = ProblemDetail.class)` directly instead of

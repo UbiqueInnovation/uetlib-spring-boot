@@ -17,8 +17,8 @@ import org.springframework.http.ProblemDetail;
 
 import java.net.URI;
 
-public abstract class AbstractUetlibThrowableProblem extends RuntimeException
-        implements BaseUetlibThrowableProblem {
+public abstract class AbstractThrowableProblem extends RuntimeException
+        implements BaseThrowableProblem {
 
     @NonNull private final URI type;
     @NonNull private final HttpStatusCode status;
@@ -26,14 +26,14 @@ public abstract class AbstractUetlibThrowableProblem extends RuntimeException
     @NonNull private final String detail;
     @Nullable private final URI instance;
 
-    protected AbstractUetlibThrowableProblem(
+    protected AbstractThrowableProblem(
             @NonNull final URI type,
             @NonNull final String title,
             @NonNull final HttpStatus status) {
         this(type, title, status, status.getReasonPhrase());
     }
 
-    protected AbstractUetlibThrowableProblem(
+    protected AbstractThrowableProblem(
             @NonNull final URI type,
             @NonNull final String title,
             @NonNull final HttpStatusCode status,
@@ -41,7 +41,7 @@ public abstract class AbstractUetlibThrowableProblem extends RuntimeException
         this(type, title, status, detail, null);
     }
 
-    protected AbstractUetlibThrowableProblem(
+    protected AbstractThrowableProblem(
             @NonNull final URI type,
             @NonNull final String title,
             @NonNull final HttpStatusCode status,
@@ -50,13 +50,13 @@ public abstract class AbstractUetlibThrowableProblem extends RuntimeException
         this(type, title, status, detail, instance, null);
     }
 
-    protected AbstractUetlibThrowableProblem(
+    protected AbstractThrowableProblem(
             @NonNull final URI type,
             @NonNull final String title,
             @NonNull final HttpStatusCode status,
             @NonNull final String detail,
             @Nullable final URI instance,
-            @Nullable final AbstractUetlibThrowableProblem cause) {
+            @Nullable final AbstractThrowableProblem cause) {
         super(cause);
         this.type = type;
         this.title = title;
@@ -105,7 +105,7 @@ public abstract class AbstractUetlibThrowableProblem extends RuntimeException
             return true;
         }
 
-        if (!(o instanceof final AbstractUetlibThrowableProblem that)) {
+        if (!(o instanceof final AbstractThrowableProblem that)) {
             return false;
         }
 
