@@ -100,6 +100,12 @@ public abstract class AbstractThrowableProblem extends RuntimeException
     }
 
     @Override
+    @JsonIgnore
+    public String getMessage() {
+        return String.join(": ", title, detail);
+    }
+
+    @Override
     public boolean equals(final Object o) {
         if (this == o) {
             return true;
