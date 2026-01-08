@@ -129,7 +129,7 @@ public final class MoreJwtDecoders {
                                 Stream.of(issuerValidator(issuerUri), audienceValidator(audiences)),
                                 additionalTokenValidators.stream())
                         .toList();
-        final var jwtValidator = new DelegatingOAuth2TokenValidator<>(tokenValidators);
+        final var jwtValidator = JwtValidators.createDefaultWithValidators(jwtValidators);
 
         final var jwtDecoderBuilder = NimbusJwtDecoder.withIssuerLocation(issuerUri);
         jwtDecoderBuilder.restOperations(restOperations);
