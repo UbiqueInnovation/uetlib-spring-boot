@@ -28,6 +28,28 @@
       via autoconfiguration anyway.
     - Remove **ANY** dependency on `zalando/problem*` in your project. All the functionality is now provided by
       `uetlib-spring-boot`.
+    - Move all `MoreJwtValidators#*JwtDecoder(...)` methods to new class `MoreJwtDecoders` in
+      `uetlib-spring-boot-security` and introduce new `MoreJwtValidators` methods with direct access to the same
+      reusable JWT validators.
+      - As a consequence, if you have an `at+jwt` decoder and you are using
+        ```java
+        private JwtDecoder connectorAtJwtDecoder() {
+            return MoreJwtValidators.issuerAndAudienceValidatingJwtDecoder(
+                    connectorIssuerUri,
+                    List.of(connectorAudience),
+                    // false, because we have type at+jwt tokens
+                    customizer -> customizer.validateType(false));
+        }
+        ```
+        then replace it with
+        ```java
+        private JwtDecoder connectorAtJwtDecoder(final RestTemplateBuilder restTemplateBuilder) {
+            return MoreJwtDecoders.issuerAndAudienceValidatingAtJwtDecoder(
+                    connectorIssuerUri,
+                    List.of(connectorAudience),
+                    restTemplateBuilder);
+        }
+        ```
 
 ## 1.7.1
 
