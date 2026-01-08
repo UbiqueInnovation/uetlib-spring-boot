@@ -22,8 +22,8 @@ public final class MoreJwtValidators {
     }
 
     @NonNull
-    public static OAuth2TokenValidator<Jwt> issuerValidator(final @NonNull String issuerUri) {
-        return JwtValidators.createDefaultWithIssuer(issuerUri);
+    public static OAuth2TokenValidator<Jwt> issuerValidator(final @NonNull String issuer) {
+        return new JwtIssuerValidator(issuer);
     }
 
     private static boolean nullSafeNotDisjoint(final List<String> c1, final List<String> c2) {
