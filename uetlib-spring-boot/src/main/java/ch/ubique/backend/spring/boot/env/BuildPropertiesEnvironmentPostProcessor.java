@@ -14,6 +14,7 @@ import org.springframework.core.io.support.EncodedResource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
@@ -63,7 +64,7 @@ public class BuildPropertiesEnvironmentPostProcessor implements EnvironmentPostP
                             new EncodedResource(
                                     buildInfoPropertiesResource, StandardCharsets.UTF_8));
         } catch (final IOException e) {
-            throw new RuntimeException(e);
+            throw new UncheckedIOException(e);
         }
 
         final var prefix = "build.";
