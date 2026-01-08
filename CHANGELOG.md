@@ -53,6 +53,14 @@
         - All `MoreJwtDecoders#*JwtDecoder(...)` methods now require a pre-configured `RestOperations` as the first
           argument. Most likely, this should be an instance of `restTemplateBuilder#build()`, where
           `restTemplateBuilder` is the Spring Boot autoconfigured `RestTemplateBuilder`.
+    - default user agent for all http clients (`RestClient` and `RestTemplate`) is now autoconfigured. You have to
+      adapt (or add if you did not yet do this) your property for the default user-agent:
+      ```diff
+      - ch.ubique.infobox.backend.external-api.default-user-agent=ub-infobox-ws-prod/${build-properties.version}
+      + ch.ubique.backend.spring.boot.http.default-user-agent=ub-infobox-ws-prod/${build-properties.version}
+      ```
+      and you have to change all usages of `ch.ubique.infobox.backend.external-api.default-user-agent` to the new
+      property.
 
 ## 1.7.1
 
