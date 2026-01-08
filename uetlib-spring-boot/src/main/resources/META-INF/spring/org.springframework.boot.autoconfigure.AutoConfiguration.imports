@@ -1,2 +1,4 @@
+ch.ubique.backend.spring.boot.http.restclient.autoconfigure.UetlibSpringBootRestClientAutoConfiguration
+ch.ubique.backend.spring.boot.http.resttemplate.autoconfigure.UetlibSpringBootRestTemplateAutoConfiguration
 ch.ubique.backend.spring.boot.springdoc.autoconfigure.UetlibSpringBootSpringDocAutoConfiguration
 ch.ubique.backend.spring.boot.problem.springdoc.autoconfigure.UetlibSpringBootSpringDocAutoConfiguration
