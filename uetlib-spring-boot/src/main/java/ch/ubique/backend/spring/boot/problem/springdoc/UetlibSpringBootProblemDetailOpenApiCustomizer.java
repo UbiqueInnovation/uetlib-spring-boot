@@ -13,7 +13,7 @@ import org.springframework.http.ProblemDetail;
  * the schema of the 'additionalProperties' and apply it to the top-level schema of the
  * ProblemDetail schema
  */
-public class UetlibSpringBootProblemProblemDetailOpenApiCustomizer implements OpenApiCustomizer {
+public class UetlibSpringBootProblemDetailOpenApiCustomizer implements OpenApiCustomizer {
 
     @Override
     public void customise(final OpenAPI openApi) {

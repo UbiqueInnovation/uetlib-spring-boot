@@ -1,4 +1,4 @@
-package ch.ubique.backend.spring.boot.springdoc;
+package ch.ubique.backend.spring.boot.springdoc.autoconfigure;
 
 import ch.ubique.backend.core.springdoc.SpringDocConfig;
 
