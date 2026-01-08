@@ -2,10 +2,11 @@ package ch.ubique.backend.spring.boot.problem.springdoc.autoconfigure;
 
 import ch.ubique.backend.spring.boot.problem.springdoc.UetlibSpringBootProblemDetailOpenApiCustomizer;
 import ch.ubique.backend.spring.boot.problem.springdoc.UetlibSpringBootSpringDocProblemOpenApiCustomizer;
-import org.springframework.context.annotation.Configuration;
+
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.context.annotation.Import;
 
-@Configuration
+@AutoConfiguration
 @Import({
     UetlibSpringBootProblemDetailOpenApiCustomizer.class,
     UetlibSpringBootSpringDocProblemOpenApiCustomizer.class
