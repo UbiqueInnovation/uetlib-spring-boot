@@ -51,10 +51,10 @@ import java.util.Set;
  * number of problem types that share common patterns (e.g. using static fields for common
  * constants).
  */
-public class UetlibSpringBootProblemSpringDocProblemOpenApiCustomizer implements OpenApiCustomizer {
+public class UetlibSpringBootSpringDocProblemOpenApiCustomizer implements OpenApiCustomizer {
 
     private static final Logger logger =
-            LoggerFactory.getLogger(UetlibSpringBootProblemSpringDocProblemOpenApiCustomizer.class);
+            LoggerFactory.getLogger(UetlibSpringBootSpringDocProblemOpenApiCustomizer.class);
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Override

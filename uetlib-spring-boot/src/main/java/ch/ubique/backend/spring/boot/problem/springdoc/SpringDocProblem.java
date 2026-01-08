@@ -3,6 +3,7 @@ package ch.ubique.backend.spring.boot.problem.springdoc;
 import ch.ubique.backend.spring.boot.problem.AbstractThrowableProblem;
 import ch.ubique.backend.spring.boot.problem.ThrowableProblem;
 import ch.ubique.backend.spring.boot.problem.errortype.ProblemErrorType;
+import ch.ubique.backend.spring.boot.problem.springdoc.autoconfigure.UetlibSpringBootSpringDocAutoConfiguration;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -29,8 +30,8 @@ import java.net.URI;
  * {@link #status()}, {@link #title()}, {@link #detail()}, {@link #errorType()} and {@link
  * #errorCode()} documented as required. This class represents the documentation equivalent of all
  * exceptions extending {@link AbstractThrowableProblem}. SpringDoc renders the correct error types
- * using the customizer {@link UetlibSpringBootProblemSpringDocProblemOpenApiCustomizer} as
- * auto-registered in {@link UetlibSpringBootProblemSpringDocAutoConfiguration}
+ * using the customizer {@link UetlibSpringBootSpringDocProblemOpenApiCustomizer} as auto-registered
+ * in {@link UetlibSpringBootSpringDocAutoConfiguration}
  *
  * <p>This extends the specification for RFC-9457 problem details with uetlib-specific extensions:
  * `errorType` and `errorCode` and marks most fields as required.

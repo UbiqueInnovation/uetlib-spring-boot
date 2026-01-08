@@ -1,2 +1,2 @@
-ch.ubique.backend.spring.boot.springdoc.UetlibSpringBootSpringDocAutoConfiguration
-ch.ubique.backend.spring.boot.problem.springdoc.UetlibSpringBootProblemSpringDocAutoConfiguration
+ch.ubique.backend.spring.boot.springdoc.autoconfigure.UetlibSpringBootSpringDocAutoConfiguration
+ch.ubique.backend.spring.boot.problem.springdoc.autoconfigure.UetlibSpringBootSpringDocAutoConfiguration
