@@ -15,13 +15,6 @@
 
     <dependencies>
 
-        <!-- to auto-generate spring-configuration-metadata.json -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-configuration-processor</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
         <!-- Core -->
         <dependency>
             <groupId>ch.ubique</groupId>
