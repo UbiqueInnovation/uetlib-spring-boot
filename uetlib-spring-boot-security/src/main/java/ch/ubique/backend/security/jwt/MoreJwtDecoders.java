@@ -41,17 +41,17 @@ public final class MoreJwtDecoders {
      *     instance of {@link RestTemplateBuilder#build()}. * @param issuerUri String representation
      *     of the issuer URI.
      * @param audiences List of allowed audience values.
-     * @param nimbusJwtDecoderCustomizer Consumer to customize the NimbusJwtDecoderBuilder. E.g. to
-     *     set {@link JwkSetUriJwtDecoderBuilder#validateType(boolean)}
+     * @param jwtDecoderCustomizer Consumer to customize the NimbusJwtDecoderBuilder. E.g. to set
+     *     {@link JwkSetUriJwtDecoderBuilder#validateType(boolean)}
      * @return JwtDecoder instance.
      */
     public static JwtDecoder issuerAndAudienceValidatingJwtDecoder(
             final RestOperations restOperations,
             final String issuerUri,
             final List<String> audiences,
-            final Consumer<JwkSetUriJwtDecoderBuilder> nimbusJwtDecoderCustomizer) {
+            final Consumer<JwkSetUriJwtDecoderBuilder> jwtDecoderCustomizer) {
         return issuerAndAudienceValidatingJwtDecoder(
-                restOperations, issuerUri, audiences, List.of(), nimbusJwtDecoderCustomizer);
+                restOperations, issuerUri, audiences, List.of(), jwtDecoderCustomizer);
     }
 
     /**
@@ -61,21 +61,25 @@ public final class MoreJwtDecoders {
      *     instance of {@link RestTemplateBuilder#build()}.
      * @param issuerUri String representation of the issuer URI.
      * @param audiences List of allowed audience values.
-     * @param nimbusJwtDecoderCustomizer Consumer to customize the NimbusJwtDecoderBuilder. E.g. to
-     *     set {@link JwkSetUriJwtDecoderBuilder#validateType(boolean)}
+     * @param additionalJwtDecoderCustomizer Consumer to customize the NimbusJwtDecoderBuilder. E.g.
+     *     to set {@link JwkSetUriJwtDecoderBuilder#validateType(boolean)}
      * @return JwtDecoder instance.
      */
     public static JwtDecoder issuerAndAudienceValidatingAtJwtDecoder(
             final RestOperations restOperations,
             final String issuerUri,
             final List<String> audiences,
-            final Consumer<JwkSetUriJwtDecoderBuilder> nimbusJwtDecoderCustomizer) {
+            final Consumer<JwkSetUriJwtDecoderBuilder> additionalJwtDecoderCustomizer) {
+
+        final Consumer<JwkSetUriJwtDecoderBuilder> noJwtTypeVerifier = b -> b.validateType(false);
+        final var jwtDecoderCustomizer = additionalJwtDecoderCustomizer.andThen(noJwtTypeVerifier);
+
         return issuerAndAudienceValidatingJwtDecoder(
                 restOperations,
                 issuerUri,
                 audiences,
                 List.of(typeAtJwtValidator()),
-                b -> b.validateType(false));
+                jwtDecoderCustomizer);
     }
 
     /**
@@ -86,8 +90,8 @@ public final class MoreJwtDecoders {
      * @param issuerUri String representation of the issuer URI.
      * @param audiences List of allowed audience values.
      * @param additionalTokenValidators Additional OAuth2TokenValidators to apply.
-     * @param nimbusJwtDecoderCustomizer Consumer to customize the NimbusJwtDecoderBuilder. E.g. to
-     *     set {@link JwkSetUriJwtDecoderBuilder#validateType(boolean)}
+     * @param additionalJwtDecoderCustomizer Consumer to customize the NimbusJwtDecoderBuilder. E.g.
+     *     to set {@link JwkSetUriJwtDecoderBuilder#validateType(boolean)}
      * @return JwtDecoder instance.
      */
     public static JwtDecoder issuerAndAudienceValidatingJwtDecoder(
@@ -95,7 +99,7 @@ public final class MoreJwtDecoders {
             final String issuerUri,
             final List<String> audiences,
             final Collection<OAuth2TokenValidator<Jwt>> additionalTokenValidators,
-            final Consumer<JwkSetUriJwtDecoderBuilder> nimbusJwtDecoderCustomizer) {
+            final Consumer<JwkSetUriJwtDecoderBuilder> additionalJwtDecoderCustomizer) {
         final var tokenValidators =
                 Stream.concat(
                                 Stream.of(issuerValidator(issuerUri), audienceValidator(audiences)),
@@ -103,12 +107,12 @@ public final class MoreJwtDecoders {
                         .toList();
         final var jwtValidator = new DelegatingOAuth2TokenValidator<>(tokenValidators);
 
-        final var nimbusJwtDecoderBuilder = NimbusJwtDecoder.withIssuerLocation(issuerUri);
-        nimbusJwtDecoderBuilder.restOperations(restOperations);
+        final var jwtDecoderBuilder = NimbusJwtDecoder.withIssuerLocation(issuerUri);
+        jwtDecoderBuilder.restOperations(restOperations);
 
-        nimbusJwtDecoderCustomizer.accept(nimbusJwtDecoderBuilder);
+        additionalJwtDecoderCustomizer.accept(jwtDecoderBuilder);
 
-        final var jwtDecoder = nimbusJwtDecoderBuilder.build();
+        final var jwtDecoder = jwtDecoderBuilder.build();
         jwtDecoder.setJwtValidator(jwtValidator);
         return jwtDecoder;
     }
