@@ -2,15 +2,15 @@ package ch.ubique.backend.spring.validation;
 
 import jakarta.validation.Validator;
 
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 /**
  * Configuration for response validation, enabling properties and defining the validation advice.
  */
-@Configuration
+@AutoConfiguration
 @EnableConfigurationProperties(ResponseValidationProperties.class)
 public class UetlibSpringBootValidationResponseValidationAutoConfiguration {
 
