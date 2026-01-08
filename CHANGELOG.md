@@ -45,9 +45,9 @@
           ```java
           private JwtDecoder connectorAtJwtDecoder(final RestTemplateBuilder restTemplateBuilder) {
               return MoreJwtDecoders.issuerAndAudienceValidatingAtJwtDecoder(
+                      restTemplateBuilder.build(),
                       connectorIssuerUri,
-                      List.of(connectorAudience),
-                      restTemplateBuilder);
+                      List.of(connectorAudience));
           }
           ```
         - All `MoreJwtDecoders#*JwtDecoder(...)` methods now require a pre-configured `RestOperations` as the first
