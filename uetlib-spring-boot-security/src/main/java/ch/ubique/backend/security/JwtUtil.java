@@ -2,6 +2,7 @@ package ch.ubique.backend.security;
 
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 
@@ -18,10 +19,13 @@ public final class JwtUtil {
     private JwtUtil() {}
 
     public static Jwt getJwt() {
-        if (SecurityContextHolder.getContext().getAuthentication().getPrincipal()
-                instanceof final Jwt jwt) {
+        if (SecurityContextHolder.getContext().getAuthentication()
+                        instanceof final Authentication authentication
+                && authentication.getPrincipal() instanceof final Jwt jwt) {
             return jwt;
         }
+
+
         throw new BadCredentialsException("Unable to retrieve JWT");
     }
 
