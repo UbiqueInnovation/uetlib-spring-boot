@@ -61,6 +61,11 @@
       ```
       and you have to change all usages of `ch.ubique.infobox.backend.external-api.default-user-agent` to the new
       property.
+    - New Logbook autoconfiguration. Remove any `WsLoggingConfig.java` or Logbook `Responsefilter`, `BodyFilters`, etc.
+      from the `*BaseConfig` (unless they are very spcific, which they proably aren't) and remove a property in the form of:
+      ```diff
+      - ch.post.logbook.body-filter.enabled=false
+      ```
 
 ## 1.7.1
 
