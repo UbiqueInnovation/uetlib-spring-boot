@@ -43,9 +43,14 @@
             <groupId>org.apache.httpcomponents.client5</groupId>
             <artifactId>httpclient5</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.zalando</groupId>
             <artifactId>logbook-spring</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.zalando</groupId>
+            <artifactId>logbook-spring-boot-autoconfigure</artifactId>
         </dependency>
 
         <dependency>
