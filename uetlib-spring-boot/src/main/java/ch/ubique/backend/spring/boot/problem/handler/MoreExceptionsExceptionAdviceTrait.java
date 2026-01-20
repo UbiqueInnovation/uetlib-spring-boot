@@ -9,7 +9,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import java.util.NoSuchElementException;
 
-public interface MoreExceptionsExceptionAdviceTrait extends ResponseEntityExceptionSkeleton {
+public interface MoreExceptionsExceptionAdviceTrait extends UetlibExceptionHandlerSkeleton {
 
     /**
      * Handle all exceptions raised within Spring MVC handling of the request. This is an extension

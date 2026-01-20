@@ -2,20 +2,35 @@ package ch.ubique.backend.spring.boot.problem.handler;
 
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.MessageSource;
 import org.springframework.http.*;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @SuppressWarnings("unused")
 @NullMarked
-public class UetlibExceptionHandler extends ResponseEntityExceptionHandler
-        implements ResponseEntityExceptionSkeleton,
+public abstract class UetlibExceptionHandler extends ResponseEntityExceptionHandler
+        implements UetlibExceptionHandlerSkeleton,
                 ThrowableProblemAdviceTrait,
                 MoreExceptionsExceptionAdviceTrait,
                 RestClientExceptionAdviceTrait {
 
+    private static final Logger logger = LoggerFactory.getLogger(UetlibExceptionHandler.class);
+
+    @Override
+    public Logger logger() {
+        return logger;
+    }
+
+    @Override
+    public @Nullable MessageSource getMessageSource() {
+        return super.getMessageSource();
+    }
+
     /**
-     * This method is defined as {@code public} in {@link ResponseEntityExceptionSkeleton} but
+     * This method is defined as {@code public} in {@link UetlibExceptionHandlerSkeleton} but
      * implemented as {@code protected} in {@link ResponseEntityExceptionHandler}. We have to
      * redefine it as {@code public} here and call the super method, otherwise Java won't compile
      * it.
@@ -33,7 +48,7 @@ public class UetlibExceptionHandler extends ResponseEntityExceptionHandler
     }
 
     /**
-     * This method is defined as {@code public} in {@link ResponseEntityExceptionSkeleton} but
+     * This method is defined as {@code public} in {@link UetlibExceptionHandlerSkeleton} but
      * implemented as {@code protected} in {@link ResponseEntityExceptionHandler}. We have to
      * redefine it as {@code public} here and call the super method, otherwise Java won't compile
      * it.

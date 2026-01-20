@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 import jakarta.validation.constraints.NotNull;
 
+import org.jspecify.annotations.NonNull;
 import org.springframework.http.ProblemDetail;
 
 import java.net.URI;
@@ -27,11 +28,11 @@ import java.net.URI;
  * }
  *
  * Then, use this class in the controller, not {@link ProblemDetail}, to have {@link #type()},
- * {@link #status()}, {@link #title()}, {@link #detail()}, {@link #errorType()} and {@link
- * #errorCode()} documented as required. This class represents the documentation equivalent of all
- * exceptions extending {@link AbstractThrowableProblem}. SpringDoc renders the correct error types
- * using the customizer {@link UetlibSpringBootSpringDocProblemOpenApiCustomizer} as auto-registered
- * in {@link UetlibSpringBootSpringDocAutoConfiguration}
+ * {@link #status()}, {@link #title()}, {@link #detail()} and {@link #problemCode()} documented as
+ * required. This class represents the documentation equivalent of all exceptions extending {@link
+ * AbstractThrowableProblem}. SpringDoc renders the correct error types using the customizer {@link
+ * UetlibSpringBootSpringDocProblemOpenApiCustomizer} as auto-registered in {@link
+ * UetlibSpringBootSpringDocAutoConfiguration}
  *
  * <p>This extends the specification for RFC-9457 problem details with uetlib-specific extensions:
  * `errorType` and `errorCode` and marks most fields as required.
@@ -68,16 +69,8 @@ public interface SpringDocProblem<
     @JsonProperty
     URI instance();
 
-    @NotNull
+    @NonNull
     @JsonProperty(required = true)
-    @Schema(
-            description =
-                    "Corresponds 1:1 to an equivalent errorCode for this specific Problem. Non-null iff errorCode is set")
-    E errorType();
-
-    @JsonProperty(required = true)
-    @Schema(
-            description =
-                    "Corresponds 1:1 to an equivalent errorType for this specific Problem. Non-null iff errorType is set")
-    int errorCode();
+    @Schema(description = "Corresponds 1:1 to a type for this specific Problem")
+    String problemCode();
 }
