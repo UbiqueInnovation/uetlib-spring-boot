@@ -1,6 +1,6 @@
 package ch.ubique.backend.spring.boot.problem;
 
-import ch.ubique.backend.spring.boot.problem.errortype.ProblemErrorType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
@@ -27,9 +27,6 @@ public interface BaseThrowableProblem {
         return null;
     }
 
-    @NonNull ProblemErrorType errorType();
-
-    default int errorCode() {
-        return errorType().code();
-    }
+    @JsonIgnore
+    @NonNull String problemCode();
 }

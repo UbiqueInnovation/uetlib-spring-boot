@@ -1,6 +1,7 @@
 package ch.ubique.backend.spring.boot.problem.springdoc;
 
 import ch.ubique.backend.spring.boot.problem.errortype.ProblemErrorType;
+import ch.ubique.backend.spring.boot.problem.errortype.ProblemType;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.media.IntegerSchema;
@@ -14,9 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springdoc.core.customizers.OpenApiCustomizer;
 
 import java.lang.reflect.ParameterizedType;
-import java.net.URI;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -28,9 +27,10 @@ import java.util.Set;
  * <ul>
  *   <li>Scans all classes in the project that implement {@link SpringDocProblem}.
  *   <li>For each class, it extracts the second generic type (which is expected to have a {@code
- *       public static final URI TYPE} field).
- *   <li>If the second generic type has a `TYPE` field of type {@link URI}, it extracts its value
- *       and adds it as the {@code example} for the `type` property in the OpenAPI schema.
+ *       public static final ProblemType PROBLEM_TYPE} field).
+ *   <li>If the second generic type has a `PROBLEM_TYPE` field of type {@link ProblemType}, it
+ *       extracts its value and adds it as the {@code example} for the `type` property in the
+ *       OpenAPI schema.
  *   <li>Uses reflection to modify the OpenAPI schema dynamically to include the example values for
  *       any classes implementing {@link SpringDocProblem} that meet the criteria.
  * </ul>
@@ -38,13 +38,13 @@ import java.util.Set;
  * The {@link OpenApiCustomizer} is invoked during the Spring Boot application startup to ensure the
  * OpenAPI specification includes accurate examples based on the runtime class details. This allows
  * for dynamic schema generation, making it easier to document APIs that use generic types with
- * specific constant fields, such as {@code TYPE}.
+ * specific constant fields, such as {@code PROBLEM_TYPE}.
  *
  * <p>For example, if a class like {@code MailpieceOrderProblem} implements {@code
  * SpringDocProblem<MailpieceOrderErrorType, MailpieceOrderException>} and {@code
- * MailpieceOrderException} contains a static constant field {@code TYPE}, this method will
- * automatically add {@code TYPE.toString()} as the example value for the `type` field in the
- * generated OpenAPI schema.
+ * MailpieceOrderException} contains a static constant field {@code PROBLEM_TYPE}, this method will
+ * automatically add {@code ErrorType.UNKNOWN.type()} as the example value for the `type` field in
+ * the generated OpenAPI schema.
  *
  * <p>This class is useful for dynamically adjusting the OpenAPI documentation without the need for
  * manually specifying examples for each class. It is particularly helpful when dealing with a large
@@ -73,17 +73,18 @@ public class UetlibSpringBootSpringDocProblemOpenApiCustomizer implements OpenAp
             }
 
             try {
-                // Check if the second generic type has a public static final URI TYPE field
-                final var typeField = exceptionGenericType.getDeclaredField("TYPE");
-                // Check if it's of type URI and static and final
-                if (!typeField.getType().equals(URI.class)
-                        || !java.lang.reflect.Modifier.isStatic(typeField.getModifiers())
-                        || !java.lang.reflect.Modifier.isFinal(typeField.getModifiers())) {
+                // Check if the second generic type has a 'public static final ProblemType
+                // PROBLEM_TYPE' field
+                final var problemTypeField = exceptionGenericType.getDeclaredField("PROBLEM_TYPE");
+                // Check if it's of type ProblemType and static and final
+                if (!problemTypeField.getType().equals(ProblemType.class)
+                        || !java.lang.reflect.Modifier.isStatic(problemTypeField.getModifiers())
+                        || !java.lang.reflect.Modifier.isFinal(problemTypeField.getModifiers())) {
                     continue;
                 }
 
-                // Get the value of the TYPE field
-                final var typeValue = typeField.get(null).toString();
+                // Get the value of the PROBLEM_TYPE field
+                final var problemTypeValue = problemTypeField.get(null).toString();
 
                 // Edit the existing schema dynamically
                 final var problemSchema =
@@ -96,35 +97,42 @@ public class UetlibSpringBootSpringDocProblemOpenApiCustomizer implements OpenAp
                     continue;
                 }
 
-                // set 'type' example value to 'typeValue' and also the only possible value
-                final var typeFieldSchema = (Schema) problemSchema.getProperties().get("type");
-                problemSchema.addProperty(
-                        typeFieldSchema.getName(),
-                        new StringSchema().example(typeValue)._enum(List.of(typeValue)));
-
-                // set errorCode of enum constant UNKNOWN which always exists
-                final var unknownErrorTypeCode =
+                // get type and problemCode of enum constant UNKNOWN, which always exists
+                final var unknownProblemErrorType =
                         Arrays.stream(errorTypeGenericType.getEnumConstants())
                                 .filter(e -> "UNKNOWN".equals(e.name()))
                                 .findFirst()
-                                .orElseThrow()
-                                .code();
-                final var allErrorCodes =
-                        Arrays.stream(errorTypeGenericType.getEnumConstants())
-                                .map(ProblemErrorType::code)
-                                .toList();
-                // set 'errorCode' example value to 'unknownErrorTypeCode' and also as the only
+                                .orElseThrow();
+                final var unknownType = unknownProblemErrorType.type();
+                final var unknownProblemCode = unknownProblemErrorType.problemCode();
+
+                // get type and problemCode of all enum constants
+                final var allProblemErrorTypes =
+                        Arrays.stream(errorTypeGenericType.getEnumConstants()).toList();
+                final var allTypes =
+                        allProblemErrorTypes.stream().map(ProblemErrorType::type).toList();
+                final var allProblemCodes =
+                        allProblemErrorTypes.stream().map(ProblemErrorType::problemCode).toList();
+
+                // set 'type' example value to 'unknownType' and also set all the
+                // possible values
+                final var typeFieldSchema = (Schema) problemSchema.getProperties().get("type");
+                problemSchema.addProperty(
+                        typeFieldSchema.getName(),
+                        new StringSchema().example(unknownType)._enum(allTypes));
+
+                // set 'problemCode' example value to 'unknownProblemCode' and also set all the
                 // possible values
                 final var errorCodeFieldSchema =
-                        (Schema) problemSchema.getProperties().get("errorCode");
+                        (Schema) problemSchema.getProperties().get("problemCode");
                 problemSchema.addProperty(
                         errorCodeFieldSchema.getName(),
-                        new IntegerSchema().example(unknownErrorTypeCode)._enum(allErrorCodes));
+                        new IntegerSchema().example(unknownProblemCode)._enum(allProblemCodes));
 
             } catch (final NoSuchFieldException | IllegalAccessException e) {
-                // Handle the case where the TYPE field is not present or accessible
+                // Handle the case where the PROBLEM_TYPE field is not present or accessible
                 logger.info(
-                        "Cannot find a 'public static final URI TYPE' in the second generic type class {} of {} to set the example value in swagger. Skipping.",
+                        "Cannot find a 'public static final ProblemType PROBLEM_TYPE' in the second generic type class {} of {} to set the example value in swagger. Skipping.",
                         exceptionGenericType.getSimpleName(),
                         problemClass.getSimpleName());
             }

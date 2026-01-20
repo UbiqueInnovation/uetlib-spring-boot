@@ -8,7 +8,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import java.util.Arrays;
 
 /**
- * Tests for {@link ResponseEntityExceptionSkeleton} to ensure compatibility with {@link
+ * Tests for {@link UetlibExceptionHandlerSkeleton} to ensure compatibility with {@link
  * ResponseEntityExceptionHandler} and that it is correctly implemented by {@link
  * UetlibExceptionHandler}.
  */
@@ -16,12 +16,12 @@ class ResponseEntityExceptionSkeletonTest {
 
     /**
      * Verifies that {@link ResponseEntityExceptionHandler} contains all methods defined in {@link
-     * ResponseEntityExceptionSkeleton} with matching signatures and return types. This ensures that
+     * UetlibExceptionHandlerSkeleton} with matching signatures and return types. This ensures that
      * the skeleton remains synchronized with the Spring Framework's base exception handler.
      */
     @Test
     void testResponseEntityExceptionHandlerHasSkeletonMethods() {
-        for (final var interfaceMethod : ResponseEntityExceptionSkeleton.class.getMethods()) {
+        for (final var interfaceMethod : UetlibExceptionHandlerSkeleton.class.getMethods()) {
             final var classMethod =
                     Arrays.stream(ResponseEntityExceptionHandler.class.getDeclaredMethods())
                             .filter(m -> m.getName().equals(interfaceMethod.getName()))
@@ -48,11 +48,11 @@ class ResponseEntityExceptionSkeletonTest {
 
     /**
      * Confirms that {@link UetlibExceptionHandler} explicitly implements {@link
-     * ResponseEntityExceptionSkeleton}.
+     * UetlibExceptionHandlerSkeleton}.
      */
     @Test
     void testUetlibExceptionHandlerImplementsSkeleton() {
         assertThat(UetlibExceptionHandler.class)
-                .isAssignableTo(ResponseEntityExceptionSkeleton.class);
+                .isAssignableTo(UetlibExceptionHandlerSkeleton.class);
     }
 }

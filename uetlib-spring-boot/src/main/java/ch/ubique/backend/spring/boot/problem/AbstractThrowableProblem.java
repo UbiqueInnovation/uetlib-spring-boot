@@ -1,7 +1,6 @@
 package ch.ubique.backend.spring.boot.problem;
 
-import static java.util.Map.entry;
-import static java.util.Map.ofEntries;
+import ch.ubique.backend.spring.boot.problem.errortype.ProblemErrorType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -16,6 +15,8 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ProblemDetail;
 
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class AbstractThrowableProblem extends RuntimeException
         implements BaseThrowableProblem {
@@ -26,43 +27,46 @@ public abstract class AbstractThrowableProblem extends RuntimeException
     @NonNull private final String detail;
     @Nullable private final URI instance;
 
+    @NonNull private final String problemCode;
+
     protected AbstractThrowableProblem(
-            @NonNull final URI type,
+            @NonNull final ProblemErrorType errorType,
             @NonNull final String title,
             @NonNull final HttpStatus status) {
-        this(type, title, status, status.getReasonPhrase());
+        this(errorType, title, status, status.getReasonPhrase());
     }
 
     protected AbstractThrowableProblem(
-            @NonNull final URI type,
+            @NonNull final ProblemErrorType errorType,
             @NonNull final String title,
             @NonNull final HttpStatusCode status,
             @NonNull final String detail) {
-        this(type, title, status, detail, null);
+        this(errorType, title, status, detail, null);
     }
 
     protected AbstractThrowableProblem(
-            @NonNull final URI type,
+            @NonNull final ProblemErrorType errorType,
             @NonNull final String title,
             @NonNull final HttpStatusCode status,
             @NonNull final String detail,
             @Nullable final URI instance) {
-        this(type, title, status, detail, instance, null);
+        this(errorType, title, status, detail, instance, null);
     }
 
     protected AbstractThrowableProblem(
-            @NonNull final URI type,
+            @NonNull final ProblemErrorType errorType,
             @NonNull final String title,
             @NonNull final HttpStatusCode status,
             @NonNull final String detail,
             @Nullable final URI instance,
             @Nullable final AbstractThrowableProblem cause) {
         super(cause);
-        this.type = type;
+        this.type = errorType.type();
         this.title = title;
         this.status = status;
         this.detail = detail;
         this.instance = instance;
+        this.problemCode = errorType.problemCode();
     }
 
     @Override
@@ -85,17 +89,30 @@ public abstract class AbstractThrowableProblem extends RuntimeException
         return detail;
     }
 
+    @Override
+    public @NonNull String problemCode() {
+        return problemCode;
+    }
+
     @JsonIgnore
-    public ProblemDetail toProblemDetail() {
+    public ProblemDetail toProblemDetail(
+            final @Nullable String localizedTitle, final @Nullable String localizedDetail) {
         final var problemDetail = ProblemDetail.forStatus(status);
         problemDetail.setType(type);
         problemDetail.setTitle(title);
         problemDetail.setDetail(detail);
         problemDetail.setInstance(instance);
-        problemDetail.setProperties(
-                ofEntries(
-                        entry("errorType", errorType().name()),
-                        entry("errorCode", errorType().code())));
+
+        final var properties = new HashMap<String, String>();
+        properties.put("problemCode", problemCode);
+        if (localizedTitle != null) {
+            properties.put("localizedTitle", localizedTitle);
+        }
+        if (localizedDetail != null) {
+            properties.put("localizedDetail", localizedDetail);
+        }
+        problemDetail.setProperties(Map.copyOf(properties));
+
         return problemDetail;
     }
 
@@ -122,7 +139,7 @@ public abstract class AbstractThrowableProblem extends RuntimeException
                 .append(title, that.title)
                 .append(detail, that.detail)
                 .append(instance, that.instance)
-                .append(errorType(), that.errorType())
+                .append(problemCode, that.problemCode)
                 .isEquals();
     }
 
@@ -135,7 +152,7 @@ public abstract class AbstractThrowableProblem extends RuntimeException
                 .append(title)
                 .append(detail)
                 .append(instance)
-                .append(errorType())
+                .append(problemCode)
                 .toHashCode();
     }
 
@@ -148,8 +165,15 @@ public abstract class AbstractThrowableProblem extends RuntimeException
                 .append("title", title)
                 .append("detail", detail)
                 .append("instance", instance)
-                .append("errorType", errorType())
-                .append("errorCode", errorType().code())
+                .append("problemCode", problemCode)
                 .toString();
+    }
+
+    public Object @Nullable [] localizedTitleArgs() {
+        return new Object[0];
+    }
+
+    public Object @Nullable [] localizedDetailArgs() {
+        return new Object[0];
     }
 }

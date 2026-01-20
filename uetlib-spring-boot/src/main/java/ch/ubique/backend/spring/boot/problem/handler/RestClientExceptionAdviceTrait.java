@@ -8,7 +8,7 @@ import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-public interface RestClientExceptionAdviceTrait extends ResponseEntityExceptionSkeleton {
+public interface RestClientExceptionAdviceTrait extends UetlibExceptionHandlerSkeleton {
 
     /**
      * Handle all exceptions raised within Spring MVC handling of the request. This is an extension

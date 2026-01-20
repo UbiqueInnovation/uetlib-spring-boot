@@ -1,6 +1,10 @@
 package ch.ubique.backend.spring.boot.problem.handler;
 
 import org.jspecify.annotations.Nullable;
+import org.slf4j.Logger;
+import org.springframework.context.MessageSource;
+import org.springframework.context.NoSuchMessageException;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.*;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -14,7 +18,27 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
  * make the traits extend {@link ResponseEntityExceptionHandler} directly, but Java does not allow
  * multiple inheritance, hence all advice traits have to be interfaces.
  */
-public interface ResponseEntityExceptionSkeleton {
+@SuppressWarnings("JavadocReference")
+public interface UetlibExceptionHandlerSkeleton {
+
+    default @Nullable String localizeMessage(
+            final @Nullable String code, final Object @Nullable [] args) {
+        final var messageSource = getMessageSource();
+        if (messageSource == null || code == null || args == null) {
+            return null;
+        }
+
+        try {
+            return messageSource.getMessage(code, args, null, LocaleContextHolder.getLocale());
+        } catch (final NoSuchMessageException e) {
+            logger().warn("Problem message with code '{}' not found", code, e);
+            return null;
+        }
+    }
+
+    Logger logger();
+
+    @Nullable MessageSource getMessageSource();
 
     /**
      * A method definition of {@link ResponseEntityExceptionHandler#createProblemDetail(Exception,
