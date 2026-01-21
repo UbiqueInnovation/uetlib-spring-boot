@@ -1,6 +1,7 @@
 package ch.ubique.backend.spring.boot.problem.handler;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -16,33 +17,39 @@ class ResponseEntityExceptionSkeletonTest {
 
     /**
      * Verifies that {@link ResponseEntityExceptionHandler} contains all methods defined in {@link
-     * UetlibExceptionHandlerSkeleton} with matching signatures and return types. This ensures that
-     * the skeleton remains synchronized with the Spring Framework's base exception handler.
+     * UetlibExceptionHandlerSkeleton} (apart from the {@link
+     * UetlibExceptionHandlerSkeleton#logger()} method) with matching signatures and return types.
+     * This ensures that the skeleton remains synchronized with the Spring Framework's base
+     * exception handler.
      */
     @Test
     void testResponseEntityExceptionHandlerHasSkeletonMethods() {
-        for (final var interfaceMethod : UetlibExceptionHandlerSkeleton.class.getMethods()) {
+        final var skeletonMethodsToCheck =
+                Arrays.stream(UetlibExceptionHandlerSkeleton.class.getMethods())
+                        .filter(skeletonMethod -> !"logger".equals(skeletonMethod.getName()))
+                        .toList();
+        for (final var skeletonMethod : skeletonMethodsToCheck) {
             final var classMethod =
                     Arrays.stream(ResponseEntityExceptionHandler.class.getDeclaredMethods())
-                            .filter(m -> m.getName().equals(interfaceMethod.getName()))
+                            .filter(m -> m.getName().equals(skeletonMethod.getName()))
                             .filter(
                                     m ->
                                             Arrays.equals(
                                                     m.getParameterTypes(),
-                                                    interfaceMethod.getParameterTypes()))
+                                                    skeletonMethod.getParameterTypes()))
                             .findFirst()
-                            .orElseThrow(
+                            .orElseGet(
                                     () ->
-                                            new AssertionError(
+                                            fail(
                                                     "Method "
-                                                            + interfaceMethod.getName()
+                                                            + skeletonMethod.getName()
                                                             + " with parameters "
                                                             + Arrays.toString(
-                                                                    interfaceMethod
+                                                                    skeletonMethod
                                                                             .getParameterTypes())
                                                             + " not found in ResponseEntityExceptionHandler"));
 
-            assertThat(classMethod.getReturnType()).isEqualTo(interfaceMethod.getReturnType());
+            assertThat(classMethod.getReturnType()).isEqualTo(skeletonMethod.getReturnType());
         }
     }
 
