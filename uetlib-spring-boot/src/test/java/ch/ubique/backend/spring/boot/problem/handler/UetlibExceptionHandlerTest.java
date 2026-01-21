@@ -75,7 +75,10 @@ class UetlibExceptionHandlerTest {
         // test for error test 2
         final var pd2 =
                 testUetlibExceptionHandler.handleAbstractThrowableProblem(
-                        new TestException(TestErrorType.ERROR_TEST2_WITH_TRANSLATIONS, "Error Test 2 exception"), newRequest());
+                        new TestException(
+                                TestErrorType.ERROR_TEST2_WITH_TRANSLATIONS,
+                                "Error Test 2 exception"),
+                        newRequest());
 
         assertEquals("Error Test 2 exception", pd2.getDetail());
 
@@ -87,7 +90,8 @@ class UetlibExceptionHandlerTest {
         // test for error test 3
         final var pd3 =
                 testUetlibExceptionHandler.handleAbstractThrowableProblem(
-                        new TestException(TestErrorType.ERROR_TEST3_WITH_TITLE_ONLY), newRequest());
+                        new TestException(TestErrorType.ERROR_TEST3_WITH_TITLE_TRANSLATION_ONLY),
+                        newRequest());
 
         // i18n title only set for error test 3
         assertNotNull(pd3.getProperties());

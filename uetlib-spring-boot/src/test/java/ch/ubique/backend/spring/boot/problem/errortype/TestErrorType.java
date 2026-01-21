@@ -7,7 +7,7 @@ import java.net.URI;
 public enum TestErrorType implements ProblemErrorType {
     ERROR_TEST1("ET1"),
     ERROR_TEST2_WITH_TRANSLATIONS("ET2"),
-    ERROR_TEST3_WITH_TITLE_ONLY("ET3");
+    ERROR_TEST3_WITH_TITLE_TRANSLATION_ONLY("ET3");
 
     public static final ProblemType PROBLEM_TYPE =
             new ProblemType(
