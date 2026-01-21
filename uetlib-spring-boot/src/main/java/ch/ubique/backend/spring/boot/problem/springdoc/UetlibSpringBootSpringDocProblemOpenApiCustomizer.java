@@ -72,70 +72,47 @@ public class UetlibSpringBootSpringDocProblemOpenApiCustomizer implements OpenAp
                 continue;
             }
 
-            try {
-                // Check if the second generic type has a 'public static final ProblemType
-                // PROBLEM_TYPE' field
-                final var problemTypeField = exceptionGenericType.getDeclaredField("PROBLEM_TYPE");
-                // Check if it's of type ProblemType and static and final
-                if (!problemTypeField.getType().equals(ProblemType.class)
-                        || !java.lang.reflect.Modifier.isStatic(problemTypeField.getModifiers())
-                        || !java.lang.reflect.Modifier.isFinal(problemTypeField.getModifiers())) {
-                    continue;
-                }
+            // Edit the existing schema dynamically
+            final var problemSchema =
+                    openApi.getComponents().getSchemas().get(problemClass.getSimpleName());
 
-                // Get the value of the PROBLEM_TYPE field
-                final var problemTypeValue = problemTypeField.get(null).toString();
-
-                // Edit the existing schema dynamically
-                final var problemSchema =
-                        openApi.getComponents().getSchemas().get(problemClass.getSimpleName());
-
-                if (problemSchema == null) {
-                    // openApi.getComponents().getSchemas() only contains all the schemas that are
-                    // actually documented on some @Operation annotation and not all problemClasses
-                    // are necessarily contained in there
-                    continue;
-                }
-
-                // get type and problemCode of enum constant UNKNOWN, which always exists
-                final var unknownProblemErrorType =
-                        Arrays.stream(errorTypeGenericType.getEnumConstants())
-                                .filter(e -> "UNKNOWN".equals(e.name()))
-                                .findFirst()
-                                .orElseThrow();
-                final var unknownType = unknownProblemErrorType.type();
-                final var unknownProblemCode = unknownProblemErrorType.problemCode();
-
-                // get type and problemCode of all enum constants
-                final var allProblemErrorTypes =
-                        Arrays.stream(errorTypeGenericType.getEnumConstants()).toList();
-                final var allTypes =
-                        allProblemErrorTypes.stream().map(ProblemErrorType::type).toList();
-                final var allProblemCodes =
-                        allProblemErrorTypes.stream().map(ProblemErrorType::problemCode).toList();
-
-                // set 'type' example value to 'unknownType' and also set all the
-                // possible values
-                final var typeFieldSchema = (Schema) problemSchema.getProperties().get("type");
-                problemSchema.addProperty(
-                        typeFieldSchema.getName(),
-                        new StringSchema().example(unknownType)._enum(allTypes));
-
-                // set 'problemCode' example value to 'unknownProblemCode' and also set all the
-                // possible values
-                final var errorCodeFieldSchema =
-                        (Schema) problemSchema.getProperties().get("problemCode");
-                problemSchema.addProperty(
-                        errorCodeFieldSchema.getName(),
-                        new IntegerSchema().example(unknownProblemCode)._enum(allProblemCodes));
-
-            } catch (final NoSuchFieldException | IllegalAccessException e) {
-                // Handle the case where the PROBLEM_TYPE field is not present or accessible
-                logger.info(
-                        "Cannot find a 'public static final ProblemType PROBLEM_TYPE' in the second generic type class {} of {} to set the example value in swagger. Skipping.",
-                        exceptionGenericType.getSimpleName(),
-                        problemClass.getSimpleName());
+            if (problemSchema == null) {
+                // openApi.getComponents().getSchemas() only contains all the schemas that are
+                // actually documented on some @Operation annotation, and not all problemClasses
+                // are necessarily contained in there
+                continue;
             }
+
+            // get type and problemCode of enum constant UNKNOWN, which always exists
+            final var unknownProblemErrorType =
+                    Arrays.stream(errorTypeGenericType.getEnumConstants())
+                            .filter(e -> "UNKNOWN".equals(e.name()))
+                            .findFirst()
+                            .orElseThrow();
+            final var unknownType = unknownProblemErrorType.type();
+            final var unknownProblemCode = unknownProblemErrorType.problemCode();
+
+            // get type and problemCode of all enum constants
+            final var allProblemErrorTypes =
+                    Arrays.stream(errorTypeGenericType.getEnumConstants()).toList();
+            final var allTypes = allProblemErrorTypes.stream().map(ProblemErrorType::type).toList();
+            final var allProblemCodes =
+                    allProblemErrorTypes.stream().map(ProblemErrorType::problemCode).toList();
+
+            // set 'type' example value to 'unknownType' and also set all the
+            // possible values
+            final var typeFieldSchema = (Schema) problemSchema.getProperties().get("type");
+            problemSchema.addProperty(
+                    typeFieldSchema.getName(),
+                    new StringSchema().example(unknownType)._enum(allTypes));
+
+            // set 'problemCode' example value to 'unknownProblemCode' and also set all the
+            // possible values
+            final var problemCodeFieldSchema =
+                    (Schema) problemSchema.getProperties().get("problemCode");
+            problemSchema.addProperty(
+                    problemCodeFieldSchema.getName(),
+                    new IntegerSchema().example(unknownProblemCode)._enum(allProblemCodes));
         }
     }
 
@@ -143,7 +120,7 @@ public class UetlibSpringBootSpringDocProblemOpenApiCustomizer implements OpenAp
     @SuppressWarnings("rawtypes")
     private Set<Class<? extends SpringDocProblem>> findAllSpringDocProblemClasses() {
         // Initialize Reflections to scan for types implementing SpringDocProblem in your package
-        final var reflections = new Reflections("ch.post", Scanners.SubTypes);
+        final var reflections = new Reflections(Scanners.SubTypes);
 
         // Return all types that implement SpringDocProblem
         return reflections.getSubTypesOf(SpringDocProblem.class);
