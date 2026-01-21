@@ -35,7 +35,8 @@ import java.net.URI;
  * UetlibSpringBootSpringDocAutoConfiguration}
  *
  * <p>This extends the specification for RFC-9457 problem details with uetlib-specific extensions:
- * `errorType` and `errorCode` and marks most fields as required.
+ * {@code localizedTitle}/{@code localizedDetail} and {@code problemCode} and marks most fields as
+ * required.
  *
  * @see ThrowableProblem
  * @see <a href="https://datatracker.ietf.org/doc/html/rfc9457">RFC-9457</a>
@@ -45,8 +46,7 @@ import java.net.URI;
         description =
                 """
                         Base documentation interface for all dedicated custom RFC-9457 problems.
-                        Each (`errorCode`) has to represent an application-wide 1:1 mapping to (`type`, `errorType`).
-                        Meaning, `errorCode` is unique application-wide, but `errorType` will only be unique for this problem `type`""")
+                        Each (`problemCode`) has to represent an application-wide 1:1 mapping to a `type`.""")
 @SuppressWarnings("unused")
 public interface SpringDocProblem<
         E extends Enum<E> & ProblemErrorType, P extends RuntimeException & ThrowableProblem<E>> {
@@ -56,6 +56,7 @@ public interface SpringDocProblem<
     URI type();
 
     @JsonProperty(required = true)
+    @Schema(example = "400")
     int status();
 
     @NotNull
@@ -67,6 +68,7 @@ public interface SpringDocProblem<
     String detail();
 
     @JsonProperty
+    @Schema(example = "/path/to/endpoint/that/has/thrown")
     URI instance();
 
     @NonNull
