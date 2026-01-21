@@ -19,8 +19,6 @@ import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import tools.jackson.databind.ObjectMapper;
-
 @WebMvcTest
 @ContextConfiguration(classes = ExceptionThrowingControllerTestConfig.class)
 @ActiveProfiles("test")
@@ -29,7 +27,6 @@ import tools.jackson.databind.ObjectMapper;
 class ExceptionThrowingControllerTest {
 
     @Autowired private MockMvc mvc;
-    @Autowired private ObjectMapper objectMapper;
 
     @Test
     void testExceptionThrown() throws Exception {

@@ -14,7 +14,7 @@ import java.util.Locale;
 public class UetlibExceptionHandlerTestConfig {
 
     @Bean
-    public ResourceBundleMessageSource messageSource() {
+    ResourceBundleMessageSource messageSource() {
         final var source = new ResourceBundleMessageSource();
         source.setDefaultEncoding("UTF-8");
         source.setBasenames("i18n/messages");
