@@ -37,7 +37,7 @@ class ExceptionThrowingControllerTest {
                 status().is4xxClientError(),
                 MockMvcResultMatchers.jsonPath("$.type")
                         .value(
-                                "urn:ch:uetlib:spring:boot:problem:test:error-test3-with-title-only"),
+                                "urn:ch:uetlib:spring:boot:problem:test:error-test3-with-title-translation-only"),
                 MockMvcResultMatchers.jsonPath("$.title").value("Test Problem"),
                 MockMvcResultMatchers.jsonPath("$.detail")
                         .value("Always throw TestErrorType.ERROR_TEST3_WITH_TITLE_ONLY"),

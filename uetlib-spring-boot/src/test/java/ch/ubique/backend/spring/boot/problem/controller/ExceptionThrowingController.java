@@ -26,6 +26,8 @@ public class ExceptionThrowingController {
                             content =
                                     @Content(schema = @Schema(implementation = TestProblem.class))))
     public void throwException() {
-        throw new TestException(TestErrorType.ERROR_TEST3_WITH_TITLE_ONLY, "Always throw TestErrorType.ERROR_TEST3_WITH_TITLE_ONLY");
+        throw new TestException(
+                TestErrorType.ERROR_TEST3_WITH_TITLE_TRANSLATION_ONLY,
+                "Always throw TestErrorType.ERROR_TEST3_WITH_TITLE_ONLY");
     }
 }
