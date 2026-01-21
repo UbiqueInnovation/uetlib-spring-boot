@@ -71,6 +71,20 @@ public interface SpringDocProblem<
 
     @NonNull
     @JsonProperty(required = true)
-    @Schema(description = "Corresponds 1:1 to a type for this specific Problem")
+    @Schema(
+            description =
+                    "Corresponds 1:1 to a type for this specific Problem, should be shown to the user for debugging purposes")
     String problemCode();
+
+    @JsonProperty
+    @Schema(
+            description =
+                    "If set, represents a localized error title than can be shown to the user")
+    String localizedTitle();
+
+    @JsonProperty
+    @Schema(
+            description =
+                    "If set, represents a localized error detail than can be shown to the user")
+    String localizedDetail();
 }
