@@ -4,15 +4,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import ch.ubique.backend.spring.boot.problem.handler.TestUetlibExceptionHandler;
-import ch.ubique.backend.spring.boot.problem.handler.config.UbiqueExceptionAdviceTestConfig;
+import ch.ubique.backend.spring.boot.problem.controller.config.ExceptionThrowingControllerTestConfig;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.AutoConfigureJson;
 import org.springframework.boot.test.autoconfigure.json.AutoConfigureJsonTesters;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
@@ -24,8 +22,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import tools.jackson.databind.ObjectMapper;
 
 @WebMvcTest
-@Import({ExceptionThrowingController.class, TestUetlibExceptionHandler.class})
-@ContextConfiguration(classes = UbiqueExceptionAdviceTestConfig.class)
+@ContextConfiguration(classes = ExceptionThrowingControllerTestConfig.class)
 @ActiveProfiles("test")
 @AutoConfigureJson
 @AutoConfigureJsonTesters
