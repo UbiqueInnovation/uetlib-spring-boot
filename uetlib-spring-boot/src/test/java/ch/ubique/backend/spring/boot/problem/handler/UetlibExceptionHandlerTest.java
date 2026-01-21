@@ -6,7 +6,7 @@ import static java.util.Objects.requireNonNull;
 
 import ch.ubique.backend.spring.boot.problem.TestException;
 import ch.ubique.backend.spring.boot.problem.errortype.TestErrorType;
-import ch.ubique.backend.spring.boot.problem.handler.config.UbiqueExceptionAdviceTestConfig;
+import ch.ubique.backend.spring.boot.problem.handler.config.UetlibExceptionHandlerTestConfig;
 
 import com.google.common.base.CaseFormat;
 
@@ -30,7 +30,7 @@ import java.util.NoSuchElementException;
 @ActiveProfiles("test")
 @SpringBootTest(
         webEnvironment = SpringBootTest.WebEnvironment.MOCK,
-        classes = UbiqueExceptionAdviceTestConfig.class)
+        classes = UetlibExceptionHandlerTestConfig.class)
 @TestPropertySource("classpath:application-test.properties")
 class UetlibExceptionHandlerTest {
 

@@ -1,4 +1,4 @@
-package ch.ubique.backend.spring.boot.problem.controller.config;
+package ch.ubique.backend.spring.boot.problem.handler.config;
 
 import ch.ubique.backend.spring.boot.problem.handler.TestUetlibExceptionHandler;
 
@@ -11,7 +11,7 @@ import java.util.Locale;
 
 @SpringBootConfiguration
 @Import(TestUetlibExceptionHandler.class)
-public class UbiqueExceptionAdviceTestConfig {
+public class UetlibExceptionHandlerTestConfig {
 
     @Bean
     public ResourceBundleMessageSource messageSource() {
