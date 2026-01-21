@@ -19,6 +19,12 @@ public class UetlibSpringBootProblemDetailOpenApiCustomizer implements OpenApiCu
     public void customise(final OpenAPI openApi) {
         final var problemDetailSchema =
                 openApi.getComponents().getSchemas().get(ProblemDetail.class.getSimpleName());
+        if (problemDetailSchema == null) {
+            // openApi.getComponents().getSchemas() only contains all the schemas that are
+            // actually documented on some @Operation annotation, and not all problemClasses
+            // are necessarily contained in there
+            return;
+        }
 
         final var additionalPropertiesSchema =
                 ((Schema<?>) problemDetailSchema.getProperties().get("properties"))
