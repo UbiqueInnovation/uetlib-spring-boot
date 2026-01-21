@@ -10,11 +10,13 @@ import io.swagger.v3.oas.models.media.StringSchema;
 
 import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
+import org.reflections.util.ClasspathHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springdoc.core.customizers.OpenApiCustomizer;
 
 import java.lang.reflect.ParameterizedType;
+import java.net.URI;
 import java.util.Arrays;
 import java.util.Set;
 
@@ -40,11 +42,8 @@ import java.util.Set;
  * for dynamic schema generation, making it easier to document APIs that use generic types with
  * specific constant fields, such as {@code PROBLEM_TYPE}.
  *
- * <p>For example, if a class like {@code MailpieceOrderProblem} implements {@code
- * SpringDocProblem<MailpieceOrderErrorType, MailpieceOrderException>} and {@code
- * MailpieceOrderException} contains a static constant field {@code PROBLEM_TYPE}, this method will
- * automatically add {@code ErrorType.UNKNOWN.type()} as the example value for the `type` field in
- * the generated OpenAPI schema.
+ * <p>The {@code type} and {@code problemCode} fields are automatically updated with all possible
+ * values and an example value.
  *
  * <p>This class is useful for dynamically adjusting the OpenAPI documentation without the need for
  * manually specifying examples for each class. It is particularly helpful when dealing with a large
@@ -83,19 +82,14 @@ public class UetlibSpringBootSpringDocProblemOpenApiCustomizer implements OpenAp
                 continue;
             }
 
-            // get type and problemCode of enum constant UNKNOWN, which always exists
-            final var unknownProblemErrorType =
-                    Arrays.stream(errorTypeGenericType.getEnumConstants())
-                            .filter(e -> "UNKNOWN".equals(e.name()))
-                            .findFirst()
-                            .orElseThrow();
-            final var unknownType = unknownProblemErrorType.type();
-            final var unknownProblemCode = unknownProblemErrorType.problemCode();
-
             // get type and problemCode of all enum constants
             final var allProblemErrorTypes =
                     Arrays.stream(errorTypeGenericType.getEnumConstants()).toList();
-            final var allTypes = allProblemErrorTypes.stream().map(ProblemErrorType::type).toList();
+            final var allTypes =
+                    allProblemErrorTypes.stream()
+                            .map(ProblemErrorType::type)
+                            .map(URI::toString)
+                            .toList();
             final var allProblemCodes =
                     allProblemErrorTypes.stream().map(ProblemErrorType::problemCode).toList();
 
@@ -104,7 +98,7 @@ public class UetlibSpringBootSpringDocProblemOpenApiCustomizer implements OpenAp
             final var typeFieldSchema = (Schema) problemSchema.getProperties().get("type");
             problemSchema.addProperty(
                     typeFieldSchema.getName(),
-                    new StringSchema().example(unknownType)._enum(allTypes));
+                    new StringSchema().example(allTypes.getFirst())._enum(allTypes));
 
             // set 'problemCode' example value to 'unknownProblemCode' and also set all the
             // possible values
@@ -112,7 +106,7 @@ public class UetlibSpringBootSpringDocProblemOpenApiCustomizer implements OpenAp
                     (Schema) problemSchema.getProperties().get("problemCode");
             problemSchema.addProperty(
                     problemCodeFieldSchema.getName(),
-                    new IntegerSchema().example(unknownProblemCode)._enum(allProblemCodes));
+                    new StringSchema().example(allProblemCodes.getFirst())._enum(allProblemCodes));
         }
     }
 
@@ -120,7 +114,8 @@ public class UetlibSpringBootSpringDocProblemOpenApiCustomizer implements OpenAp
     @SuppressWarnings("rawtypes")
     private Set<Class<? extends SpringDocProblem>> findAllSpringDocProblemClasses() {
         // Initialize Reflections to scan for types implementing SpringDocProblem in your package
-        final var reflections = new Reflections(Scanners.SubTypes);
+        final var reflections =
+                new Reflections(ClasspathHelper.forJavaClassPath(), Scanners.SubTypes);
 
         // Return all types that implement SpringDocProblem
         return reflections.getSubTypesOf(SpringDocProblem.class);
