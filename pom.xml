@@ -15,12 +15,17 @@
     <packaging>pom</packaging>
 
     <properties>
+        <uetlib-test.version>2.0.0-alpha.3</uetlib-test.version>
+        <uetlib-core.version>2.0.0-alpha.12</uetlib-core.version>
+        <uetlib-geo.version>2.0.0-alpha.5</uetlib-geo.version>
+
         <sonar.projectName>uetlib-spring-boot</sonar.projectName>
         <sonar.coverage.module>uetlib-spring-boot-coverage</sonar.coverage.module>
     </properties>
 
     <modules>
         <module>uetlib-spring-boot</module>
+        <module>uetlib-spring-boot-geo</module>
         <module>uetlib-spring-boot-security</module>
         <module>uetlib-spring-boot-validation</module>
         <module>uetlib-spring-boot-coverage</module>
@@ -30,7 +35,7 @@
         <dependency>
             <groupId>ch.ubique</groupId>
             <artifactId>uetlib-test</artifactId>
-            <version>2.0.0-alpha.3</version>
+            <version>${uetlib-test.version}</version>
             <scope>test</scope>
         </dependency>
 

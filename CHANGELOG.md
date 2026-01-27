@@ -6,6 +6,8 @@
 
 - Spring Boot 4 compatibility
 - Remove deprecated in `HeaderUtility`, use methods in `HttpHeaderUtils` in `uetlib-core`
+- Add new module `uetlib-spring-boot-geo` with `JsonMapperBuilderCustomizers` for the different JTS module for
+  `JsonMapper`
 
 ### Breaking Changes
 
@@ -62,7 +64,8 @@
       and you have to change all usages of `ch.ubique.infobox.backend.external-api.default-user-agent` to the new
       property.
     - New Logbook autoconfiguration. Remove any `WsLoggingConfig.java` or Logbook `Responsefilter`, `BodyFilters`, etc.
-      from the `*BaseConfig` (unless they are very spcific, which they proably aren't) and remove a property in the form of:
+      from the `*BaseConfig` (unless they are very spcific, which they proably aren't) and remove a property in the form
+      of:
       ```diff
       - ch.post.logbook.body-filter.enabled=false
       ```
