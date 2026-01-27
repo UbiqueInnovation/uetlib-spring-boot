@@ -1,5 +1,7 @@
 package ch.ubique.backend.security;
 
+import static java.util.Objects.requireNonNullElseGet;
+
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
@@ -8,7 +10,6 @@ import org.springframework.security.oauth2.jwt.Jwt;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -24,7 +25,6 @@ public final class JwtUtil {
                 && authentication.getPrincipal() instanceof final Jwt jwt) {
             return jwt;
         }
-
 
         throw new BadCredentialsException("Unable to retrieve JWT");
     }
@@ -146,7 +146,7 @@ public final class JwtUtil {
 
     private static <T> T notNullOrFallback(
             final T claimValue, final Supplier<T> fallbackClaimSupplier) {
-        return Objects.requireNonNullElseGet(claimValue, fallbackClaimSupplier);
+        return requireNonNullElseGet(claimValue, fallbackClaimSupplier);
     }
 
     private static Long claimAsLong(final Object claimObject) {

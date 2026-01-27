@@ -1,5 +1,7 @@
 package ch.ubique.backend.core.security;
 
+import static java.util.Objects.requireNonNullElse;
+
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -15,7 +17,6 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
-import java.util.Objects;
 
 /** LogRequestInterceptor for logging user activity. */
 @SuppressWarnings("unused")
@@ -36,7 +37,7 @@ public class LogRequestInterceptor implements HandlerInterceptor, Filter {
 
     private void log(final HttpServletRequest request, final HttpServletResponse response) {
         final var ipAddress =
-                Objects.requireNonNullElse(
+                requireNonNullElse(
                         request.getHeader(X_FORWARDED_FOR_HEADER), request.getRemoteAddr());
         logger.info(
                 "Request: {} | Method: {} | HTTP Status: {} | IP: {}",

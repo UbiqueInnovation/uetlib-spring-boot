@@ -1,5 +1,7 @@
 package ch.ubique.backend.core.file;
 
+import static java.util.Objects.requireNonNullElse;
+
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 
@@ -10,7 +12,6 @@ import org.springframework.http.MediaType;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.util.Objects;
 
 public class ByteFile {
 
@@ -25,7 +26,7 @@ public class ByteFile {
             @Nullable final String contentType) {
 
         final var contentTypeOrOctetStream =
-                Objects.requireNonNullElse(contentType, MediaType.APPLICATION_OCTET_STREAM_VALUE);
+                requireNonNullElse(contentType, MediaType.APPLICATION_OCTET_STREAM_VALUE);
 
         return new ByteFile()
                 .setBytes(bytes)
