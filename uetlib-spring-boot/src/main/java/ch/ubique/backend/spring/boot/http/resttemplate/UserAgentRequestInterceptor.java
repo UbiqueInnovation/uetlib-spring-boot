@@ -23,7 +23,9 @@ public class UserAgentRequestInterceptor implements ClientHttpRequestInterceptor
             final byte @NonNull [] body,
             final @NonNull ClientHttpRequestExecution execution)
             throws IOException {
-        request.getHeaders().add(USER_AGENT, defaultUserAgent);
+        if (!request.getHeaders().containsHeader(USER_AGENT)) {
+            request.getHeaders().set(USER_AGENT, defaultUserAgent);
+        }
         return execution.execute(request, body);
     }
 }
