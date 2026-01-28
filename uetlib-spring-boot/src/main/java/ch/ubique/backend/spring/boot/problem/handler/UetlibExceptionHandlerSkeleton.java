@@ -1,5 +1,8 @@
 package ch.ubique.backend.spring.boot.problem.handler;
 
+import static java.util.Objects.requireNonNull;
+
+import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.springframework.context.MessageSource;
@@ -47,4 +50,28 @@ public interface UetlibExceptionHandlerSkeleton {
             HttpHeaders headers,
             HttpStatusCode statusCode,
             WebRequest request);
+
+    /**
+     * Try to map the given status code to an {@link HttpStatusCode} enum value. If there is no
+     * matching enum value, the default status code is returned.
+     *
+     * @param status the status code as integer
+     * @param defaultStatusCode the default status code to return if the given status code is
+     *     invalid. Must not be {@code null}.
+     * @return the corresponding {@link HttpStatusCode} enum value
+     */
+    @NonNull
+    default HttpStatusCode resolveStatusCodeOrDefault(
+            final int status, final @NonNull HttpStatusCode defaultStatusCode) {
+        try {
+            return HttpStatusCode.valueOf(status);
+        } catch (final IllegalArgumentException e) {
+            logger().debug(
+                            "Invalid HTTP status code received {}, will fall back to {}",
+                            status,
+                            defaultStatusCode,
+                            e);
+            return requireNonNull(defaultStatusCode);
+        }
+    }
 }
