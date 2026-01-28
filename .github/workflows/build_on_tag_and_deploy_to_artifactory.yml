@@ -1,11 +1,11 @@
-name: Build on Tag and Deploy Dev
+name: Build on Tag and Deploy to Artifactory
 on:
   push:
     tags: [ v* ]
 
 jobs:
   build-deploy:
-    name: Build on Tag and Deploy Dev
+    name: Build on Tag and Deploy to Artifactory
     runs-on: ubuntu-latest
     permissions:
       id-token: write
