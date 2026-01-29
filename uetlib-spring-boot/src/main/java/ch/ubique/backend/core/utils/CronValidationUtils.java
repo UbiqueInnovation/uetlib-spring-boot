@@ -35,7 +35,7 @@ public final class CronValidationUtils {
         if (CronExpression.isValidExpression(limitToSixTokens)) {
             logger.warn(
                     "Cron expression {} is invalid. Fixed it by stripping additional tokens from"
-                        + " the end. Valid expression is now {}.",
+                            + " the end. Valid expression is now {}.",
                     cronExpression,
                     limitToSixTokens);
             return limitToSixTokens;

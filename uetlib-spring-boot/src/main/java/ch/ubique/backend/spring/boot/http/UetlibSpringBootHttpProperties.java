@@ -13,6 +13,7 @@ import org.springframework.validation.annotation.Validated;
 public record UetlibSpringBootHttpProperties(
         @Schema(
                         description =
-                                "The default user-agent to apply to all auto-configured RestClient and RestTemplate")
+                                "The default user-agent to apply to all auto-configured RestClient"
+                                    + " and RestTemplate")
                 @NotNull
                 String defaultUserAgent) {}

@@ -42,7 +42,6 @@ public class RestClientUtilsTest {
         assertTrue(queryParams.get("tags").containsAll(List.of("tag1", "tag2", "tag3")));
     }
 
-
     // Test with null values and List in POJO
     @Test
     void testGetQueryParamsWithNullValuesAndList() {
@@ -55,8 +54,7 @@ public class RestClientUtilsTest {
                 List<String> tags) {}
 
         // Instantiate the record with null and non-null values
-        final var searchParams =
-                new SearchParams("appKeyValue", null, "macOS", 3, List.of());
+        final var searchParams = new SearchParams("appKeyValue", null, "macOS", 3, List.of());
 
         // Get query parameters
         final var queryParams = RestClientUtils.getQueryParamsFromRecord(searchParams);
