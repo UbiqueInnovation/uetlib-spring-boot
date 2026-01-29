@@ -27,6 +27,11 @@ final class ResponseEntityValueExtractorTest {
         validator = factory.getValidator();
     }
 
+    private static <T> Set<ConstraintViolation<T>> validate(final T bean) {
+        assertNotNull(validator, "Validator must be initialized in @BeforeAll");
+        return validator.validate(bean);
+    }
+
     @Test
     void extractsBodyValue_whenEntityAndBodyPresent() {
         final var receiver = new CapturingReceiver();
@@ -94,11 +99,6 @@ final class ResponseEntityValueExtractorTest {
         final var valid = new UserBodyBean(ResponseEntity.ok(new User("Alice")));
         final var violationsValid = validate(valid);
         assertTrue(violationsValid.isEmpty());
-    }
-
-    private static <T> Set<ConstraintViolation<T>> validate(final T bean) {
-        assertNotNull(validator, "Validator must be initialized in @BeforeAll");
-        return validator.validate(bean);
     }
 
     // --- Test helpers
