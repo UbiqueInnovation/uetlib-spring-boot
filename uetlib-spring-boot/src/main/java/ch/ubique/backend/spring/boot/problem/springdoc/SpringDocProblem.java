@@ -45,8 +45,9 @@ import java.net.URI;
 @Schema(
         description =
                 """
-                        Base documentation interface for all dedicated custom RFC-9457 problems.
-                        Each (`problemCode`) has to represent an application-wide 1:1 mapping to a `type`.""")
+                Base documentation interface for all dedicated custom RFC-9457 problems.
+                Each (`problemCode`) has to represent an application-wide 1:1 mapping to a `type`.\
+                """)
 @SuppressWarnings("unused")
 public interface SpringDocProblem<
         E extends Enum<E> & ProblemErrorType, P extends RuntimeException & ThrowableProblem<E>> {
@@ -75,7 +76,8 @@ public interface SpringDocProblem<
     @JsonProperty(required = true)
     @Schema(
             description =
-                    "Corresponds 1:1 to a type for this specific Problem, should be shown to the user for debugging purposes")
+                    "Corresponds 1:1 to a type for this specific Problem, should be shown to the"
+                        + " user for debugging purposes")
     String problemCode();
 
     @JsonProperty

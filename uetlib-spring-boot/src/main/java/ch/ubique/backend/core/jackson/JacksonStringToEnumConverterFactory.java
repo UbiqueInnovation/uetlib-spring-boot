@@ -1,12 +1,12 @@
 package ch.ubique.backend.core.jackson;
 
-import tools.jackson.databind.ObjectMapper;
-
 import jakarta.validation.constraints.NotNull;
 
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.convert.converter.ConverterFactory;
 import org.springframework.stereotype.Component;
+
+import tools.jackson.databind.ObjectMapper;
 
 /**
  * deserialize Enums from String using Jackson. SpringBoot by itself just calls {@link Enum#valueOf}

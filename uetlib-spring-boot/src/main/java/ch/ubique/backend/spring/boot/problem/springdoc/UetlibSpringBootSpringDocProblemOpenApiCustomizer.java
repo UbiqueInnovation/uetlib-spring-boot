@@ -4,7 +4,6 @@ import ch.ubique.backend.spring.boot.problem.errortype.ProblemErrorType;
 import ch.ubique.backend.spring.boot.problem.errortype.ProblemType;
 
 import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.media.IntegerSchema;
 import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.media.StringSchema;
 

@@ -29,7 +29,8 @@ public final class UetlibSpringBootLogbookProperties {
 
         @Schema(
                 description =
-                        "form url encoded fields to obfuscate. Set to empty list to disable all body replacements",
+                        "form url encoded fields to obfuscate. Set to empty list to disable all"
+                            + " body replacements",
                 defaultValue = "subject_token,authToken")
         private Set<String> formUrlEncodedBodyFields = Set.of("subject_token", "authToken");
 

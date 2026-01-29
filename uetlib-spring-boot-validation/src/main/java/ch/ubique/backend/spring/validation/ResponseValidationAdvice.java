@@ -137,7 +137,8 @@ public class ResponseValidationAdvice implements ResponseBodyAdvice<Object> {
                     || properties.action() == ResponseValidationAction.THROW) {
                 logger.atLevel(properties.logLevel())
                         .log(
-                                "Response validation throws an exception on {}. Body {}. Exception:",
+                                "Response validation throws an exception on {}. Body {}."
+                                    + " Exception:",
                                 body.getClass().getName(),
                                 body,
                                 exception);
