@@ -1,4 +1,4 @@
-package ch.ubique.backend.spring.boot.jackson;
+package ch.ubique.backend.spring.boot.geo.jackson;
 
 import ch.ubique.backend.geo.jackson.JsonMapperJtsUtils;
 
@@ -7,11 +7,12 @@ import org.springframework.boot.jackson.autoconfigure.JsonMapperBuilderCustomize
 
 import tools.jackson.databind.json.JsonMapper;
 
-public class UetlibJacksonGeoJtsLv95JsonMapperBuilderCustomizer
+@SuppressWarnings("unused")
+public class UetlibJacksonGeoJtsLv03JsonMapperBuilderCustomizer
         implements JsonMapperBuilderCustomizer {
 
     @Override
     public void customize(final JsonMapper.@NonNull Builder jsonMapperBuilder) {
-        JsonMapperJtsUtils.configureJtsLv95(jsonMapperBuilder);
+        JsonMapperJtsUtils.configureJtsLv03(jsonMapperBuilder);
     }
 }
