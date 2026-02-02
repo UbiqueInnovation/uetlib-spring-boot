@@ -23,7 +23,7 @@ public interface ThrowableProblemAdviceTrait extends UetlibExceptionHandlerSkele
             final AbstractThrowableProblem problem,
             @SuppressWarnings("unused") final WebRequest request) {
 
-        final var problemTypeCode = problem.type().toString().replaceAll(":", ".");
+        final var problemTypeCode = problem.type().toString().replace(":", ".");
 
         final var localizedTitleCode = "problem.title." + problemTypeCode;
         final var localizedTitleArgs = problem.localizedTitleArgs();
