@@ -2,9 +2,9 @@ package ch.ubique.backend.spring.boot.springdoc.autoconfigure;
 
 import ch.ubique.backend.core.springdoc.SpringDocConfig;
 
-import org.springframework.context.annotation.Configuration;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 
-@Configuration
+@AutoConfiguration
 public class UetlibSpringBootSpringDocAutoConfiguration {
 
     static {
