@@ -94,6 +94,10 @@ public abstract class AbstractThrowableProblem extends RuntimeException
         return problemCode;
     }
 
+    public @NonNull Map<@NonNull String, @NonNull Object> additionalProperties() {
+        return Map.of();
+    }
+
     @JsonIgnore
     public ProblemDetail toProblemDetail(
             final @Nullable String localizedTitle, final @Nullable String localizedDetail) {
@@ -103,7 +107,7 @@ public abstract class AbstractThrowableProblem extends RuntimeException
         problemDetail.setDetail(detail);
         problemDetail.setInstance(instance);
 
-        final var properties = new HashMap<String, String>();
+        final var properties = new HashMap<>(additionalProperties());
         properties.put("problemCode", problemCode);
         if (localizedTitle != null) {
             properties.put("localizedTitle", localizedTitle);

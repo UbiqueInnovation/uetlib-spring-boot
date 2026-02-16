@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2.0.1
+
+## Improvements
+
+- Add support for additional properties problem details when using `AbstractThrowableProblem`
+
 ## 2.0.0
 
 ### Improvements
