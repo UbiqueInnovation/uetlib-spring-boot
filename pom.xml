@@ -16,7 +16,7 @@
 
     <properties>
         <uetlib-test.version>2.0.0</uetlib-test.version>
-        <uetlib-core.version>2.0.0</uetlib-core.version>
+        <uetlib-core.version>2.0.1</uetlib-core.version>
         <uetlib-geo.version>2.0.0</uetlib-geo.version>
 
         <sonar.projectName>uetlib-spring-boot</sonar.projectName>
