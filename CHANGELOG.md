@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2.0.4
+
+- Add user-agent interceptor before Logbook interceptor for `RestTemplate` to have the user-agent in the logs written by
+  logbook.
+
 ## 2.0.2
 
 ## Improvements
@@ -11,7 +16,7 @@
 ### Improvements
 
 - Spring Boot 4 compatibility
-- Remove deprecated in `HeaderUtility`, use methods in `HttpHeaderUtils` in `uetlib-core`
+- Remove deprecated methods in `HeaderUtility`, use methods in `HttpHeaderUtils` in `uetlib-core`
 - Add new module `uetlib-spring-boot-geo` with `JsonMapperBuilderCustomizers` for the different JTS module for
   `JsonMapper`
 
