@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.0.5
+
+- More Logbook autoconfiguration options for ResponseFilters
+
 ## 2.0.4
 
 - Add user-agent interceptor before Logbook interceptor for `RestTemplate` to have the user-agent in the logs written by

@@ -30,36 +30,47 @@ public class UetlibSpringBootLogbookAutoConfiguration {
         final var obfuscate = uetlibSpringBootLogbookProperties.getObfuscate();
         final var formUrlEncodedBodyFields = obfuscate.getFormUrlEncodedBodyFields();
 
-        // No replacements if formUrlEncodedBodyFields is not set
-        if (formUrlEncodedBodyFields.isEmpty()) {
-            return BodyFilters.replaceFormUrlEncodedProperty(
-                    formUrlEncodedBodyFields, logbookObfuscateReplacement);
-        }
+        final var defaultValue = BodyFilters.defaultValue();
 
-        final var replaceFormUrlEncodedProperty =
+        final var formUrlEncodedFilter =
                 BodyFilters.replaceFormUrlEncodedProperty(
                         formUrlEncodedBodyFields, logbookObfuscateReplacement);
 
-        return Stream.of(replaceFormUrlEncodedProperty)
-                .reduce(BodyFilters.defaultValue(), BodyFilter::merge);
+        return Stream.of(formUrlEncodedFilter).reduce(defaultValue, BodyFilter::merge);
     }
 
     @Bean
     @ConditionalOnMissingBean(ResponseFilter.class)
-    ResponseFilter logbookResponseFilter() {
+    ResponseFilter logbookResponseFilter(
+            final UetlibSpringBootLogbookProperties uetlibSpringBootLogbookProperties) {
+        final var responseFilter = uetlibSpringBootLogbookProperties.getResponseFilter();
+        final var bodyReplacers = responseFilter.getBodyReplacers();
+        final var contentTypes = bodyReplacers.getContentTypes();
+        final var contentEncodings = bodyReplacers.getContentEncodings();
+
         final var defaultValue = ResponseFilters.replaceBody(BodyReplacers.defaultValue());
 
-        final var protobufFilter =
-                ResponseFilters.replaceBody(
-                        BodyReplacers.replaceBody(
-                                Conditions.contentType("application/protobuf"),
-                                "<binary protobuf>"));
-        final var gzipFilter =
-                ResponseFilters.replaceBody(
-                        BodyReplacers.replaceBody(
-                                Conditions.header(HttpHeaders.CONTENT_ENCODING, "gzip"),
-                                "<binary gzipped>"));
+        final var contentTypeFilters =
+                contentTypes.stream()
+                        .map(
+                                contentType ->
+                                        ResponseFilters.replaceBody(
+                                                BodyReplacers.replaceBody(
+                                                        Conditions.contentType(
+                                                                contentType.toString()),
+                                                        "<replaced " + contentType + ">")));
+        final var contentEncodingsFilters =
+                contentEncodings.stream()
+                        .map(
+                                contentEncoding ->
+                                        ResponseFilters.replaceBody(
+                                                BodyReplacers.replaceBody(
+                                                        Conditions.header(
+                                                                HttpHeaders.CONTENT_ENCODING,
+                                                                contentEncoding),
+                                                        "<replaced " + contentEncoding + ">")));
 
-        return Stream.of(protobufFilter, gzipFilter).reduce(defaultValue, ResponseFilter::merge);
+        return Stream.concat(contentTypeFilters, contentEncodingsFilters)
+                .reduce(defaultValue, ResponseFilter::merge);
     }
 }
