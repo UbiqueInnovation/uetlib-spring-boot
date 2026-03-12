@@ -6,8 +6,10 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 
+import java.util.List;
 import java.util.Set;
 
 /** Configuration properties for logbook configuration . */
@@ -17,6 +19,9 @@ public final class UetlibSpringBootLogbookProperties {
     @Schema(description = "Configure logbook obfuscation")
     private @Valid @NotNull Obfuscate obfuscate = new Obfuscate();
 
+    @Schema(description = "Configure logbook response filter")
+    private @Valid @NotNull ResponseFilter responseFilter = new ResponseFilter();
+
     public Obfuscate getObfuscate() {
         return obfuscate;
     }
@@ -25,12 +30,20 @@ public final class UetlibSpringBootLogbookProperties {
         this.obfuscate = obfuscate;
     }
 
+    public ResponseFilter getResponseFilter() {
+        return responseFilter;
+    }
+
+    public void setResponseFilter(final ResponseFilter responseFilter) {
+        this.responseFilter = responseFilter;
+    }
+
     public static class Obfuscate {
 
         @Schema(
                 description =
                         "form url encoded fields to obfuscate. Set to empty list to disable all"
-                            + " body replacements",
+                                + " body replacements",
                 defaultValue = "subject_token,authToken")
         private Set<String> formUrlEncodedBodyFields = Set.of("subject_token", "authToken");
 
@@ -40,6 +53,49 @@ public final class UetlibSpringBootLogbookProperties {
 
         public void setFormUrlEncodedBodyFields(final Set<String> formUrlEncodedBodyFields) {
             this.formUrlEncodedBodyFields = formUrlEncodedBodyFields;
+        }
+    }
+
+    public static class ResponseFilter {
+
+        @Schema(description = "Configure additional body replacers")
+        private BodyReplacers bodyReplacers = new BodyReplacers();
+
+        public BodyReplacers getBodyReplacers() {
+            return bodyReplacers;
+        }
+
+        public void setBodyReplacers(final BodyReplacers bodyReplacers) {
+            this.bodyReplacers = bodyReplacers;
+        }
+
+        public static class BodyReplacers {
+            @Schema(
+                    description = "Configure additional body replacers by content type",
+                    defaultValue = "application/protobuf")
+            private List<MediaType> contentTypes =
+                    List.of(MediaType.valueOf("application/protobuf"));
+
+            @Schema(
+                    description = "Configure additional body replacers by content encoding",
+                    defaultValue = "gzip")
+            private List<String> contentEncodings = List.of("gzip");
+
+            public List<MediaType> getContentTypes() {
+                return contentTypes;
+            }
+
+            public void setContentTypes(final List<MediaType> contentTypes) {
+                this.contentTypes = contentTypes;
+            }
+
+            public List<String> getContentEncodings() {
+                return contentEncodings;
+            }
+
+            public void setContentEncodings(final List<String> contentEncodings) {
+                this.contentEncodings = contentEncodings;
+            }
         }
     }
 }
