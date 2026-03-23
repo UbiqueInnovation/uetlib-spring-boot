@@ -1,5 +1,6 @@
-package ch.ubique.backend.spring.boot.problem.handler;
+package ch.ubique.backend.spring.boot.problem.handler.trait;
 
+import ch.ubique.backend.spring.boot.problem.handler.UetlibExceptionHandlerSkeletonTrait;
 import org.jspecify.annotations.Nullable;
 import org.springframework.context.MessageSource;
 import org.springframework.http.*;
@@ -8,7 +9,7 @@ import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-public interface RestClientExceptionAdviceTrait extends UetlibExceptionHandlerSkeleton {
+public interface RestClientExceptionAdviceTrait extends UetlibExceptionHandlerSkeletonTrait {
 
     /**
      * Handle all exceptions raised within Spring MVC handling of the request. This is an extension

@@ -5,6 +5,8 @@ import static java.util.Objects.requireNonNull;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.MessageSource;
 import org.springframework.http.*;
 import org.springframework.web.context.request.WebRequest;
@@ -20,11 +22,13 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
  * multiple inheritance, hence all advice traits have to be interfaces.
  */
 @SuppressWarnings("JavadocReference")
-public interface UetlibExceptionHandlerSkeleton {
+public interface UetlibExceptionHandlerSkeletonTrait extends ApplicationContextAware {
 
     Logger logger();
 
     @Nullable MessageSource getMessageSource();
+
+    ApplicationContext getApplicationContext();
 
     /**
      * A method definition of {@link ResponseEntityExceptionHandler#createProblemDetail(Exception,

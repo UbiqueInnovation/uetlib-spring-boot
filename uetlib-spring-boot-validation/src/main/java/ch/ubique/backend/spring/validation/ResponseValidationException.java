@@ -1,8 +1,7 @@
 package ch.ubique.backend.spring.validation;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 
 import java.util.Set;
 
@@ -19,10 +18,8 @@ import java.util.Set;
  * @author Ubique Innovation AG
  * @since 1.4.0
  */
-public class ResponseValidationException extends RuntimeException {
-
-    /** The constraint violations that caused this exception. */
-    @JsonIgnore private final transient Set<ConstraintViolation<Object>> violations;
+@SuppressWarnings("java:S110")
+public class ResponseValidationException extends ConstraintViolationException {
 
     /** The response object type that failed validation. */
     private final Class<?> responseType;
@@ -35,18 +32,8 @@ public class ResponseValidationException extends RuntimeException {
      */
     public ResponseValidationException(
             final Set<ConstraintViolation<Object>> violations, final Class<?> responseType) {
-        super("Response validation failed for " + responseType.getName());
-        this.violations = violations;
+        super("Response validation failed for " + responseType.getName(), violations);
         this.responseType = responseType;
-    }
-
-    /**
-     * Returns the constraint violations that caused this exception.
-     *
-     * @return the constraint violations, never {@code null}
-     */
-    public Set<ConstraintViolation<Object>> getViolations() {
-        return violations;
     }
 
     /**
@@ -54,7 +41,7 @@ public class ResponseValidationException extends RuntimeException {
      *
      * @return the response object type, never {@code null}
      */
-    public Class<?> getResponseType() {
+    public Class<?> responseType() {
         return responseType;
     }
 }
