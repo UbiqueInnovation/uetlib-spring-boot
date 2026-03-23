@@ -5,9 +5,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
-class UetlibExceptionHandlerSkeletonTest {
+class UetlibExceptionHandlerSkeletonTraitTest {
 
-    private final UetlibExceptionHandlerSkeleton handler = new UetlibExceptionHandler() {};
+    private final UetlibExceptionHandlerSkeletonTrait handler = new UetlibExceptionHandler() {};
 
     @Test
     void resolveStatusCodeOrDefault_withStandardStatus_returnsValue() {

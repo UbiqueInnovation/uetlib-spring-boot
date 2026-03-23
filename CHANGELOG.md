@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 2.1.0
+
+- Constraint violations from `ConstraintViolationException`, `BindException`, and
+  `MethodArgumentNotValidException` are now included as structured `violations` in the problem
+  detail response body when `ch.ubique.backend.spring.boot.problem.include-constraint-violations=true`.
+  This property defaults to `false` and should remain disabled in production environments to avoid
+  leaking internal validation details.
+
 ## 2.0.5
 
 - More Logbook autoconfiguration options for ResponseFilters

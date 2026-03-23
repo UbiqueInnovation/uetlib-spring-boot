@@ -1,7 +1,8 @@
-package ch.ubique.backend.spring.boot.problem.handler;
+package ch.ubique.backend.spring.boot.problem.handler.trait;
 
 import ch.ubique.backend.spring.boot.problem.AbstractThrowableProblem;
 
+import ch.ubique.backend.spring.boot.problem.handler.UetlibExceptionHandlerSkeletonTrait;
 import org.jspecify.annotations.Nullable;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -9,7 +10,7 @@ import org.springframework.http.*;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 
-public interface ThrowableProblemAdviceTrait extends UetlibExceptionHandlerSkeleton {
+public interface ThrowableProblemAdviceTrait extends UetlibExceptionHandlerSkeletonTrait {
 
     /**
      * Handle all {@link AbstractThrowableProblem} and return the contained {@link ProblemDetail} to
