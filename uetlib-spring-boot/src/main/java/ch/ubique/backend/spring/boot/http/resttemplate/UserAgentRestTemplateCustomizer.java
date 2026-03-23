@@ -13,7 +13,7 @@ public class UserAgentRestTemplateCustomizer implements RestTemplateCustomizer {
     private final String defaultUserAgent;
 
     public UserAgentRestTemplateCustomizer(final UetlibSpringBootHttpProperties httpProperties) {
-        this.defaultUserAgent = httpProperties.defaultUserAgent();
+        this.defaultUserAgent = httpProperties.getDefaultUserAgent();
     }
 
     @Override
