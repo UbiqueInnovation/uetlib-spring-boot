@@ -7,6 +7,7 @@ import jakarta.validation.Validator;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.event.Level;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -40,8 +41,8 @@ public class ResponseValidationAdvice implements ResponseBodyAdvice<Object> {
     /** The Jakarta Bean Validation validator used to validate response objects. */
     private final Validator validator;
 
-    /** Response validation properties to define log level and action. */
-    private final ResponseValidationProperties properties;
+    private final ResponseValidationAction validationAction;
+    private final Level validationLogLevel;
 
     /**
      * Constructs ResponseValidationAdvice with configuration from application properties.
@@ -51,7 +52,8 @@ public class ResponseValidationAdvice implements ResponseBodyAdvice<Object> {
     public ResponseValidationAdvice(
             final Validator validator, final ResponseValidationProperties properties) {
         this.validator = validator;
-        this.properties = properties;
+        this.validationAction = properties.getAction();
+        this.validationLogLevel = properties.getLogLevel();
     }
 
     /**
@@ -66,7 +68,7 @@ public class ResponseValidationAdvice implements ResponseBodyAdvice<Object> {
     public boolean supports(
             @NotNull final MethodParameter returnType,
             @NotNull final Class<? extends HttpMessageConverter<?>> converterType) {
-        if (ResponseValidationAction.DISABLE == properties.action()) {
+        if (ResponseValidationAction.DISABLE == validationAction) {
             return false;
         }
         // Check if the method or class is annotated with @ValidateResponse
@@ -111,9 +113,9 @@ public class ResponseValidationAdvice implements ResponseBodyAdvice<Object> {
             return body;
         }
 
-        if (properties.action() == ResponseValidationAction.LOG
-                || properties.action() == ResponseValidationAction.THROW) {
-            logger.atLevel(properties.logLevel())
+        if (validationAction == ResponseValidationAction.LOG
+                || validationAction == ResponseValidationAction.THROW) {
+            logger.atLevel(validationLogLevel)
                     .log(
                             "Response validation failed on {}. Body: {}. Violations: {}",
                             body.getClass().getName(),
@@ -121,7 +123,7 @@ public class ResponseValidationAdvice implements ResponseBodyAdvice<Object> {
                             violations);
         }
 
-        if (properties.action() == ResponseValidationAction.THROW) {
+        if (validationAction == ResponseValidationAction.THROW) {
             throw new ResponseValidationException(violations, body.getClass());
         }
 
@@ -133,18 +135,18 @@ public class ResponseValidationAdvice implements ResponseBodyAdvice<Object> {
         try {
             return validator.validate(body);
         } catch (final IllegalArgumentException | ValidationException exception) {
-            if (properties.action() == ResponseValidationAction.LOG
-                    || properties.action() == ResponseValidationAction.THROW) {
-                logger.atLevel(properties.logLevel())
+            if (validationAction == ResponseValidationAction.LOG
+                    || validationAction == ResponseValidationAction.THROW) {
+                logger.atLevel(validationLogLevel)
                         .log(
                                 "Response validation throws an exception on {}. Body {}."
-                                    + " Exception:",
+                                        + " Exception:",
                                 body.getClass().getName(),
                                 body,
                                 exception);
             }
 
-            if (properties.action() == ResponseValidationAction.THROW) {
+            if (validationAction == ResponseValidationAction.THROW) {
                 throw exception;
             }
 

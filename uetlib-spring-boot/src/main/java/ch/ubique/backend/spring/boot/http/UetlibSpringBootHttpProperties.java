@@ -10,10 +10,18 @@ import org.springframework.validation.annotation.Validated;
 /** Configuration properties for http client configuration . */
 @ConfigurationProperties(prefix = "ch.ubique.backend.spring.boot.http")
 @Validated
-public record UetlibSpringBootHttpProperties(
-        @Schema(
-                        description =
-                                "The default user-agent to apply to all auto-configured RestClient"
-                                    + " and RestTemplate")
-                @NotNull
-                String defaultUserAgent) {}
+public final class UetlibSpringBootHttpProperties {
+    @Schema(
+            description =
+                    "The default user-agent to apply to all auto-configured RestClient"
+                            + " and RestTemplate")
+    private @NotNull String defaultUserAgent;
+
+    public String getDefaultUserAgent() {
+        return defaultUserAgent;
+    }
+
+    public void setDefaultUserAgent(final String defaultUserAgent) {
+        this.defaultUserAgent = defaultUserAgent;
+    }
+}

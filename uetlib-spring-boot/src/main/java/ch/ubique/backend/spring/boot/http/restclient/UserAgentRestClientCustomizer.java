@@ -12,7 +12,7 @@ public class UserAgentRestClientCustomizer implements RestClientCustomizer {
     private final String defaultUserAgent;
 
     public UserAgentRestClientCustomizer(final UetlibSpringBootHttpProperties httpProperties) {
-        this.defaultUserAgent = httpProperties.defaultUserAgent();
+        this.defaultUserAgent = httpProperties.getDefaultUserAgent();
     }
 
     @Override
