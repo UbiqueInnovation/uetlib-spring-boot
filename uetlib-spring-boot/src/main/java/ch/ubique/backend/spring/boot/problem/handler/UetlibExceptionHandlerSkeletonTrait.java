@@ -30,6 +30,8 @@ public interface UetlibExceptionHandlerSkeletonTrait extends ApplicationContextA
 
     ApplicationContext getApplicationContext();
 
+    UetlibSpringBootProblemProperties getUetlibSpringBootProblemProperties();
+
     /**
      * A method definition of {@link ResponseEntityExceptionHandler#createProblemDetail(Exception,
      * HttpStatusCode, String, String, Object[], WebRequest)}. Signature has to match the definition
