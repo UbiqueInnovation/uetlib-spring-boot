@@ -27,7 +27,6 @@
         <module>uetlib-spring-boot</module>
         <module>uetlib-spring-boot-geo</module>
         <module>uetlib-spring-boot-security</module>
-        <module>uetlib-spring-boot-validation</module>
         <module>uetlib-spring-boot-coverage</module>
     </modules>
 
