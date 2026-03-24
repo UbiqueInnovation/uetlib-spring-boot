@@ -2,7 +2,15 @@
 
 ## 2.1.0
 
-- Constraint violations from `ConstraintViolationException`, `BindException`, and
+### Breaking Changes
+
+- merge module `uetlib-spring-boot-validation` into `uetlib-spring-boot` and remove the old module. Necessary Changes are either:
+  - Replace module `uetlib-spring-boot-validation` with `uetlib-spring-boot` in your depencies if the latter is not yet included or 
+  - just drop the dependency on `uetlib-spring-boot-validation` in your project if `uetlib-spring-boot` is already included.
+
+### Improvements
+
+- Constraint violations from `ResponseValidationException`, `ConstraintViolationException`, `BindException`, and
   `MethodArgumentNotValidException` are now included as structured `violations` in the problem
   detail response body when `ch.ubique.backend.spring.boot.problem.include-constraint-violations=true`.
   This property defaults to `false` and should remain disabled in production environments to avoid
@@ -19,7 +27,7 @@
 
 ## 2.0.2
 
-## Improvements
+### Improvements
 
 - Add support for additional properties problem details when using `AbstractThrowableProblem`
 
