@@ -3,6 +3,7 @@ package ch.ubique.backend.spring.boot.problem.handler.trait.violation;
 import static java.util.Comparator.comparing;
 
 import ch.ubique.backend.spring.boot.problem.handler.UetlibExceptionHandlerSkeletonTrait;
+import ch.ubique.backend.spring.validation.ResponseValidationException;
 
 import jakarta.validation.ConstraintViolationException;
 
@@ -24,13 +25,22 @@ import java.util.stream.Stream;
 /** Advice trait to handle any validation exceptions */
 public interface ViolationAdviceTrait extends UetlibExceptionHandlerSkeletonTrait {
 
-    @ExceptionHandler({ConstraintViolationException.class, BindException.class})
+    @ExceptionHandler({
+        ResponseValidationException.class,
+        ConstraintViolationException.class,
+        BindException.class
+    })
     @Nullable
     @SuppressWarnings("java:S112")
-    default ResponseEntity<Object> handleViolationExceptions(final Exception ex, final WebRequest request)
-            throws Exception {
+    default ResponseEntity<Object> handleViolationExceptions(
+            final Exception ex, final WebRequest request) throws Exception {
         final var headers = new HttpHeaders();
         return switch (ex) {
+            // ResponseValidationException is a subclass of ConstraintViolationException, but a
+            // server error, not a client error
+            case final ResponseValidationException subEx ->
+                    handleConstraintViolation(
+                            subEx, headers, HttpStatus.INTERNAL_SERVER_ERROR, request);
             case final ConstraintViolationException subEx ->
                     handleConstraintViolation(subEx, headers, HttpStatus.BAD_REQUEST, request);
             case final BindException subEx ->
