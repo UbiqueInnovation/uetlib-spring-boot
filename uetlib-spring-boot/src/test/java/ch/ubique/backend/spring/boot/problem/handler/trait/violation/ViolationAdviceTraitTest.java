@@ -58,7 +58,7 @@ class ViolationAdviceTraitTest {
         final var violations = VALIDATOR.validate(new TestBean("", 5));
         final var ex = new ConstraintViolationException(violations);
 
-        final var response = handler.handleConstraintViolation(ex, newRequest());
+        final var response = handler.handleViolationExceptions(ex, newRequest());
 
         assertThat(response).isNotNull();
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -85,7 +85,7 @@ class ViolationAdviceTraitTest {
         assertThat(violations).hasSizeGreaterThanOrEqualTo(2);
         final var ex = new ConstraintViolationException(violations);
 
-        final var response = handler.handleConstraintViolation(ex, newRequest());
+        final var response = handler.handleViolationExceptions(ex, newRequest());
 
         assertThat(response).isNotNull();
         final var body = assertInstanceOf(ProblemDetail.class, response.getBody());
@@ -111,7 +111,7 @@ class ViolationAdviceTraitTest {
         assertThat(violations).hasSize(1);
         final var ex = new ConstraintViolationException("single violation", violations);
 
-        final var response = handler.handleConstraintViolation(ex, newRequest());
+        final var response = handler.handleViolationExceptions(ex, newRequest());
 
         assertThat(response).isNotNull();
         final var body = assertInstanceOf(ProblemDetail.class, response.getBody());
@@ -127,7 +127,7 @@ class ViolationAdviceTraitTest {
                 new FieldError("myBean", "email", "invalid@", false, null, null, "invalid email"));
         final var ex = new BindException(bindingResult);
 
-        final var response = handler.handleBindException(ex, newRequest());
+        final var response = handler.handleViolationExceptions(ex, newRequest());
 
         assertThat(response).isNotNull();
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -150,7 +150,7 @@ class ViolationAdviceTraitTest {
         bindingResult.addError(new ObjectError("myBean", "global constraint failed"));
         final var ex = new BindException(bindingResult);
 
-        final var response = handler.handleBindException(ex, newRequest());
+        final var response = handler.handleViolationExceptions(ex, newRequest());
 
         assertThat(response).isNotNull();
         final var body = assertInstanceOf(ProblemDetail.class, response.getBody());
@@ -174,7 +174,7 @@ class ViolationAdviceTraitTest {
         bindingResult.addError(new ObjectError("order", "order is invalid"));
         final var ex = new BindException(bindingResult);
 
-        final var response = handler.handleBindException(ex, newRequest());
+        final var response = handler.handleViolationExceptions(ex, newRequest());
 
         assertThat(response).isNotNull();
         final var body = assertInstanceOf(ProblemDetail.class, response.getBody());
@@ -193,7 +193,7 @@ class ViolationAdviceTraitTest {
         final var bindingResult = new BeanPropertyBindingResult(new Object(), "myBean");
         final var ex = new BindException(bindingResult);
 
-        final var response = handler.handleBindException(ex, newRequest());
+        final var response = handler.handleViolationExceptions(ex, newRequest());
 
         assertThat(response).isNotNull();
         final var body = assertInstanceOf(ProblemDetail.class, response.getBody());

@@ -33,7 +33,7 @@ public abstract class UetlibExceptionHandler extends ResponseEntityExceptionHand
     private static final Logger logger = LoggerFactory.getLogger(UetlibExceptionHandler.class);
 
     @Nullable private ApplicationContext applicationContext;
-    private boolean includeConstraintViolations;
+    @Nullable private UetlibSpringBootProblemProperties uetlibSpringBootProblemProperties;
 
     @Override
     public Logger logger() {
@@ -49,15 +49,18 @@ public abstract class UetlibExceptionHandler extends ResponseEntityExceptionHand
     public void setApplicationContext(final ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
 
-        includeConstraintViolations =
-                applicationContext
-                        .getBean(UetlibSpringBootProblemProperties.class)
-                        .isIncludeConstraintViolations();
+        uetlibSpringBootProblemProperties =
+                applicationContext.getBean(UetlibSpringBootProblemProperties.class);
     }
 
     @Override
     public ApplicationContext getApplicationContext() {
         return requireNonNull(applicationContext);
+    }
+
+    @Override
+    public UetlibSpringBootProblemProperties getUetlibSpringBootProblemProperties() {
+        return requireNonNull(uetlibSpringBootProblemProperties);
     }
 
     /**
@@ -105,11 +108,7 @@ public abstract class UetlibExceptionHandler extends ResponseEntityExceptionHand
             final HttpHeaders headers,
             final HttpStatusCode status,
             final WebRequest request) {
-        if (includeConstraintViolations) {
-            return ViolationAdviceTrait.super.handleMethodArgumentNotValid(
-                    ex, headers, status, request);
-        }
-
-        return super.handleMethodArgumentNotValid(ex, headers, status, request);
+        return ViolationAdviceTrait.super.handleMethodArgumentNotValid(
+                ex, headers, status, request);
     }
 }
