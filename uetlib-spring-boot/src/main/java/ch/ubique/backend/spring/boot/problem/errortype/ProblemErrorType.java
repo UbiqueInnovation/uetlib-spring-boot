@@ -4,10 +4,11 @@ import com.google.common.base.CaseFormat;
 
 import org.jspecify.annotations.NonNull;
 
+import java.io.Serializable;
 import java.net.URI;
 
 /** Usually implemented by enums. These also have the {@link #name()} method by default. */
-public interface ProblemErrorType {
+public interface ProblemErrorType extends Serializable {
 
     @NonNull ProblemType problemType();
 

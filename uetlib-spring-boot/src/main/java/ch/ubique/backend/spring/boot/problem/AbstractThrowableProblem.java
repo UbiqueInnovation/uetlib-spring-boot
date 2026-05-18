@@ -21,13 +21,12 @@ import java.util.Map;
 public abstract class AbstractThrowableProblem extends RuntimeException
         implements BaseThrowableProblem {
 
-    @NonNull private final URI type;
+    @NonNull private final ProblemErrorType errorType;
+
     @NonNull private final HttpStatusCode status;
     @NonNull private final String title;
     @NonNull private final String detail;
     @Nullable private final URI instance;
-
-    @NonNull private final String problemCode;
 
     protected AbstractThrowableProblem(
             @NonNull final ProblemErrorType errorType,
@@ -61,17 +60,37 @@ public abstract class AbstractThrowableProblem extends RuntimeException
             @Nullable final URI instance,
             @Nullable final AbstractThrowableProblem cause) {
         super(cause);
-        this.type = errorType.type();
+        this.errorType = errorType;
         this.title = title;
         this.status = status;
         this.detail = detail;
         this.instance = instance;
-        this.problemCode = errorType.problemCode();
+    }
+
+    /**
+     * In implementing classes, you can override this method to return the actual error type by
+     * casting. This will always succeed since the only way to set the error type is via our own
+     * constructor:
+     *
+     * <p>
+     *
+     * {@snippet lang = java:
+     * @Override
+     * public @NonNull MyProblemErrorType errorType() {
+     *     return (MyProblemErrorType) super.errorType();
+     * }
+     * }
+     *
+     * @return
+     */
+    @Override
+    public @NonNull ProblemErrorType errorType() {
+        return errorType;
     }
 
     @Override
     public @NonNull URI type() {
-        return type;
+        return errorType.type();
     }
 
     @Override
@@ -91,7 +110,7 @@ public abstract class AbstractThrowableProblem extends RuntimeException
 
     @Override
     public @NonNull String problemCode() {
-        return problemCode;
+        return errorType.problemCode();
     }
 
     public @NonNull Map<@NonNull String, @NonNull Object> additionalProperties() {
@@ -102,13 +121,13 @@ public abstract class AbstractThrowableProblem extends RuntimeException
     public ProblemDetail toProblemDetail(
             final @Nullable String localizedTitle, final @Nullable String localizedDetail) {
         final var problemDetail = ProblemDetail.forStatus(status);
-        problemDetail.setType(type);
+        problemDetail.setType(errorType.type());
         problemDetail.setTitle(title);
         problemDetail.setDetail(detail);
         problemDetail.setInstance(instance);
 
         final var properties = new HashMap<>(additionalProperties());
-        properties.put("problemCode", problemCode);
+        properties.put("problemCode", errorType.problemCode());
         if (localizedTitle != null) {
             properties.put("localizedTitle", localizedTitle);
         }
@@ -138,12 +157,11 @@ public abstract class AbstractThrowableProblem extends RuntimeException
 
         return new EqualsBuilder()
                 .appendSuper(super.equals(o))
-                .append(type, that.type)
+                .append(errorType, that.errorType)
                 .append(status, that.status)
                 .append(title, that.title)
                 .append(detail, that.detail)
                 .append(instance, that.instance)
-                .append(problemCode, that.problemCode)
                 .isEquals();
     }
 
@@ -151,12 +169,11 @@ public abstract class AbstractThrowableProblem extends RuntimeException
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .appendSuper(super.hashCode())
-                .append(type)
+                .append(errorType)
                 .append(status)
                 .append(title)
                 .append(detail)
                 .append(instance)
-                .append(problemCode)
                 .toHashCode();
     }
 
@@ -164,12 +181,12 @@ public abstract class AbstractThrowableProblem extends RuntimeException
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
                 .appendSuper(super.toString())
-                .append("type", type)
+                .append("type", errorType.type())
                 .append("status", status)
                 .append("title", title)
                 .append("detail", detail)
                 .append("instance", instance)
-                .append("problemCode", problemCode)
+                .append("problemCode", errorType.problemCode())
                 .toString();
     }
 
