@@ -1,5 +1,6 @@
 package ch.ubique.backend.spring.boot.problem;
 
+import ch.ubique.backend.spring.boot.problem.errortype.ProblemErrorType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import org.jspecify.annotations.NonNull;
@@ -13,6 +14,8 @@ import java.net.URI;
  * not use anywhere else apart from the existing usage in this module. Please.
  */
 public interface BaseThrowableProblem {
+
+    @NonNull ProblemErrorType errorType();
 
     @NonNull URI type();
 
