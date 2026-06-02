@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 3.0.0
+
+### Breaking Changes
+
+- Remove setters from `ByteFile` so we properties can have strict non-nullability assertions. Replaced setter with
+  builder as `ByteFile.builder()`.
+
 ## 2.1.1
 
 - expose `errorType` from `AbstractThrowableProblem` again
