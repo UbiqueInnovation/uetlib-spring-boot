@@ -1,12 +1,19 @@
 # CHANGELOG
 
+## 2.1.1
+
+- expose `errorType` from `AbstractThrowableProblem` again
+
 ## 2.1.0
 
 ### Breaking Changes
 
-- merge module `uetlib-spring-boot-validation` into `uetlib-spring-boot` and remove the old module. Necessary Changes are either:
-  - Replace module `uetlib-spring-boot-validation` with `uetlib-spring-boot` in your depencies if the latter is not yet included or 
-  - just drop the dependency on `uetlib-spring-boot-validation` in your project if `uetlib-spring-boot` is already included.
+- merge module `uetlib-spring-boot-validation` into `uetlib-spring-boot` and remove the old module. Necessary Changes
+  are either:
+    - Replace module `uetlib-spring-boot-validation` with `uetlib-spring-boot` in your depencies if the latter is not
+      yet included or
+    - Drop the dependency on `uetlib-spring-boot-validation` in your project if `uetlib-spring-boot` is already
+      included.
 
 ### Improvements
 
