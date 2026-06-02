@@ -2,6 +2,7 @@ package ch.ubique.backend.core.http.header;
 
 import static ch.ubique.backend.core.utils.HttpHeaderUtils.createNextRefreshHeaderValue;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,7 +42,7 @@ public final class HeaderUtility {
             final T body,
             final Duration nextRefresh,
             final Duration maxAge,
-            final Duration backoff) {
+            final @Nullable Duration backoff) {
         final var builder =
                 ResponseEntity.ok()
                         .cacheControl(CacheControl.maxAge(maxAge))
@@ -79,8 +80,8 @@ public final class HeaderUtility {
      *
      * @return {@link ResponseEntity<T>} with the given headers and status NO_CONTENT
      */
-    public static <T> ResponseEntity<T> createNoContentResponseEntity(
-            final Duration nextRefresh, final Duration maxAge, final Duration backoff) {
+    public static <T extends @Nullable Object> ResponseEntity<T> createNoContentResponseEntity(
+            final Duration nextRefresh, final Duration maxAge, final @Nullable Duration backoff) {
         final var builder =
                 ResponseEntity.noContent()
                         .cacheControl(CacheControl.maxAge(maxAge))
@@ -107,7 +108,7 @@ public final class HeaderUtility {
      * @return {@link ResponseEntity<T>} with the given headers and status NOT_MODIFIED
      */
     public static <T> ResponseEntity<T> createNotModifiedResponseEntity(
-            final Duration nextRefresh, final Duration maxAge, final Duration backoff) {
+            final Duration nextRefresh, final Duration maxAge, final @Nullable Duration backoff) {
         final var builder =
                 ResponseEntity.status(HttpStatus.NOT_MODIFIED)
                         .header(NEXT_REFRESH, createNextRefreshHeaderValue(nextRefresh))
