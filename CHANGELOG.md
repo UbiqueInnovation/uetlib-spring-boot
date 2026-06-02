@@ -1,11 +1,16 @@
 # CHANGELOG
 
-## 3.0.0
+## 2.2.0
 
 ### Breaking Changes
 
-- Remove setters from `ByteFile` so we properties can have strict non-nullability assertions. Replaced setter with
-  builder as `ByteFile.builder()`.
+- Remove classes that should not exist here and also exist in `uetlib-core`. Use teh classes from `uetlib-core` instead:
+    - `ByteFile`
+    - `DataAndInput`
+    - `InputCollectionLoaderService`
+    - `InputCollectionLoaderServiceMapper`
+    - `InputDataLoaderService`
+    - `InputDataLoaderServiceMapper`
 
 ## 2.1.1
 
