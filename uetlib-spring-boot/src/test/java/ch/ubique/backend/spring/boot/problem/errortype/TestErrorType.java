@@ -1,7 +1,5 @@
 package ch.ubique.backend.spring.boot.problem.errortype;
 
-import org.jspecify.annotations.NonNull;
-
 import java.net.URI;
 
 public enum TestErrorType implements ProblemErrorType {
@@ -13,19 +11,19 @@ public enum TestErrorType implements ProblemErrorType {
             new ProblemType(
                     URI.create("urn:ch:uetlib:spring:boot:problem:test"), "UT" /* UETLIB-TEST */);
 
-    @NonNull private final String code;
+    private final String code;
 
-    TestErrorType(@NonNull final String code) {
+    TestErrorType(final String code) {
         this.code = code;
     }
 
     @Override
-    public @NonNull ProblemType problemType() {
+    public ProblemType problemType() {
         return PROBLEM_TYPE;
     }
 
     @Override
-    public @NonNull String code() {
+    public String code() {
         return code;
     }
 }

@@ -2,7 +2,6 @@ package ch.ubique.backend.spring.boot.env;
 
 import static java.util.Objects.requireNonNull;
 
-import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.springframework.boot.EnvironmentPostProcessor;
 import org.springframework.boot.SpringApplication;
@@ -32,8 +31,7 @@ public class BuildPropertiesEnvironmentPostProcessor implements EnvironmentPostP
 
     @Override
     public void postProcessEnvironment(
-            final @NonNull ConfigurableEnvironment environment,
-            final @NonNull SpringApplication application) {
+            final ConfigurableEnvironment environment, final SpringApplication application) {
         final var buildProperties = loadBuildProperties();
         if (buildProperties == null) {
             return;

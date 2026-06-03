@@ -2,7 +2,6 @@ package ch.ubique.backend.security.jwt;
 
 import static ch.ubique.backend.security.jwt.MoreJwtValidators.*;
 
-import org.jspecify.annotations.NonNull;
 import org.springframework.boot.restclient.RestTemplateBuilder;
 import org.springframework.security.oauth2.core.OAuth2TokenValidator;
 import org.springframework.security.oauth2.jwt.*;
@@ -28,11 +27,10 @@ public final class MoreJwtDecoders {
      * @param audiences Collection of allowed audience values.
      * @return JwtDecoder instance.
      */
-    @NonNull
     public static JwtDecoder issuerAndAudienceValidatingJwtDecoder(
-            final @NonNull RestOperations restOperations,
-            final @NonNull String issuerUri,
-            final @NonNull Collection<String> audiences) {
+            final RestOperations restOperations,
+            final String issuerUri,
+            final Collection<String> audiences) {
         return issuerAndAudienceValidatingJwtDecoder(restOperations, issuerUri, audiences, b -> {});
     }
 
@@ -47,12 +45,11 @@ public final class MoreJwtDecoders {
      *     {@link JwkSetUriJwtDecoderBuilder#validateType(boolean)}
      * @return JwtDecoder instance.
      */
-    @NonNull
     public static JwtDecoder issuerAndAudienceValidatingJwtDecoder(
-            final @NonNull RestOperations restOperations,
-            final @NonNull String issuerUri,
-            final @NonNull Collection<String> audiences,
-            final @NonNull Consumer<JwkSetUriJwtDecoderBuilder> jwtDecoderCustomizer) {
+            final RestOperations restOperations,
+            final String issuerUri,
+            final Collection<String> audiences,
+            final Consumer<JwkSetUriJwtDecoderBuilder> jwtDecoderCustomizer) {
         return issuerAndAudienceValidatingJwtDecoder(
                 restOperations, issuerUri, audiences, List.of(), jwtDecoderCustomizer);
     }
@@ -66,11 +63,10 @@ public final class MoreJwtDecoders {
      * @param audiences Collection of allowed audience values.
      * @return JwtDecoder instance.
      */
-    @NonNull
     public static JwtDecoder issuerAndAudienceValidatingAtJwtDecoder(
-            final @NonNull RestOperations restOperations,
-            final @NonNull String issuerUri,
-            final @NonNull Collection<String> audiences) {
+            final RestOperations restOperations,
+            final String issuerUri,
+            final Collection<String> audiences) {
 
         final Consumer<JwkSetUriJwtDecoderBuilder> noJwtTypeVerifier = b -> b.validateType(false);
 
@@ -93,12 +89,11 @@ public final class MoreJwtDecoders {
      *     to set {@link JwkSetUriJwtDecoderBuilder#validateType(boolean)}
      * @return JwtDecoder instance.
      */
-    @NonNull
     public static JwtDecoder issuerAndAudienceValidatingAtJwtDecoder(
-            final @NonNull RestOperations restOperations,
-            final @NonNull String issuerUri,
-            final @NonNull Collection<String> audiences,
-            final @NonNull Consumer<JwkSetUriJwtDecoderBuilder> additionalJwtDecoderCustomizer) {
+            final RestOperations restOperations,
+            final String issuerUri,
+            final Collection<String> audiences,
+            final Consumer<JwkSetUriJwtDecoderBuilder> additionalJwtDecoderCustomizer) {
 
         final Consumer<JwkSetUriJwtDecoderBuilder> noJwtTypeVerifier = b -> b.validateType(false);
         final var jwtDecoderCustomizer = additionalJwtDecoderCustomizer.andThen(noJwtTypeVerifier);
@@ -123,13 +118,12 @@ public final class MoreJwtDecoders {
      *     to set {@link JwkSetUriJwtDecoderBuilder#validateType(boolean)}
      * @return JwtDecoder instance.
      */
-    @NonNull
     public static JwtDecoder issuerAndAudienceValidatingJwtDecoder(
-            final @NonNull RestOperations restOperations,
-            final @NonNull String issuerUri,
-            final @NonNull Collection<String> audiences,
-            final @NonNull Collection<OAuth2TokenValidator<Jwt>> additionalTokenValidators,
-            final @NonNull Consumer<JwkSetUriJwtDecoderBuilder> additionalJwtDecoderCustomizer) {
+            final RestOperations restOperations,
+            final String issuerUri,
+            final Collection<String> audiences,
+            final Collection<OAuth2TokenValidator<Jwt>> additionalTokenValidators,
+            final Consumer<JwkSetUriJwtDecoderBuilder> additionalJwtDecoderCustomizer) {
         final var jwtValidators =
                 Stream.concat(
                                 Stream.of(issuerValidator(issuerUri), audienceValidator(audiences)),

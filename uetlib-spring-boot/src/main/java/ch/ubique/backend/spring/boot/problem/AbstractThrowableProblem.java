@@ -8,7 +8,6 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -21,42 +20,40 @@ import java.util.Map;
 public abstract class AbstractThrowableProblem extends RuntimeException
         implements BaseThrowableProblem {
 
-    @NonNull private final ProblemErrorType errorType;
+    private final ProblemErrorType errorType;
 
-    @NonNull private final HttpStatusCode status;
-    @NonNull private final String title;
-    @NonNull private final String detail;
+    private final HttpStatusCode status;
+    private final String title;
+    private final String detail;
     @Nullable private final URI instance;
 
     protected AbstractThrowableProblem(
-            @NonNull final ProblemErrorType errorType,
-            @NonNull final String title,
-            @NonNull final HttpStatus status) {
+            final ProblemErrorType errorType, final String title, final HttpStatus status) {
         this(errorType, title, status, status.getReasonPhrase());
     }
 
     protected AbstractThrowableProblem(
-            @NonNull final ProblemErrorType errorType,
-            @NonNull final String title,
-            @NonNull final HttpStatusCode status,
-            @NonNull final String detail) {
+            final ProblemErrorType errorType,
+            final String title,
+            final HttpStatusCode status,
+            final String detail) {
         this(errorType, title, status, detail, null);
     }
 
     protected AbstractThrowableProblem(
-            @NonNull final ProblemErrorType errorType,
-            @NonNull final String title,
-            @NonNull final HttpStatusCode status,
-            @NonNull final String detail,
+            final ProblemErrorType errorType,
+            final String title,
+            final HttpStatusCode status,
+            final String detail,
             @Nullable final URI instance) {
         this(errorType, title, status, detail, instance, null);
     }
 
     protected AbstractThrowableProblem(
-            @NonNull final ProblemErrorType errorType,
-            @NonNull final String title,
-            @NonNull final HttpStatusCode status,
-            @NonNull final String detail,
+            final ProblemErrorType errorType,
+            final String title,
+            final HttpStatusCode status,
+            final String detail,
             @Nullable final URI instance,
             @Nullable final AbstractThrowableProblem cause) {
         super(cause);
@@ -76,7 +73,7 @@ public abstract class AbstractThrowableProblem extends RuntimeException
      *
      * {@snippet lang = java:
      * @Override
-     * public @NonNull MyProblemErrorType errorType() {
+     * public  MyProblemErrorType errorType() {
      *     return (MyProblemErrorType) super.errorType();
      * }
      * }
@@ -84,36 +81,36 @@ public abstract class AbstractThrowableProblem extends RuntimeException
      * @return
      */
     @Override
-    public @NonNull ProblemErrorType errorType() {
+    public ProblemErrorType errorType() {
         return errorType;
     }
 
     @Override
-    public @NonNull URI type() {
+    public URI type() {
         return errorType.type();
     }
 
     @Override
-    public @NonNull HttpStatusCode status() {
+    public HttpStatusCode status() {
         return status;
     }
 
     @Override
-    public @NonNull String title() {
+    public String title() {
         return title;
     }
 
     @Override
-    public @NonNull String detail() {
+    public String detail() {
         return detail;
     }
 
     @Override
-    public @NonNull String problemCode() {
+    public String problemCode() {
         return errorType.problemCode();
     }
 
-    public @NonNull Map<@NonNull String, @NonNull Object> additionalProperties() {
+    public Map<String, Object> additionalProperties() {
         return Map.of();
     }
 

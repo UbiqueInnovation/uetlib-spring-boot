@@ -1,8 +1,8 @@
 package ch.ubique.backend.spring.boot.problem.handler.trait;
 
 import ch.ubique.backend.spring.boot.problem.AbstractThrowableProblem;
-
 import ch.ubique.backend.spring.boot.problem.handler.UetlibExceptionHandlerSkeletonTrait;
+
 import org.jspecify.annotations.Nullable;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.context.i18n.LocaleContextHolder;

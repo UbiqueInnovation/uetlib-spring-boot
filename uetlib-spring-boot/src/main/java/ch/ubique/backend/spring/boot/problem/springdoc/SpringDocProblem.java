@@ -9,9 +9,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-import jakarta.validation.constraints.NotNull;
-
-import org.jspecify.annotations.NonNull;
 import org.springframework.http.ProblemDetail;
 
 import java.net.URI;
@@ -52,7 +49,6 @@ import java.net.URI;
 public interface SpringDocProblem<
         E extends Enum<E> & ProblemErrorType, P extends RuntimeException & ThrowableProblem<E>> {
 
-    @NotNull
     @JsonProperty(required = true)
     URI type();
 
@@ -60,11 +56,9 @@ public interface SpringDocProblem<
     @Schema(example = "400")
     int status();
 
-    @NotNull
     @JsonProperty(required = true)
     String title();
 
-    @NotNull
     @JsonProperty(required = true)
     String detail();
 
@@ -72,12 +66,11 @@ public interface SpringDocProblem<
     @Schema(example = "/path/to/endpoint/that/has/thrown")
     URI instance();
 
-    @NonNull
     @JsonProperty(required = true)
     @Schema(
             description =
                     "Corresponds 1:1 to a type for this specific Problem, should be shown to the"
-                        + " user for debugging purposes")
+                            + " user for debugging purposes")
     String problemCode();
 
     @JsonProperty
