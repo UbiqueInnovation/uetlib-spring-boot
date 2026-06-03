@@ -51,7 +51,7 @@ public interface ThrowableProblemAdviceTrait extends UetlibExceptionHandlerSkele
             final AbstractThrowableProblem problem, final WebRequest request) {
         final var headers = new HttpHeaders();
         if (problem instanceof final ProblemResponseHeadersProvider provider) {
-            provider.addHeaders(headers);
+            provider.addProblemResponseHeaders(headers);
         }
         customizeAbstractThrowableProblemHeaders(problem, request, headers);
         return headers;
