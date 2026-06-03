@@ -9,8 +9,8 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.constraints.NotNull;
 
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -28,10 +28,10 @@ public class LogRequestInterceptor implements HandlerInterceptor, Filter {
 
     @Override
     public void postHandle(
-            @NotNull final HttpServletRequest request,
-            @NotNull final HttpServletResponse response,
-            @NotNull final Object handler,
-            final ModelAndView modelAndView) {
+            final HttpServletRequest request,
+            final HttpServletResponse response,
+            final Object handler,
+            final @Nullable ModelAndView modelAndView) {
         log(request, response);
     }
 

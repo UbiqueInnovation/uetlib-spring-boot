@@ -4,7 +4,7 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ValidationException;
 import jakarta.validation.Validator;
 
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.event.Level;
@@ -66,8 +66,8 @@ public class ResponseValidationAdvice implements ResponseBodyAdvice<Object> {
      */
     @Override
     public boolean supports(
-            @NotNull final MethodParameter returnType,
-            @NotNull final Class<? extends HttpMessageConverter<?>> converterType) {
+            final MethodParameter returnType,
+            final Class<? extends HttpMessageConverter<?>> converterType) {
         if (ResponseValidationAction.DISABLE == validationAction) {
             return false;
         }
@@ -91,13 +91,13 @@ public class ResponseValidationAdvice implements ResponseBodyAdvice<Object> {
      *     ResponseValidationAction#THROW}
      */
     @Override
-    public Object beforeBodyWrite(
-            final Object body,
-            @NotNull final MethodParameter returnType,
-            @NotNull final MediaType selectedContentType,
-            @NotNull final Class<? extends HttpMessageConverter<?>> selectedConverterType,
-            @NotNull final ServerHttpRequest request,
-            @NotNull final ServerHttpResponse response) {
+    public @Nullable Object beforeBodyWrite(
+            @Nullable final Object body,
+            final MethodParameter returnType,
+            final MediaType selectedContentType,
+            final Class<? extends HttpMessageConverter<?>> selectedConverterType,
+            final ServerHttpRequest request,
+            final ServerHttpResponse response) {
         if (body == null) {
             return null;
         }

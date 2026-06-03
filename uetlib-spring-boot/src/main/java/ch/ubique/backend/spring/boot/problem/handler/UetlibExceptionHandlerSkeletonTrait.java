@@ -2,7 +2,6 @@ package ch.ubique.backend.spring.boot.problem.handler;
 
 import static java.util.Objects.requireNonNull;
 
-import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.springframework.context.ApplicationContext;
@@ -66,9 +65,8 @@ public interface UetlibExceptionHandlerSkeletonTrait extends ApplicationContextA
      *     invalid. Must not be {@code null}.
      * @return the corresponding {@link HttpStatusCode} enum value
      */
-    @NonNull
     default HttpStatusCode resolveStatusCodeOrDefault(
-            final int status, final @NonNull HttpStatusCode defaultStatusCode) {
+            final int status, final HttpStatusCode defaultStatusCode) {
         try {
             return HttpStatusCode.valueOf(status);
         } catch (final IllegalArgumentException e) {

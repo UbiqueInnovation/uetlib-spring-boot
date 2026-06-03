@@ -4,7 +4,6 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.constraints.NotNull;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -28,8 +27,8 @@ public class ApiKeyAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected final void doFilterInternal(
             final HttpServletRequest request,
-            final @NotNull HttpServletResponse response,
-            final @NotNull FilterChain filterChain)
+            final HttpServletResponse response,
+            final FilterChain filterChain)
             throws ServletException, IOException {
 
         final var requestApiKey = request.getHeader("X-API-KEY");

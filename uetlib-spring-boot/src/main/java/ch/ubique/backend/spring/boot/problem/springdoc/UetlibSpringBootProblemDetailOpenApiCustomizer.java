@@ -1,5 +1,7 @@
 package ch.ubique.backend.spring.boot.problem.springdoc;
 
+import static java.util.Objects.requireNonNull;
+
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.media.Schema;
 
@@ -27,7 +29,7 @@ public class UetlibSpringBootProblemDetailOpenApiCustomizer implements OpenApiCu
         }
 
         final var additionalPropertiesSchema =
-                ((Schema<?>) problemDetailSchema.getProperties().get("properties"))
+                requireNonNull(((Schema<?>) problemDetailSchema.getProperties().get("properties")))
                         .getAdditionalProperties();
         problemDetailSchema.additionalProperties(additionalPropertiesSchema);
 

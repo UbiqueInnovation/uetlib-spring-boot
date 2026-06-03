@@ -2,8 +2,6 @@ package ch.ubique.backend.security.oauth2;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
-import jakarta.annotation.Nullable;
-
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.oauth2.client.endpoint.AbstractRestClientOAuth2AccessTokenResponseClient;
 import org.springframework.security.oauth2.client.endpoint.OAuth2ClientCredentialsGrantRequest;
@@ -31,13 +29,12 @@ public class ResourceIndicatorClientCredentialsRequestConverter
     }
 
     @Override
-    @Nullable
     public MultiValueMap<String, String> convert(
             final OAuth2ClientCredentialsGrantRequest tokenRequest) {
         final var registrationId = tokenRequest.getClientRegistration().getRegistrationId();
         final var resource = clientResource.get(registrationId);
         if (isBlank(resource)) {
-            return null;
+            return MultiValueMap.fromSingleValue(Map.of());
         }
 
         final var customParams = new LinkedMultiValueMap<String, String>();

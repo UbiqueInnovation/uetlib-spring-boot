@@ -1,6 +1,5 @@
 package ch.ubique.backend.core.utils.retry;
 
-import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,9 +34,9 @@ public class LoggingRetryListener implements RetryListener {
 
     @Override
     public void onRetryFailure(
-            final @NonNull RetryPolicy retryPolicy,
-            final @NonNull Retryable<?> retryable,
-            final @NonNull Throwable throwable) {
+            final RetryPolicy retryPolicy,
+            final Retryable<?> retryable,
+            final Throwable throwable) {
         if (logger.isDebugEnabled()) {
             logger.debug(
                     "Got {} while trying {} on retry: {}",
@@ -67,9 +66,9 @@ public class LoggingRetryListener implements RetryListener {
 
     @Override
     public void onRetryPolicyInterruption(
-            final @NonNull RetryPolicy retryPolicy,
-            final @NonNull Retryable<?> retryable,
-            final @NonNull RetryException exception) {
+            final RetryPolicy retryPolicy,
+            final Retryable<?> retryable,
+            final RetryException exception) {
         logger.info(
                 "Retry interrupted during attempt {} while waiting during backoff with cause.",
                 exception.getRetryCount(),
@@ -78,9 +77,9 @@ public class LoggingRetryListener implements RetryListener {
 
     @Override
     public void onRetryPolicyExhaustion(
-            final @NonNull RetryPolicy retryPolicy,
-            final @NonNull Retryable<?> retryable,
-            final @NonNull RetryException exception) {
+            final RetryPolicy retryPolicy,
+            final Retryable<?> retryable,
+            final RetryException exception) {
         logger.info(
                 "Could not complete task. Retry policy exhausted after {} retries.",
                 exception.getRetryCount(),
@@ -89,8 +88,8 @@ public class LoggingRetryListener implements RetryListener {
 
     @Override
     public void onRetrySuccess(
-            final @NonNull RetryPolicy retryPolicy,
-            final @NonNull Retryable<?> retryable,
+            final RetryPolicy retryPolicy,
+            final Retryable<?> retryable,
             @Nullable final Object result) {
         logger.debug("Successful after retries.");
     }

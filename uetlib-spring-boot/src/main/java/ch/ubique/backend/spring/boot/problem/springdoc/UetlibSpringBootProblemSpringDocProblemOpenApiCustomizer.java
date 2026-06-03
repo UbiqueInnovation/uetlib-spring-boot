@@ -1,5 +1,7 @@
 package ch.ubique.backend.spring.boot.problem.springdoc;
 
+import static java.util.Objects.requireNonNull;
+
 import ch.ubique.backend.spring.boot.problem.errortype.ProblemErrorType;
 import ch.ubique.backend.spring.boot.problem.errortype.ProblemType;
 
@@ -7,11 +9,10 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.media.StringSchema;
 
+import org.jspecify.annotations.Nullable;
 import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
 import org.reflections.util.ClasspathHelper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springdoc.core.customizers.OpenApiCustomizer;
 
 import java.lang.reflect.ParameterizedType;
@@ -50,9 +51,6 @@ import java.util.Set;
  * constants).
  */
 public class UetlibSpringBootProblemSpringDocProblemOpenApiCustomizer implements OpenApiCustomizer {
-
-    private static final Logger logger =
-            LoggerFactory.getLogger(UetlibSpringBootProblemSpringDocProblemOpenApiCustomizer.class);
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
@@ -94,7 +92,8 @@ public class UetlibSpringBootProblemSpringDocProblemOpenApiCustomizer implements
 
             // set 'type' example value to 'unknownType' and also set all the
             // possible values
-            final var typeFieldSchema = (Schema) problemSchema.getProperties().get("type");
+            final var typeFieldSchema =
+                    (Schema) requireNonNull(problemSchema.getProperties().get("type"));
             problemSchema.addProperty(
                     typeFieldSchema.getName(),
                     new StringSchema().example(allTypes.getFirst())._enum(allTypes));
@@ -102,7 +101,7 @@ public class UetlibSpringBootProblemSpringDocProblemOpenApiCustomizer implements
             // set 'problemCode' example value to 'unknownProblemCode' and also set all the
             // possible values
             final var problemCodeFieldSchema =
-                    (Schema) problemSchema.getProperties().get("problemCode");
+                    (Schema) requireNonNull(problemSchema.getProperties().get("problemCode"));
             problemSchema.addProperty(
                     problemCodeFieldSchema.getName(),
                     new StringSchema().example(allProblemCodes.getFirst())._enum(allProblemCodes));
@@ -121,18 +120,19 @@ public class UetlibSpringBootProblemSpringDocProblemOpenApiCustomizer implements
     }
 
     // Extract the first generic type (the related error type) from the class
-    private Class<ProblemErrorType> getErrorTypeGenericType(final Class<?> problemClass) {
+    private @Nullable Class<ProblemErrorType> getErrorTypeGenericType(final Class<?> problemClass) {
         return getNthGenericType(problemClass, 0);
     }
 
     // Extract the second generic type (the related exception) from the class
-    private Class<RuntimeException> getExceptionGenericType(final Class<?> problemClass) {
+    private @Nullable Class<RuntimeException> getExceptionGenericType(final Class<?> problemClass) {
         return getNthGenericType(problemClass, 1);
     }
 
     // Extract the second generic type (the related exception) from the class
     @SuppressWarnings("unchecked")
-    private <T> Class<T> getNthGenericType(final Class<?> problemClass, final int genericIndex) {
+    private <T> @Nullable Class<T> getNthGenericType(
+            final Class<?> problemClass, final int genericIndex) {
         // Check if the class is parameterised (i.e. has generics)
         final var genericInterfaces = problemClass.getGenericInterfaces();
         for (final var genericInterface : genericInterfaces) {

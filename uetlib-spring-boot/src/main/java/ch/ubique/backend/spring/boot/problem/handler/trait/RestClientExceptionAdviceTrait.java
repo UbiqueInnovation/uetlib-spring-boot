@@ -1,6 +1,9 @@
 package ch.ubique.backend.spring.boot.problem.handler.trait;
 
+import static java.util.Objects.requireNonNull;
+
 import ch.ubique.backend.spring.boot.problem.handler.UetlibExceptionHandlerSkeletonTrait;
+
 import org.jspecify.annotations.Nullable;
 import org.springframework.context.MessageSource;
 import org.springframework.http.*;
@@ -50,7 +53,8 @@ public interface RestClientExceptionAdviceTrait extends UetlibExceptionHandlerSk
             final HttpStatusCodeException ex, final HttpHeaders headers, final WebRequest request) {
         final var status = ex.getStatusCode();
         final var body =
-                createProblemDetail(ex, status, ex.getLocalizedMessage(), null, null, request);
+                createProblemDetail(
+                        ex, status, requireNonNull(ex.getLocalizedMessage()), null, null, request);
         return handleExceptionInternal(ex, body, headers, status, request);
     }
 }
