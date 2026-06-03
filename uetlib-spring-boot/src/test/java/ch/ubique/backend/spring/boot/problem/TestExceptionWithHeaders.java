@@ -13,7 +13,7 @@ public class TestExceptionWithHeaders extends AbstractThrowableProblem
     }
 
     @Override
-    public void addHeaders(final HttpHeaders headers) {
+    public void addProblemResponseHeaders(final HttpHeaders headers) {
         headers.add("x-problem-code", problemCode());
     }
 }

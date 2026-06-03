@@ -4,5 +4,5 @@ import org.springframework.http.HttpHeaders;
 
 public interface ProblemResponseHeadersProvider {
 
-    void addHeaders(HttpHeaders headers);
+    void addProblemResponseHeaders(HttpHeaders headers);
 }
