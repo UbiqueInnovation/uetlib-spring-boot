@@ -1,9 +1,9 @@
 package ch.ubique.backend.spring.boot.problem;
 
 import ch.ubique.backend.spring.boot.problem.errortype.ProblemErrorType;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.springframework.http.HttpStatusCode;
 
@@ -15,15 +15,15 @@ import java.net.URI;
  */
 public interface BaseThrowableProblem {
 
-    @NonNull ProblemErrorType errorType();
+    ProblemErrorType errorType();
 
-    @NonNull URI type();
+    URI type();
 
-    @NonNull HttpStatusCode status();
+    HttpStatusCode status();
 
-    @NonNull String title();
+    String title();
 
-    @NonNull String detail();
+    String detail();
 
     @Nullable
     default URI instance() {
@@ -31,5 +31,5 @@ public interface BaseThrowableProblem {
     }
 
     @JsonIgnore
-    @NonNull String problemCode();
+    String problemCode();
 }

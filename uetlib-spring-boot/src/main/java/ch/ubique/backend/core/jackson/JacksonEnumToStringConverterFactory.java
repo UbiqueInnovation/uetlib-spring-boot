@@ -1,6 +1,5 @@
 package ch.ubique.backend.core.jackson;
 
-import org.jetbrains.annotations.NotNull;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.convert.converter.ConverterFactory;
 import org.springframework.stereotype.Component;
@@ -25,8 +24,7 @@ public class JacksonEnumToStringConverterFactory implements ConverterFactory<Enu
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends String> @NotNull Converter<Enum, T> getConverter(
-            final @NotNull Class<T> targetType) {
+    public <T extends String> Converter<Enum, T> getConverter(final Class<T> targetType) {
         return new JacksonStringToEnumConverter(objectMapper);
     }
 
@@ -38,7 +36,7 @@ public class JacksonEnumToStringConverterFactory implements ConverterFactory<Enu
             this.objectMapper = objectMapper;
         }
 
-        public String convert(@NotNull final T source) {
+        public String convert(final T source) {
             return objectMapper.convertValue(source, String.class);
         }
     }

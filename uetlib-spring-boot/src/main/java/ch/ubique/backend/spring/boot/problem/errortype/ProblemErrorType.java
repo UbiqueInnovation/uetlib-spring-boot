@@ -2,15 +2,13 @@ package ch.ubique.backend.spring.boot.problem.errortype;
 
 import com.google.common.base.CaseFormat;
 
-import org.jspecify.annotations.NonNull;
-
 import java.io.Serializable;
 import java.net.URI;
 
 /** Usually implemented by enums. These also have the {@link #name()} method by default. */
 public interface ProblemErrorType extends Serializable {
 
-    @NonNull ProblemType problemType();
+    ProblemType problemType();
 
     /**
      * The actual resulting type of this specific error type: The problem type (as base) joined with
@@ -18,7 +16,7 @@ public interface ProblemErrorType extends Serializable {
      *
      * <p>Example: {@code urn:ch:uetlib:spring:boot:problem:test:test-error}
      */
-    default @NonNull URI type() {
+    default URI type() {
         return URI.create(
                 problemType().type()
                         + ":"
@@ -31,11 +29,11 @@ public interface ProblemErrorType extends Serializable {
      *
      * <p>Example: {@code UT|ET}
      */
-    default @NonNull String problemCode() {
+    default String problemCode() {
         return problemType().code() + "|" + code();
     }
 
-    @NonNull String name();
+    String name();
 
-    @NonNull String code();
+    String code();
 }

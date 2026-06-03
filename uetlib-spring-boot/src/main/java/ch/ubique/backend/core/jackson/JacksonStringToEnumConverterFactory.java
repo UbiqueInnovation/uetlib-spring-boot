@@ -1,7 +1,5 @@
 package ch.ubique.backend.core.jackson;
 
-import jakarta.validation.constraints.NotNull;
-
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.convert.converter.ConverterFactory;
 import org.springframework.stereotype.Component;
@@ -26,8 +24,7 @@ public class JacksonStringToEnumConverterFactory implements ConverterFactory<Str
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends Enum> @NotNull Converter<String, T> getConverter(
-            final @NotNull Class<T> targetType) {
+    public <T extends Enum> Converter<String, T> getConverter(final Class<T> targetType) {
         return new JacksonStringToEnumConverter(targetType, objectMapper);
     }
 

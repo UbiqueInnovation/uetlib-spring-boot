@@ -2,8 +2,6 @@ package ch.ubique.backend.core.jackson;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import jakarta.validation.constraints.NotNull;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.core.convert.converter.Converter;
 
@@ -11,7 +9,7 @@ import tools.jackson.databind.ObjectMapper;
 
 class JacksonStringToEnumConverterTest {
 
-    private static final @NotNull Converter<String, JacksonTestEnum> STRING_TO_ENUM_CONVERTER =
+    private static final Converter<String, JacksonTestEnum> STRING_TO_ENUM_CONVERTER =
             new JacksonStringToEnumConverterFactory(new ObjectMapper())
                     .getConverter(JacksonTestEnum.class);
 

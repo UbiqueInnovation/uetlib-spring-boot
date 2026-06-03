@@ -1,7 +1,9 @@
 package ch.ubique.backend.security;
 
+import static java.util.Objects.requireNonNull;
 import static java.util.Objects.requireNonNullElseGet;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
@@ -107,15 +109,15 @@ public final class JwtUtil {
     }
 
     private static <T> List<T> claimAsList(
-            final String claimName, final Function<Object, T> claimConverter) {
-        final var claim = getJwt().getClaims().get(claimName);
+            final String claimName, final Function<Object, @Nullable T> claimConverter) {
+        final var claim = requireNonNull(getJwt().getClaims().get(claimName));
         return claimAsList(claim, claimName, claimConverter);
     }
 
     private static <T> List<T> claimAsList(
             final String claimName,
             final String fallbackClaimName,
-            final Function<Object, T> claimConverter) {
+            final Function<Object, @Nullable T> claimConverter) {
         final var claim = getJwt().getClaims().get(claimName);
         if (claim != null) {
             return claimAsList(claim, claimName, claimConverter);
@@ -125,7 +127,9 @@ public final class JwtUtil {
 
     @SuppressWarnings("java:S3740")
     private static <T> List<T> claimAsList(
-            final Object claim, final String claimName, final Function<Object, T> claimConverter) {
+            final Object claim,
+            final String claimName,
+            final Function<Object, @Nullable T> claimConverter) {
         //noinspection rawtypes
         if (claim instanceof final List claimList) {
             //noinspection unchecked
@@ -140,30 +144,34 @@ public final class JwtUtil {
         return List.of(notNullOrThrow(claimConverter.apply(claim), claimName));
     }
 
-    private static <T> T notNullOrThrow(final T claimValue, final String claimName) {
+    private static <T> T notNullOrThrow(final @Nullable T claimValue, final String claimName) {
         return Optional.ofNullable(claimValue).orElseThrow(throwClaimNotFound(claimName));
     }
 
     private static <T> T notNullOrFallback(
-            final T claimValue, final Supplier<T> fallbackClaimSupplier) {
+            final @Nullable T claimValue, final Supplier<T> fallbackClaimSupplier) {
         return requireNonNullElseGet(claimValue, fallbackClaimSupplier);
     }
 
-    private static Long claimAsLong(final Object claimObject) {
+    private static @Nullable Long claimAsLong(final @Nullable Object claimObject) {
         try {
-            return claimObject instanceof final String claim
-                    ? Long.parseLong(claim)
-                    : ((Number) claimObject).longValue();
+            return switch (claimObject) {
+                case null -> null;
+                case final String claim -> Long.parseLong(claim);
+                default -> ((Number) claimObject).longValue();
+            };
         } catch (final NullPointerException | NumberFormatException exception) {
             return null;
         }
     }
 
-    private static Double claimAsDouble(final Object claimObject) {
+    private static @Nullable Double claimAsDouble(final @Nullable Object claimObject) {
         try {
-            return claimObject instanceof final String claim
-                    ? Double.parseDouble(claim)
-                    : ((Number) claimObject).doubleValue();
+            return switch (claimObject) {
+                case null -> null;
+                case final String claim -> Double.parseDouble(claim);
+                default -> ((Number) claimObject).doubleValue();
+            };
         } catch (final NullPointerException | NumberFormatException exception) {
             return null;
         }

@@ -3,12 +3,14 @@ package ch.ubique.backend.spring.boot.problem.handler.trait.violation;
 import static java.util.Comparator.*;
 import static java.util.Optional.ofNullable;
 
+import ch.ubique.backend.core.validator.NullOrNotBlank;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.validation.ConstraintViolation;
+import jakarta.validation.constraints.NotBlank;
 
-import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
@@ -17,8 +19,8 @@ import java.util.Comparator;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record Violation(
-        @JsonProperty(required = true) String fieldName,
-        @JsonProperty(required = true) String message,
+        @JsonProperty(required = true) @NotBlank String fieldName,
+        @Nullable @NullOrNotBlank String message,
         @Nullable Object rejectedValue)
         implements Comparable<Violation> {
 
@@ -32,7 +34,7 @@ public record Violation(
                                             .map(Object::hashCode)
                                             .orElse(Integer.MIN_VALUE));
 
-    public Violation(final String fieldName, final String message) {
+    public Violation(final String fieldName, final @Nullable String message) {
         this(fieldName, message, null);
     }
 
@@ -57,7 +59,7 @@ public record Violation(
     }
 
     @Override
-    public int compareTo(final @NonNull Violation o) {
+    public int compareTo(final Violation o) {
         return COMPARATOR.compare(this, o);
     }
 }
