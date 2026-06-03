@@ -1,7 +1,6 @@
 package ch.ubique.backend.security;
 
 import static java.util.Objects.requireNonNull;
-import static java.util.Objects.requireNonNullElseGet;
 
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.access.AccessDeniedException;
@@ -12,7 +11,6 @@ import org.springframework.security.oauth2.jwt.Jwt;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -145,12 +143,19 @@ public final class JwtUtil {
     }
 
     private static <T> T notNullOrThrow(final @Nullable T claimValue, final String claimName) {
-        return Optional.ofNullable(claimValue).orElseThrow(throwClaimNotFound(claimName));
+        if (claimValue != null) {
+            return claimValue;
+        }
+
+        throw claimNotFoundException(claimName);
     }
 
     private static <T> T notNullOrFallback(
             final @Nullable T claimValue, final Supplier<T> fallbackClaimSupplier) {
-        return requireNonNullElseGet(claimValue, fallbackClaimSupplier);
+        if (claimValue != null) {
+            return claimValue;
+        }
+        return fallbackClaimSupplier.get();
     }
 
     private static @Nullable Long claimAsLong(final @Nullable Object claimObject) {
@@ -181,9 +186,7 @@ public final class JwtUtil {
         return getJwt().getTokenValue();
     }
 
-    private static Supplier<AccessDeniedException> throwClaimNotFound(final String claimName) {
-        return () -> {
-            throw new AccessDeniedException("Claim '" + claimName + "' not found in JWT");
-        };
+    private static AccessDeniedException claimNotFoundException(final String claimName) {
+        return new AccessDeniedException("Claim '" + claimName + "' not found in JWT");
     }
 }
