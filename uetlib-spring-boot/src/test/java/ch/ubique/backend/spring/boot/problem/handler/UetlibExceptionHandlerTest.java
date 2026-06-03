@@ -1,10 +1,15 @@
 package ch.ubique.backend.spring.boot.problem.handler;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static ch.ubique.backend.spring.boot.problem.errortype.TestErrorType.ERROR_TEST1;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import static java.util.Objects.requireNonNull;
 
+import ch.ubique.backend.spring.boot.problem.AbstractThrowableProblem;
 import ch.ubique.backend.spring.boot.problem.TestException;
+import ch.ubique.backend.spring.boot.problem.TestExceptionWithHeaders;
 import ch.ubique.backend.spring.boot.problem.errortype.TestErrorType;
 import ch.ubique.backend.spring.boot.problem.handler.config.UetlibExceptionHandlerTestConfig;
 
@@ -16,8 +21,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.context.i18n.SimpleLocaleContext;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ProblemDetail;
-import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
@@ -47,81 +52,173 @@ class UetlibExceptionHandlerTest {
 
     @Test
     void handleUetlibThrowableProblem_returnsProblemDetailWithExpectedFields() {
-        final var pd1 =
+        // test for error test 1
+        final var response1 =
                 testUetlibExceptionHandler.handleAbstractThrowableProblem(
-                        new TestException(TestErrorType.ERROR_TEST1), newRequest());
+                        new TestException(ERROR_TEST1), newRequest());
 
-        // Basic fields
-        assertEquals(
-                TestErrorType.PROBLEM_TYPE.type()
-                        + ":"
-                        + CaseFormat.UPPER_UNDERSCORE.to(
-                                CaseFormat.LOWER_HYPHEN, TestErrorType.ERROR_TEST1.name()),
-                requireNonNull(pd1.getType()).toString());
-        assertEquals("Test Problem", pd1.getTitle());
-        assertEquals(400, pd1.getStatus());
+        assertThat(response1.getStatusCode().value()).isEqualTo(400);
+
+        final var pd1 = response1.getBody();
+        assertThat(pd1).isNotNull();
+        assertThat(pd1.getType())
+                .hasToString(
+                        TestErrorType.PROBLEM_TYPE.type()
+                                + ":"
+                                + CaseFormat.UPPER_UNDERSCORE.to(
+                                        CaseFormat.LOWER_HYPHEN, ERROR_TEST1.name()));
+        assertThat(pd1.getTitle()).isEqualTo("Test Problem");
+        assertThat(pd1.getStatus()).isEqualTo(400);
         // Default detail equals reason phrase of BAD_REQUEST in our TestProblem constructor
-        assertEquals("Bad Request", pd1.getDetail());
-        assertNull(pd1.getInstance());
-
-        // Custom properties added by AbstractUetlibThrowableProblem
-        assertNotNull(pd1.getProperties());
-        assertEquals("UT|ET1", pd1.getProperties().get("problemCode"));
-
-        // i18n not set
-        assertNull(pd1.getProperties().get("localizedTitle"));
-        assertNull(pd1.getProperties().get("localizedDetail"));
+        assertThat(pd1.getDetail()).isEqualTo("Bad Request");
+        assertThat(pd1.getInstance()).isNull();
+        assertThat(pd1.getProperties())
+                .isNotNull()
+                .containsEntry("problemCode", "UT|ET1")
+                .doesNotContainKeys("localizedTitle", "localizedDetail");
 
         // test for error test 2
-        final var pd2 =
+        final var response2 =
                 testUetlibExceptionHandler.handleAbstractThrowableProblem(
                         new TestException(
                                 TestErrorType.ERROR_TEST2_WITH_TRANSLATIONS,
                                 "Error Test 2 exception"),
                         newRequest());
 
-        assertEquals("Error Test 2 exception", pd2.getDetail());
+        assertThat(response2.getStatusCode().value()).isEqualTo(400);
 
-        // i18n set for error test 2
-        assertNotNull(pd2.getProperties());
-        assertEquals("DE: Error Test2 Titel", pd2.getProperties().get("localizedTitle"));
-        assertEquals("EN: Error Test2 Detail", pd2.getProperties().get("localizedDetail"));
+        final var pd2 = response2.getBody();
+        assertThat(pd2).isNotNull();
+        assertThat(pd2.getDetail()).isEqualTo("Error Test 2 exception");
+        assertThat(pd2.getProperties())
+                .isNotNull()
+                .containsEntry("localizedTitle", "DE: Error Test2 Titel")
+                .containsEntry("localizedDetail", "EN: Error Test2 Detail");
 
         // test for error test 3
-        final var pd3 =
+        final var response3 =
                 testUetlibExceptionHandler.handleAbstractThrowableProblem(
                         new TestException(TestErrorType.ERROR_TEST3_WITH_TITLE_TRANSLATION_ONLY),
                         newRequest());
 
-        // i18n title only set for error test 3
-        assertNotNull(pd3.getProperties());
-        assertEquals("DE: Error Test3 Titel", pd3.getProperties().get("localizedTitle"));
-        assertNull(pd1.getProperties().get("localizedDetail"));
+        assertThat(response3.getStatusCode().value()).isEqualTo(400);
+
+        final var pd3 = response3.getBody();
+        assertThat(pd3).isNotNull();
+        assertThat(pd3.getProperties())
+                .isNotNull()
+                .containsEntry("localizedTitle", "DE: Error Test3 Titel")
+                .doesNotContainKey("localizedDetail");
     }
 
     @Test
     void handleNoSuchElementException_mapsTo404ProblemDetail() throws Exception {
         final var ex = new NoSuchElementException("Element 17 not found");
+        final var response =
+                requireNonNull(testUetlibExceptionHandler.handleMoreExceptions(ex, newRequest()));
 
-        final var response = testUetlibExceptionHandler.handleMoreExceptions(ex, newRequest());
-
-        // ResponseEntity and status
-        assertInstanceOf(ResponseEntity.class, response);
-        assertEquals(404, response.getStatusCode().value());
-
-        final var body = response.getBody();
-        final var problemDetail = assertInstanceOf(ProblemDetail.class, body);
-        assertEquals(404, problemDetail.getStatus());
-        assertEquals("Element 17 not found", problemDetail.getDetail());
-        // Do not assert title/type as they are framework-defined defaults.
+        assertThat(response.getStatusCode().value()).isEqualTo(404);
+        assertThat(response.getBody())
+                .isInstanceOf(ProblemDetail.class)
+                .satisfies(
+                        body -> {
+                            final var pd = requireNonNull((ProblemDetail) body);
+                            assertThat(pd.getStatus()).isEqualTo(404);
+                            assertThat(pd.getDetail()).isEqualTo("Element 17 not found");
+                        });
     }
 
     @Test
     void handleOtherException_isRethrown() {
         final var ex = new IllegalArgumentException("boom");
-
         assertThrows(
                 IllegalArgumentException.class,
                 () -> testUetlibExceptionHandler.handleException(ex, newRequest()));
+    }
+
+    // ======== ProblemResponseHeadersProvider ========
+
+    @Test
+    void
+            handleAbstractThrowableProblem_whenExceptionImplementsProblemResponseHeadersProvider_headersAreIncluded() {
+        final var response =
+                testUetlibExceptionHandler.handleAbstractThrowableProblem(
+                        new TestExceptionWithHeaders(), newRequest());
+
+        assertThat(response.getStatusCode().value()).isEqualTo(400);
+        assertThat(response.getHeaders().get("x-problem-code")).containsExactly("UT|ET1");
+        assertThat(response.getBody())
+                .isNotNull()
+                .satisfies(
+                        pd ->
+                                assertThat(requireNonNull(pd).getProperties())
+                                        .containsEntry("problemCode", "UT|ET1"));
+    }
+
+    @Test
+    void
+            handleAbstractThrowableProblem_whenExceptionDoesNotImplementProvider_noProviderHeadersAdded() {
+        final var response =
+                testUetlibExceptionHandler.handleAbstractThrowableProblem(
+                        new TestException(ERROR_TEST1), newRequest());
+
+        assertThat(response.getHeaders().get("x-problem-code")).isNull();
+    }
+
+    // ======== customizeAbstractThrowableProblemHeaders extension hook ========
+
+    @Test
+    void handleAbstractThrowableProblem_whenCustomizeHookOverridden_customHeaderIsAdded() {
+        // Anonymous subclass overrides the hook — no Spring context needed for this code path
+        final var handler =
+                new TestUetlibExceptionHandler() {
+                    @Override
+                    public void customizeAbstractThrowableProblemHeaders(
+                            final AbstractThrowableProblem problem,
+                            final WebRequest request,
+                            final HttpHeaders headers) {
+                        headers.add("x-custom-hook", "hook-was-called");
+                    }
+                };
+
+        final var response =
+                handler.handleAbstractThrowableProblem(
+                        new TestException(ERROR_TEST1), newRequest());
+
+        assertThat(response.getStatusCode().value()).isEqualTo(400);
+        assertThat(response.getHeaders().get("x-custom-hook")).containsExactly("hook-was-called");
+    }
+
+    @Test
+    void
+            handleAbstractThrowableProblem_whenBothProviderAndHookPresent_headersFromBothAreIncluded() {
+        final var handler =
+                new TestUetlibExceptionHandler() {
+                    @Override
+                    public void customizeAbstractThrowableProblemHeaders(
+                            final AbstractThrowableProblem problem,
+                            final WebRequest request,
+                            final HttpHeaders headers) {
+                        headers.add("x-custom-hook", "hook-was-called");
+                    }
+                };
+
+        final var response =
+                handler.handleAbstractThrowableProblem(
+                        new TestExceptionWithHeaders(), newRequest());
+
+        assertThat(response.getStatusCode().value()).isEqualTo(400);
+        assertThat(response.getHeaders().get("x-problem-code")).isNotNull();
+        assertThat(response.getHeaders().get("x-custom-hook")).isNotNull();
+    }
+
+    @Test
+    void handleAbstractThrowableProblem_defaultHook_addsNoExtraHeaders() {
+        final var response =
+                testUetlibExceptionHandler.handleAbstractThrowableProblem(
+                        new TestException(ERROR_TEST1), newRequest());
+
+        // Default hook is a no-op — only framework-managed headers are present
+        assertThat(response.getHeaders().get("x-custom-hook")).isNull();
     }
 }
