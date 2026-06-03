@@ -1,6 +1,7 @@
 package ch.ubique.backend.spring.boot.problem.handler.trait;
 
 import ch.ubique.backend.spring.boot.problem.AbstractThrowableProblem;
+import ch.ubique.backend.spring.boot.problem.ProblemResponseHeadersProvider;
 import ch.ubique.backend.spring.boot.problem.handler.UetlibExceptionHandlerSkeletonTrait;
 
 import org.jspecify.annotations.Nullable;
@@ -20,21 +21,55 @@ public interface ThrowableProblemAdviceTrait extends UetlibExceptionHandlerSkele
      */
     // add more here
     @ExceptionHandler(AbstractThrowableProblem.class)
-    default ProblemDetail handleAbstractThrowableProblem(
+    default ResponseEntity<ProblemDetail> handleAbstractThrowableProblem(
             final AbstractThrowableProblem problem,
             @SuppressWarnings("unused") final WebRequest request) {
 
         final var problemTypeCode = problem.type().toString().replace(":", ".");
+        final var localizedTitle = getLocalizedProblemField(problem, "title", problemTypeCode);
+        final var localizedDetail = getLocalizedProblemField(problem, "detail", problemTypeCode);
 
-        final var localizedTitleCode = "problem.title." + problemTypeCode;
+        final var body = problem.toProblemDetail(localizedTitle, localizedDetail);
+
+        final var headers = buildErrorResponseHeaders(problem, request);
+
+        return ResponseEntity.status(HttpStatusCode.valueOf(body.getStatus()))
+                .headers(headers)
+                .body(body);
+    }
+
+    private @Nullable String getLocalizedProblemField(
+            final AbstractThrowableProblem problem,
+            final String titleDetail,
+            final String problemTypeCode) {
+        final var localizedTitleCode = "problem." + titleDetail + "." + problemTypeCode;
         final var localizedTitleArgs = problem.localizedTitleArgs();
-        final var localizedTitle = localizeMessage(localizedTitleCode, localizedTitleArgs);
+        return localizeMessage(localizedTitleCode, localizedTitleArgs);
+    }
 
-        final var localizedDetailCode = "problem.detail." + problemTypeCode;
-        final var localizedDetailArgs = problem.localizedDetailArgs();
-        final var localizedDetail = localizeMessage(localizedDetailCode, localizedDetailArgs);
+    private HttpHeaders buildErrorResponseHeaders(
+            final AbstractThrowableProblem problem, final WebRequest request) {
+        final var headers = new HttpHeaders();
+        if (problem instanceof final ProblemResponseHeadersProvider provider) {
+            provider.addHeaders(headers);
+        }
+        customizeAbstractThrowableProblemHeaders(problem, request, headers);
+        return headers;
+    }
 
-        return problem.toProblemDetail(localizedTitle, localizedDetail);
+    /**
+     * Customize the headers of the {@link AbstractThrowableProblem}.
+     *
+     * @param problem the problem to customize
+     * @param request the current request
+     * @param headers the headers to customize
+     */
+    @SuppressWarnings("unused")
+    default void customizeAbstractThrowableProblemHeaders(
+            final AbstractThrowableProblem problem,
+            final WebRequest request,
+            final HttpHeaders headers) {
+        // extension hook
     }
 
     default @Nullable String localizeMessage(

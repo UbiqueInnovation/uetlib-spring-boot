@@ -77,8 +77,6 @@ public abstract class AbstractThrowableProblem extends RuntimeException
      *     return (MyProblemErrorType) super.errorType();
      * }
      * }
-     *
-     * @return
      */
     @Override
     public ProblemErrorType errorType() {

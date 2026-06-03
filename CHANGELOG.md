@@ -12,6 +12,14 @@
     - `InputDataLoaderService`
     - `InputDataLoaderServiceMapper`
 
+### Improvements
+
+- Add `ProblemResponseHeadersProvider` interface: implement it on any `AbstractThrowableProblem` subclass to contribute
+  custom HTTP response headers when that exception is handled.
+- Add `customizeAbstractThrowableProblemHeaders` extension hook on `UetlibExceptionHandler`: override this method in
+  your exception handler subclass to add or modify response headers for any `AbstractThrowableProblem`, regardless of
+  its type.
+
 ## 2.1.1
 
 - expose `errorType` from `AbstractThrowableProblem` again
