@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2.2.1
+
+### Improvements
+
+- Always add `x-problem-code` header for every `AbstractThrowableProblem` error responses.
+
 ## 2.2.0
 
 ### Breaking Changes
