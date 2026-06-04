@@ -1,6 +1,7 @@
 package ch.ubique.backend.spring.boot.problem.handler;
 
 import static ch.ubique.backend.spring.boot.problem.errortype.TestErrorType.ERROR_TEST1;
+import static ch.ubique.backend.spring.boot.problem.handler.trait.ThrowableProblemAdviceTrait.PROBLEM_CODE_HEADER;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -131,9 +132,10 @@ class UetlibExceptionHandlerTest {
     @Test
     void handleOtherException_isRethrown() {
         final var ex = new IllegalArgumentException("boom");
+        final var request = newRequest();
         assertThrows(
                 IllegalArgumentException.class,
-                () -> testUetlibExceptionHandler.handleException(ex, newRequest()));
+                () -> testUetlibExceptionHandler.handleException(ex, request));
     }
 
     // ======== ProblemResponseHeadersProvider ========
@@ -146,7 +148,9 @@ class UetlibExceptionHandlerTest {
                         new TestExceptionWithHeaders(), newRequest());
 
         assertThat(response.getStatusCode().value()).isEqualTo(400);
-        assertThat(response.getHeaders().get("x-problem-code")).containsExactly("UT|ET1");
+        assertThat(response.getHeaders().get(PROBLEM_CODE_HEADER)).containsExactly("UT|ET1");
+        assertThat(response.getHeaders().get("x-provider-extra-header"))
+                .containsExactly("provider-extra-value");
         assertThat(response.getBody())
                 .isNotNull()
                 .satisfies(
@@ -162,7 +166,8 @@ class UetlibExceptionHandlerTest {
                 testUetlibExceptionHandler.handleAbstractThrowableProblem(
                         new TestException(ERROR_TEST1), newRequest());
 
-        assertThat(response.getHeaders().get("x-problem-code")).isNull();
+        assertThat(response.getHeaders().get(PROBLEM_CODE_HEADER)).containsExactly("UT|ET1");
+        assertThat(response.getHeaders().get("x-provider-extra-header")).isNull();
     }
 
     // ======== customizeAbstractThrowableProblemHeaders extension hook ========
@@ -208,8 +213,10 @@ class UetlibExceptionHandlerTest {
                         new TestExceptionWithHeaders(), newRequest());
 
         assertThat(response.getStatusCode().value()).isEqualTo(400);
-        assertThat(response.getHeaders().get("x-problem-code")).isNotNull();
-        assertThat(response.getHeaders().get("x-custom-hook")).isNotNull();
+        assertThat(response.getHeaders().get(PROBLEM_CODE_HEADER)).containsExactly("UT|ET1");
+        assertThat(response.getHeaders().get("x-provider-extra-header"))
+                .containsExactly("provider-extra-value");
+        assertThat(response.getHeaders().get("x-custom-hook")).containsExactly("hook-was-called");
     }
 
     @Test
