@@ -13,6 +13,8 @@ import org.springframework.web.context.request.WebRequest;
 
 public interface ThrowableProblemAdviceTrait extends UetlibExceptionHandlerSkeletonTrait {
 
+    String PROBLEM_CODE_HEADER = "x-problem-code";
+
     /**
      * Handle all {@link AbstractThrowableProblem} and return the contained {@link ProblemDetail} to
      * be wrapped in a {@link org.springframework.web.ErrorResponse} by spring.
@@ -47,9 +49,16 @@ public interface ThrowableProblemAdviceTrait extends UetlibExceptionHandlerSkele
         return localizeMessage(localizedTitleCode, localizedTitleArgs);
     }
 
+    /**
+     * Always adds the {@link #PROBLEM_CODE_HEADER} to the response headers and adds additional
+     * headers from {@link ProblemResponseHeadersProvider} and from overriden implementations of
+     * {@link #customizeAbstractThrowableProblemHeaders(AbstractThrowableProblem, WebRequest,
+     * HttpHeaders)}.
+     */
     private HttpHeaders buildErrorResponseHeaders(
             final AbstractThrowableProblem problem, final WebRequest request) {
         final var headers = new HttpHeaders();
+        headers.add(PROBLEM_CODE_HEADER, problem.problemCode());
         if (problem instanceof final ProblemResponseHeadersProvider provider) {
             provider.addProblemResponseHeaders(headers);
         }
