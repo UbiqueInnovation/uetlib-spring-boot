@@ -16,7 +16,7 @@
 
     <properties>
         <uetlib-test.version>2.0.1</uetlib-test.version>
-        <uetlib-core.version>2.3.1</uetlib-core.version>
+        <uetlib-core.version>2.3.3</uetlib-core.version>
         <uetlib-geo.version>3.1.1</uetlib-geo.version>
 
         <!-- westemeyer version config -->
