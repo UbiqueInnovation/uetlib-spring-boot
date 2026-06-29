@@ -1,6 +1,6 @@
 package ch.ubique.backend.spring.boot.problem.handler.trait;
 
-import static java.util.Objects.requireNonNull;
+import static java.util.Objects.requireNonNullElse;
 
 import ch.ubique.backend.spring.boot.problem.handler.UetlibExceptionHandlerSkeletonTrait;
 
@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
+import java.util.Objects;
 
 public interface RestClientExceptionAdviceTrait extends UetlibExceptionHandlerSkeletonTrait {
 
@@ -54,7 +56,12 @@ public interface RestClientExceptionAdviceTrait extends UetlibExceptionHandlerSk
         final var status = ex.getStatusCode();
         final var body =
                 createProblemDetail(
-                        ex, status, requireNonNull(ex.getLocalizedMessage()), null, null, request);
+                        ex,
+                        status,
+                        requireNonNullElse(ex.getLocalizedMessage(), "Status Code Exception"),
+                        null,
+                        null,
+                        request);
         return handleExceptionInternal(ex, body, headers, status, request);
     }
 }
