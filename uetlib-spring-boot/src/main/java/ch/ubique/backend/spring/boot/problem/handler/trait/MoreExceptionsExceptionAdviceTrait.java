@@ -1,6 +1,6 @@
 package ch.ubique.backend.spring.boot.problem.handler.trait;
 
-import static java.util.Objects.requireNonNull;
+import static java.util.Objects.requireNonNullElse;
 
 import ch.ubique.backend.spring.boot.problem.handler.UetlibExceptionHandlerSkeletonTrait;
 
@@ -54,7 +54,12 @@ public interface MoreExceptionsExceptionAdviceTrait extends UetlibExceptionHandl
         final var status = HttpStatus.NOT_FOUND;
         final var body =
                 createProblemDetail(
-                        ex, status, requireNonNull(ex.getLocalizedMessage()), null, null, request);
+                        ex,
+                        status,
+                        requireNonNullElse(ex.getLocalizedMessage(), "No such element"),
+                        null,
+                        null,
+                        request);
         return handleExceptionInternal(ex, body, headers, status, request);
     }
 }
