@@ -7,7 +7,7 @@
     <parent>
         <groupId>ch.ubique</groupId>
         <artifactId>uetlib-parent</artifactId>
-        <version>2026.06.0</version>
+        <version>2026.07.0</version>
     </parent>
 
     <artifactId>uetlib-spring-boot-parent</artifactId>
@@ -16,8 +16,8 @@
 
     <properties>
         <uetlib-test.version>2.1.0</uetlib-test.version>
-        <uetlib-core.version>2.3.3</uetlib-core.version>
-        <uetlib-geo.version>3.2.0</uetlib-geo.version>
+        <uetlib-core.version>2.4.0</uetlib-core.version>
+        <uetlib-geo.version>3.2.1</uetlib-geo.version>
 
         <!-- westemeyer version config -->
         <westemeyer-version-package-name>ch.ubique.backend.spring.boot.version</westemeyer-version-package-name>
