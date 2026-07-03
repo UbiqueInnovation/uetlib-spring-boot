@@ -1,6 +1,7 @@
 package ch.ubique.backend.security.jwt;
 
 import org.jetbrains.annotations.Contract;
+import org.jspecify.annotations.Nullable;
 import org.springframework.security.oauth2.core.OAuth2TokenValidator;
 import org.springframework.security.oauth2.jwt.*;
 
@@ -25,9 +26,9 @@ public final class MoreJwtValidators {
         return new JwtIssuerValidator(issuer);
     }
 
-    @Contract("null, _ -> false")
+    @Contract("null, _ -> false; _, null -> false")
     private static boolean nullSafeNotDisjoint(
-            final Collection<String> c1, final Collection<String> c2) {
-        return c1 != null && !Collections.disjoint(c1, c2);
+            final @Nullable Collection<String> c1, final @Nullable Collection<String> c2) {
+        return c1 != null && c2 != null && !Collections.disjoint(c1, c2);
     }
 }
