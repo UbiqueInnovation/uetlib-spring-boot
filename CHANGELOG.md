@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## 2.3.0
+
+### Improvements
+
+- Allow setting no `audience` to validate in `MoreJwtValidator::issuerAndAudienceValidatingJwtDecoder`
+
+## 2.2.2
+
+### Bugfixes
+
+- Fix NPEs in `RestClientExceptionAdviceTrait` and `MoreExceptionsExceptionAdviceTrait`
+
 ## 2.2.1
 
 ### Improvements
