@@ -1,5 +1,42 @@
 # CHANGELOG
 
+## 2.4.0
+
+### Breaking Changes
+
+Yes, `2.4.0` instead of `3.0.0` as both users of `ApiKeyAuthenticationFilter` (RegaDA and Agridata) are on Spring Boot
+3.x and thus have to perform breaking changes anyway.
+
+- New `ApiKeyAuthenticationFilter` in `uetlib-spring-boot-security` to extend Spring Security's
+  `AbstractPreAuthenticatedProcessingFilter` and
+  extract headers. It defaults to the `Authorization` header, but a custom header name (e.g. `X-API-KEY`) can be
+  supplied via constructor. This effectively replaces `ApiKeyAuthenticationFilter` in `uetlib-spring-boot` (will be
+  removed in `3.0.0`).
+- Introduce `ApiKeyAuthenticationManager` which handles timing-safe verification of API keys and can be initialized with
+  a single key/authority, or a `Map<String, ? extends Collection<? extends GrantedAuthority>>` for multi-key support.
+
+  **Migration Path:**
+  If you want to use the library's `ApiKeyAuthenticationFilter` (which defaults to extracting the `Authorization`
+  header, but can be configured for other headers like `X-API-KEY`), register it in your `SecurityFilterChain` paired
+  with `ApiKeyAuthenticationManager`:
+
+  ```java
+  @Bean
+  SecurityFilterChain apiFilterChain(final HttpSecurity http, @Value("${my-app.api-key}") final String apiKey) {
+    final var manager = new ApiKeyAuthenticationManager(apiKey, "ROLE_API_USER");
+    final var filter = new ApiKeyAuthenticationFilter(manager, "X-API-KEY");
+
+    http
+        .securityMatcher("/v1/demo/**")
+        .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
+        .authorizeHttpRequests(auth -> auth
+            .anyRequest().hasRole("API_USER")
+        );
+
+    return http.build();
+  }
+  ```
+
 ## 2.3.1
 
 ### Improvements
@@ -194,7 +231,9 @@
   -       SpringDocConfig.setDefaultConfig();
   - }
   ```
-  or
+
+or
+
   ```diff
   - static {
   -       SpringDocConfig.setDefaultConfigWith(

@@ -12,12 +12,21 @@ import java.io.IOException;
 import java.security.MessageDigest;
 import java.text.MessageFormat;
 
+// TODO remove in 3.0.0
 /**
- * Override {@link #shouldNotFilter} to configure which requests are filtered. For path-based
- * filtering you get the request path from {@link HttpServletRequest#getServletPath()}.
+ * @deprecated since 2.4.0, migrate to {@link
+ *     ch.ubique.backend.security.filter.ApiKeyAuthenticationFilter} and {@link
+ *     ch.ubique.backend.security.manager.ApiKeyAuthenticationManager} in {@code
+ *     uetlib-spring-boot-security}.
+ *     <p>See <a
+ *     href="https://github.com/UbiqueInnovation/uetlib-spring-boot/blob/main/CHANGELOG.md#240">Changelog
+ *     2.4.0</a>
+ *     <p>Will be removed in `3.0.0`.
  */
 @SuppressWarnings("unused")
+@Deprecated(forRemoval = true, since = "2.4.0")
 public class ApiKeyAuthenticationFilter extends OncePerRequestFilter {
+
     private final String appApiKey;
 
     public ApiKeyAuthenticationFilter(final String appApiKey) {
