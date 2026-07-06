@@ -1,5 +1,18 @@
 # CHANGELOG
 
+## 2.3.1
+
+### Improvements
+
+- Add more content types to default logbook by replacers (
+  `ch.ubique.backend.spring.boot.logbook.response-filter.body-replacers.content-types`). Now includes all of:
+    - `text/html`
+    - `text/css`
+    - `application/javascript`
+    - `font/*`
+    - `image/*`
+    - `application/protobuf`
+
 ## 2.3.0
 
 ### Improvements
