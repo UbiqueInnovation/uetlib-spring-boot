@@ -2,11 +2,16 @@
 
 ## 2.4.0
 
-### Breaking Changes
+### Improvements
 
-Yes, `2.4.0` instead of `3.0.0` as both users of `ApiKeyAuthenticationFilter` (RegaDA and Agridata) are on Spring Boot
-3.x and thus have to perform breaking changes anyway.
-
+- Add more content types to default logbook by replacers (
+  `ch.ubique.backend.spring.boot.logbook.response-filter.body-replacers.content-types`). Now includes all of:
+    - `text/html`
+    - `text/css`
+    - `text/javascript`
+    - `font/*`
+    - `image/*`
+    - `application/protobuf`
 - New `ApiKeyAuthenticationFilter` in `uetlib-spring-boot-security` to extend Spring Security's
   `AbstractPreAuthenticatedProcessingFilter` and
   extract headers. It defaults to the `Authorization` header where it expects the value format `ApiKey {key}`. It
@@ -37,19 +42,6 @@ Yes, `2.4.0` instead of `3.0.0` as both users of `ApiKeyAuthenticationFilter` (R
     return http.build();
   }
   ```
-
-## 2.3.1
-
-### Improvements
-
-- Add more content types to default logbook by replacers (
-  `ch.ubique.backend.spring.boot.logbook.response-filter.body-replacers.content-types`). Now includes all of:
-    - `text/html`
-    - `text/css`
-    - `application/javascript`
-    - `font/*`
-    - `image/*`
-    - `application/protobuf`
 
 ## 2.3.0
 
