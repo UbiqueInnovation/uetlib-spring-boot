@@ -32,7 +32,7 @@ class ApiKeyAuthenticationFilterTest {
         final var filter = new ApiKeyAuthenticationFilter(mockAuthManager);
 
         final var request = new MockHttpServletRequest();
-        request.addHeader(HttpHeaders.AUTHORIZATION, "Bearer my-token");
+        request.addHeader(HttpHeaders.AUTHORIZATION, "ApiKey my-token");
 
         final var response = new MockHttpServletResponse();
         final var chain = new MockFilterChain();
@@ -47,11 +47,30 @@ class ApiKeyAuthenticationFilterTest {
         // Verify manager was called with the correct principal
         final var authCaptor = ArgumentCaptor.forClass(Authentication.class);
         verify(mockAuthManager).authenticate(authCaptor.capture());
-        assertThat(authCaptor.getValue().getPrincipal()).isEqualTo("Bearer my-token");
+        assertThat(authCaptor.getValue().getPrincipal()).isEqualTo("my-token");
 
         // Verify context populated
         assertThat(SecurityContextHolder.getContext().getAuthentication())
                 .isSameAs(authenticatedToken);
+    }
+
+    @Test
+    void doFilter_withAuthorizationHeaderMissingPrefix_doesNotAuthenticate()
+            throws ServletException, IOException {
+        final var mockAuthManager = mock(AuthenticationManager.class);
+        final var filter = new ApiKeyAuthenticationFilter(mockAuthManager);
+
+        final var request = new MockHttpServletRequest();
+        request.addHeader(HttpHeaders.AUTHORIZATION, "Bearer my-token");
+
+        final var response = new MockHttpServletResponse();
+        final var chain = new MockFilterChain();
+
+        filter.doFilter(request, response, chain);
+
+        // Verify manager was not called since getPreAuthenticatedPrincipal returned null
+        verifyNoInteractions(mockAuthManager);
+        assertThat(SecurityContextHolder.getContext().getAuthentication()).isNull();
     }
 
     @Test
@@ -94,6 +113,35 @@ class ApiKeyAuthenticationFilterTest {
         final var authCaptor = ArgumentCaptor.forClass(Authentication.class);
         verify(mockAuthManager).authenticate(authCaptor.capture());
         assertThat(authCaptor.getValue().getPrincipal()).isEqualTo("custom-api-key-value");
+
+        // Verify context populated
+        assertThat(SecurityContextHolder.getContext().getAuthentication())
+                .isSameAs(authenticatedToken);
+    }
+
+    @Test
+    void doFilter_withCustomHeaderApiKey_extractsRawValueWithoutPrefix()
+            throws ServletException, IOException {
+        final var mockAuthManager = mock(AuthenticationManager.class);
+        final var filter = new ApiKeyAuthenticationFilter(mockAuthManager, "ApiKey");
+
+        final var request = new MockHttpServletRequest();
+        request.addHeader("ApiKey", "raw-token-without-prefix");
+
+        final var response = new MockHttpServletResponse();
+        final var chain = new MockFilterChain();
+
+        final var authenticatedToken = mock(Authentication.class);
+        when(authenticatedToken.isAuthenticated()).thenReturn(true);
+        when(mockAuthManager.authenticate(any(Authentication.class)))
+                .thenReturn(authenticatedToken);
+
+        filter.doFilter(request, response, chain);
+
+        // Verify manager was called with the correct principal (no prefix processing)
+        final var authCaptor = ArgumentCaptor.forClass(Authentication.class);
+        verify(mockAuthManager).authenticate(authCaptor.capture());
+        assertThat(authCaptor.getValue().getPrincipal()).isEqualTo("raw-token-without-prefix");
 
         // Verify context populated
         assertThat(SecurityContextHolder.getContext().getAuthentication())
