@@ -9,9 +9,10 @@ Yes, `2.4.0` instead of `3.0.0` as both users of `ApiKeyAuthenticationFilter` (R
 
 - New `ApiKeyAuthenticationFilter` in `uetlib-spring-boot-security` to extend Spring Security's
   `AbstractPreAuthenticatedProcessingFilter` and
-  extract headers. It defaults to the `Authorization` header where it expects the value format `ApiKey {key}`, but a
-  custom header name (e.g. `X-API-KEY`, where the raw header value is used directly) can be supplied via constructor.
-  This effectively replaces `ApiKeyAuthenticationFilter` in `uetlib-spring-boot` (will be removed in `3.0.0`).
+  extract headers. It defaults to the `Authorization` header where it expects the value format `ApiKey {key}`. It
+  provides constructors to customize the header name (e.g., `X-API-KEY`), and optionally a custom prefix format (or
+  `null`/empty for raw value extraction). This effectively replaces `ApiKeyAuthenticationFilter` in
+  `uetlib-spring-boot` (will be removed in `3.0.0`).
 - Introduce `ApiKeyAuthenticationManager` which handles timing-safe verification of API keys and can be initialized with
   a single key/authority, or a `Map<String, ? extends Collection<? extends GrantedAuthority>>` for multi-key support.
 

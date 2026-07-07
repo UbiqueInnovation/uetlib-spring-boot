@@ -1,5 +1,7 @@
 package ch.ubique.backend.security.filter;
 
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+
 import static java.util.Objects.requireNonNull;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,6 +26,7 @@ import org.springframework.security.web.authentication.preauth.AbstractPreAuthen
 public class ApiKeyAuthenticationFilter extends AbstractPreAuthenticatedProcessingFilter {
 
     private final String authorizationHeaderName;
+    private final @Nullable String authorizationHeaderKeyPrefix;
 
     /**
      * Creates a new filter using {@link HttpHeaders#AUTHORIZATION} as the header name. Expects
@@ -49,8 +52,32 @@ public class ApiKeyAuthenticationFilter extends AbstractPreAuthenticatedProcessi
     public ApiKeyAuthenticationFilter(
             final AuthenticationManager authenticationManager,
             final String authorizationHeaderName) {
+        this(
+                authenticationManager,
+                authorizationHeaderName,
+                HttpHeaders.AUTHORIZATION.equalsIgnoreCase(authorizationHeaderName)
+                        ? "ApiKey "
+                        : null);
+    }
+
+    /**
+     * Creates a new filter using a custom header name and custom prefix format.
+     *
+     * <p>If the prefix is non-null and non-empty, it expects the header value to match this prefix
+     * (case-insensitively) and returns the substring following the prefix. If the prefix is null or
+     * empty, it returns the raw header value directly.
+     *
+     * @param authenticationManager the authentication manager
+     * @param authorizationHeaderName the name of the header to check
+     * @param authorizationHeaderKeyPrefix the expected prefix for the key (e.g. {@code "ApiKey "})
+     */
+    public ApiKeyAuthenticationFilter(
+            final AuthenticationManager authenticationManager,
+            final String authorizationHeaderName,
+            final @Nullable String authorizationHeaderKeyPrefix) {
         this.authorizationHeaderName =
                 requireNonNull(authorizationHeaderName, "headerName must not be null");
+        this.authorizationHeaderKeyPrefix = authorizationHeaderKeyPrefix;
         setAuthenticationManager(authenticationManager);
     }
 
@@ -60,9 +87,10 @@ public class ApiKeyAuthenticationFilter extends AbstractPreAuthenticatedProcessi
         if (headerValue == null) {
             return null;
         }
-        if (HttpHeaders.AUTHORIZATION.equalsIgnoreCase(authorizationHeaderName)) {
-            if (headerValue.regionMatches(true, 0, "ApiKey ", 0, 7)) {
-                return headerValue.substring(7);
+        if (isNotEmpty(authorizationHeaderKeyPrefix)) {
+            final var prefixLength = authorizationHeaderKeyPrefix.length();
+            if (headerValue.regionMatches(true, 0, authorizationHeaderKeyPrefix, 0, prefixLength)) {
+                return headerValue.substring(prefixLength);
             }
             return null;
         }
