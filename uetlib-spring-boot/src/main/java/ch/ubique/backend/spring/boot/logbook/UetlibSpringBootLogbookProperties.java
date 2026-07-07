@@ -73,12 +73,12 @@ public final class UetlibSpringBootLogbookProperties {
             @Schema(
                     description = "Configure additional body replacers by content type",
                     defaultValue =
-                            "text/html,text/css,application/javascript,font/*,image/*,application/protobuf")
+                            "text/html,text/css,text/javascript,font/*,image/*,application/protobuf")
             private List<MediaType> contentTypes =
                     List.of(
                             MediaType.TEXT_HTML,
                             MediaType.valueOf("text/css"),
-                            MediaType.valueOf("application/javascript"),
+                            MediaType.valueOf("text/javascript"),
                             MediaType.valueOf("font/*"),
                             MediaType.valueOf("image/*"),
                             MediaType.valueOf("application/protobuf"));
