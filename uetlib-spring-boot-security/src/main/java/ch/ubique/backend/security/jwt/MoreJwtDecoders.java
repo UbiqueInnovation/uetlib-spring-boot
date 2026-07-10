@@ -2,7 +2,6 @@ package ch.ubique.backend.security.jwt;
 
 import static ch.ubique.backend.security.jwt.MoreJwtValidators.*;
 
-import java.util.ArrayList;
 import org.jspecify.annotations.Nullable;
 import org.springframework.boot.restclient.RestTemplateBuilder;
 import org.springframework.security.oauth2.core.OAuth2TokenValidator;
@@ -10,10 +9,10 @@ import org.springframework.security.oauth2.jwt.*;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder.JwkSetUriJwtDecoderBuilder;
 import org.springframework.web.client.RestOperations;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.stream.Stream;
 
 @SuppressWarnings("unused")
 public final class MoreJwtDecoders {

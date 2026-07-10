@@ -28,7 +28,6 @@
         <dependency>
             <groupId>ch.ubique</groupId>
             <artifactId>uetlib-geo</artifactId>
-            <version>${uetlib-geo.version}</version>
         </dependency>
     </dependencies>
 </project>

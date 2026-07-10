@@ -152,10 +152,9 @@ class ApiKeyAuthenticationFilterTest {
     void doFilter_withConfigurablePrefix_extractsPrefixAndAuthenticates()
             throws ServletException, IOException {
         final var mockAuthManager = mock(AuthenticationManager.class);
-        final var filter = new ApiKeyAuthenticationFilter(
-                mockAuthManager,
-                HttpHeaders.AUTHORIZATION,
-                "CustomTokenPrefix ");
+        final var filter =
+                new ApiKeyAuthenticationFilter(
+                        mockAuthManager, HttpHeaders.AUTHORIZATION, "CustomTokenPrefix ");
 
         final var request = new MockHttpServletRequest();
         request.addHeader(HttpHeaders.AUTHORIZATION, "CustomTokenPrefix my-token");
@@ -182,10 +181,9 @@ class ApiKeyAuthenticationFilterTest {
     void doFilter_withConfigurablePrefixMismatch_doesNotAuthenticate()
             throws ServletException, IOException {
         final var mockAuthManager = mock(AuthenticationManager.class);
-        final var filter = new ApiKeyAuthenticationFilter(
-                mockAuthManager,
-                HttpHeaders.AUTHORIZATION,
-                "CustomTokenPrefix ");
+        final var filter =
+                new ApiKeyAuthenticationFilter(
+                        mockAuthManager, HttpHeaders.AUTHORIZATION, "CustomTokenPrefix ");
 
         final var request = new MockHttpServletRequest();
         request.addHeader(HttpHeaders.AUTHORIZATION, "WrongPrefix my-token");
@@ -203,10 +201,8 @@ class ApiKeyAuthenticationFilterTest {
     void doFilter_withConfigurableNullPrefix_extractsRawValue()
             throws ServletException, IOException {
         final var mockAuthManager = mock(AuthenticationManager.class);
-        final var filter = new ApiKeyAuthenticationFilter(
-                mockAuthManager,
-                HttpHeaders.AUTHORIZATION,
-                null);
+        final var filter =
+                new ApiKeyAuthenticationFilter(mockAuthManager, HttpHeaders.AUTHORIZATION, null);
 
         final var request = new MockHttpServletRequest();
         request.addHeader(HttpHeaders.AUTHORIZATION, "raw-token-value");
