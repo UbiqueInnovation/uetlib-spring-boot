@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2.5.0
+
+### Improvements
+
+- Also handle `ResourceNotFoundException` as a `404 Not Found` in `UetlibExceptionHandler`
+
 ## 2.4.0
 
 ### Improvements
