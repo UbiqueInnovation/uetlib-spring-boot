@@ -2,6 +2,7 @@ package ch.ubique.backend.spring.boot.problem.handler.trait;
 
 import static java.util.Objects.requireNonNullElse;
 
+import ch.ubique.backend.core.exception.ResourceNotFoundException;
 import ch.ubique.backend.spring.boot.problem.handler.UetlibExceptionHandlerSkeletonTrait;
 
 import org.jspecify.annotations.Nullable;
@@ -24,13 +25,16 @@ public interface MoreExceptionsExceptionAdviceTrait extends UetlibExceptionHandl
      * @param request the current request
      */
     // add more here
-    @ExceptionHandler(NoSuchElementException.class)
+    @ExceptionHandler({NoSuchElementException.class, ResourceNotFoundException.class})
     @Nullable
+    @SuppressWarnings("java:S112")
     default ResponseEntity<Object> handleMoreExceptions(
             final Exception ex, final WebRequest request) throws Exception {
         final var headers = new HttpHeaders();
         return switch (ex) {
             case final NoSuchElementException subEx -> handleNoSuchElement(subEx, headers, request);
+            case final ResourceNotFoundException subEx ->
+                    handleResourceNotFound(subEx, headers, request);
             default -> throw ex;
         };
     }
@@ -57,6 +61,36 @@ public interface MoreExceptionsExceptionAdviceTrait extends UetlibExceptionHandl
                         ex,
                         status,
                         requireNonNullElse(ex.getLocalizedMessage(), "No such element"),
+                        null,
+                        null,
+                        request);
+        return handleExceptionInternal(ex, body, headers, status, request);
+    }
+
+    /**
+     * Customize the handling of {@link ResourceNotFoundException}.
+     *
+     * <p>By default, this method creates a {@link ProblemDetail} with the status and a short detail
+     * message, and also looks up an override for the detail via {@link MessageSource}, before
+     * delegating to {@link #handleExceptionInternal}.
+     *
+     * @param ex the exception to handle
+     * @param headers the headers to use for the response
+     * @param request the current request
+     * @return a {@code ResponseEntity} for the response to use, possibly {@code null} when the
+     *     response is already committed
+     */
+    @Nullable
+    default ResponseEntity<Object> handleResourceNotFound(
+            final ResourceNotFoundException ex,
+            final HttpHeaders headers,
+            final WebRequest request) {
+        final var status = HttpStatus.NOT_FOUND;
+        final var body =
+                createProblemDetail(
+                        ex,
+                        status,
+                        requireNonNullElse(ex.getLocalizedMessage(), "Resource not found"),
                         null,
                         null,
                         request);
