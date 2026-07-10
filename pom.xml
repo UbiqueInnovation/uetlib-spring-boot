@@ -15,10 +15,6 @@
     <packaging>pom</packaging>
 
     <properties>
-        <uetlib-test.version>2.1.0</uetlib-test.version>
-        <uetlib-core.version>2.4.0</uetlib-core.version>
-        <uetlib-geo.version>3.2.1</uetlib-geo.version>
-
         <!-- westemeyer version config -->
         <westemeyer-version-package-name>ch.ubique.backend.spring.boot.version</westemeyer-version-package-name>
 
@@ -37,7 +33,6 @@
         <dependency>
             <groupId>ch.ubique</groupId>
             <artifactId>uetlib-test</artifactId>
-            <version>${uetlib-test.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -52,6 +47,26 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>ch.ubique</groupId>
+                <artifactId>uetlib-test</artifactId>
+                <version>2.1.0</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.ubique</groupId>
+                <artifactId>uetlib-core</artifactId>
+                <version>2.4.0</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.ubique</groupId>
+                <artifactId>uetlib-geo</artifactId>
+                <version>3.2.1</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <repositories>
         <repository>
