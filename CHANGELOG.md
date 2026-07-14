@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2.6.0
+
+- New builder style for `MorejetDecoders`
+- Deprecate old overloaded methods for removal in `3.0.0`
+
 ## 2.5.0
 
 ### Improvements
