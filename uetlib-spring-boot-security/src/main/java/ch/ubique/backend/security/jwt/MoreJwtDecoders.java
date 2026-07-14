@@ -11,6 +11,7 @@ import org.springframework.web.client.RestOperations;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 
 @SuppressWarnings("unused")
@@ -71,11 +72,7 @@ public final class MoreJwtDecoders {
         final Consumer<JwkSetUriJwtDecoderBuilder> noJwtTypeVerifier = b -> b.validateType(false);
 
         return issuerAndAudienceValidatingJwtDecoder(
-                restOperations,
-                issuerUri,
-                audiences,
-                List.of(typeAtJwtValidator()),
-                noJwtTypeVerifier);
+                restOperations, issuerUri, audiences, noJwtTypeVerifier);
     }
 
     /**
@@ -99,11 +96,37 @@ public final class MoreJwtDecoders {
         final var jwtDecoderCustomizer = additionalJwtDecoderCustomizer.andThen(noJwtTypeVerifier);
 
         return issuerAndAudienceValidatingJwtDecoder(
+                restOperations, issuerUri, audiences, Set.of("at+jwt"), jwtDecoderCustomizer);
+    }
+
+    /**
+     * Creates a JwtDecoder that validates issuer and audience claims.
+     *
+     * @param restOperations RestOperations A pre-configured RestOperations instance, most likely an
+     *     instance of {@link RestTemplateBuilder#build()}.
+     * @param issuerUri String representation of the issuer URI.
+     * @param audiences List of allowed audience values.
+     * @param validTypes Set valid jwt type values (empty defaulting to allow type "JWT")
+     * @param additionalJwtDecoderCustomizer Consumer to customize the NimbusJwtDecoderBuilder. E.g.
+     *     to set {@link JwkSetUriJwtDecoderBuilder#validateType(boolean)}
+     * @return JwtDecoder instance.
+     */
+    public static JwtDecoder issuerAndAudienceValidatingJwtDecoder(
+            final RestOperations restOperations,
+            final String issuerUri,
+            final @Nullable List<String> audiences,
+            final Set<String> validTypes,
+            final Consumer<JwkSetUriJwtDecoderBuilder> additionalJwtDecoderCustomizer) {
+        final var typeValidator =
+                validTypes.isEmpty()
+                        ? new JwtTypeValidator(List.of("JWT"))
+                        : new JwtTypeValidator(validTypes);
+        return issuerAndAudienceValidatingJwtDecoder(
                 restOperations,
                 issuerUri,
                 audiences,
-                List.of(typeAtJwtValidator()),
-                jwtDecoderCustomizer);
+                List.of(typeValidator),
+                additionalJwtDecoderCustomizer);
     }
 
     /**

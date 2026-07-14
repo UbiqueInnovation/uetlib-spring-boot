@@ -23,6 +23,7 @@ import org.springframework.web.client.RestOperations;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @SuppressWarnings("SameParameterValue")
 class MoreJwtDecodersTest {
@@ -78,6 +79,12 @@ class MoreJwtDecodersTest {
         return validators.stream().anyMatch(clazz::isInstance);
     }
 
+    private boolean hasValidatorOfClassName(
+            final List<OAuth2TokenValidator<Jwt>> validators, final String simpleClassName) {
+        return validators.stream()
+                .anyMatch(v -> v.getClass().getSimpleName().equals(simpleClassName));
+    }
+
     @Test
     void issuerAndAudienceValidatingJwtDecoder_withAudiences_configuresDecoderCorrectly()
             throws Exception {
@@ -100,6 +107,8 @@ class MoreJwtDecodersTest {
         assertThat(hasValidatorOfClass(subValidators, JwtIssuerValidator.class)).isTrue();
         assertThat(hasValidatorOfClass(subValidators, JwtClaimValidator.class)).isTrue();
         assertThat(hasValidatorOfClass(subValidators, JwtTypeValidator.class)).isTrue();
+        assertThat(hasValidatorOfClassName(subValidators, "X509CertificateThumbprintValidator"))
+                .isTrue();
     }
 
     @Test
@@ -122,6 +131,35 @@ class MoreJwtDecodersTest {
         assertThat(hasValidatorOfClass(subValidators, JwtIssuerValidator.class)).isTrue();
         assertThat(hasValidatorOfClass(subValidators, JwtClaimValidator.class)).isFalse();
         assertThat(hasValidatorOfClass(subValidators, JwtTypeValidator.class)).isTrue();
+        assertThat(hasValidatorOfClassName(subValidators, "X509CertificateThumbprintValidator"))
+                .isTrue();
+    }
+
+    @Test
+    void issuerAndAudienceValidatingJwtDecoder_withValidTypes_configuresDecoderCorrectly()
+            throws Exception {
+        final var issuer = "https://example.com/issuer";
+        final var audiences = List.of("aud1");
+        final var restOperations = mockRestOperations(issuer);
+        final var validTypes = Set.of("custom-typ");
+
+        final var jwtDecoder =
+                MoreJwtDecoders.issuerAndAudienceValidatingJwtDecoder(
+                        restOperations, issuer, audiences, validTypes, b -> {});
+
+        assertThat(jwtDecoder).isNotNull();
+
+        final var validator = getJwtValidator(jwtDecoder);
+        assertThat(validator).isNotNull();
+
+        final var subValidators = getTokenValidators(validator);
+        assertThat(subValidators).hasSize(5);
+        assertThat(hasValidatorOfClass(subValidators, JwtTimestampValidator.class)).isTrue();
+        assertThat(hasValidatorOfClass(subValidators, JwtIssuerValidator.class)).isTrue();
+        assertThat(hasValidatorOfClass(subValidators, JwtClaimValidator.class)).isTrue();
+        assertThat(hasValidatorOfClass(subValidators, JwtTypeValidator.class)).isTrue();
+        assertThat(hasValidatorOfClassName(subValidators, "X509CertificateThumbprintValidator"))
+                .isTrue();
     }
 
     @Test
@@ -145,5 +183,7 @@ class MoreJwtDecodersTest {
         assertThat(hasValidatorOfClass(subValidators, JwtIssuerValidator.class)).isTrue();
         assertThat(hasValidatorOfClass(subValidators, JwtClaimValidator.class)).isTrue();
         assertThat(hasValidatorOfClass(subValidators, JwtTypeValidator.class)).isTrue();
+        assertThat(hasValidatorOfClassName(subValidators, "X509CertificateThumbprintValidator"))
+                .isTrue();
     }
 }
