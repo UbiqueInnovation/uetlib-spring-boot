@@ -10,7 +10,6 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder.JwkSetUriJwtDeco
 import org.springframework.web.client.RestOperations;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -25,13 +24,13 @@ public final class MoreJwtDecoders {
      * @param restOperations RestOperations A pre-configured RestOperations instance, most likely an
      *     instance of {@link RestTemplateBuilder#build()}.
      * @param issuerUri String representation of the issuer URI.
-     * @param audiences Collection of allowed audience values or null to allow any audience.
+     * @param audiences List of allowed audience values or null to allow any audience.
      * @return JwtDecoder instance.
      */
     public static JwtDecoder issuerAndAudienceValidatingJwtDecoder(
             final RestOperations restOperations,
             final String issuerUri,
-            final @Nullable Collection<String> audiences) {
+            final @Nullable List<String> audiences) {
         return issuerAndAudienceValidatingJwtDecoder(restOperations, issuerUri, audiences, b -> {});
     }
 
@@ -41,7 +40,7 @@ public final class MoreJwtDecoders {
      * @param restOperations RestOperations A pre-configured RestOperations instance, most likely an
      *     instance of {@link RestTemplateBuilder#build()}. * @param issuerUri String representation
      *     of the issuer URI.
-     * @param audiences Collection of allowed audience values or null to allow any audience.
+     * @param audiences List of allowed audience values or null to allow any audience.
      * @param jwtDecoderCustomizer Consumer to customize the NimbusJwtDecoderBuilder. E.g. to set
      *     {@link JwkSetUriJwtDecoderBuilder#validateType(boolean)}
      * @return JwtDecoder instance.
@@ -49,7 +48,7 @@ public final class MoreJwtDecoders {
     public static JwtDecoder issuerAndAudienceValidatingJwtDecoder(
             final RestOperations restOperations,
             final String issuerUri,
-            final @Nullable Collection<String> audiences,
+            final @Nullable List<String> audiences,
             final Consumer<JwkSetUriJwtDecoderBuilder> jwtDecoderCustomizer) {
         return issuerAndAudienceValidatingJwtDecoder(
                 restOperations, issuerUri, audiences, List.of(), jwtDecoderCustomizer);
@@ -61,13 +60,13 @@ public final class MoreJwtDecoders {
      * @param restOperations RestOperations A pre-configured RestOperations instance, most likely an
      *     instance of {@link RestTemplateBuilder#build()}.
      * @param issuerUri String representation of the issuer URI.
-     * @param audiences Collection of allowed audience values.
+     * @param audiences List of allowed audience values.
      * @return JwtDecoder instance.
      */
     public static JwtDecoder issuerAndAudienceValidatingAtJwtDecoder(
             final RestOperations restOperations,
             final String issuerUri,
-            final Collection<String> audiences) {
+            final List<String> audiences) {
 
         final Consumer<JwkSetUriJwtDecoderBuilder> noJwtTypeVerifier = b -> b.validateType(false);
 
@@ -85,7 +84,7 @@ public final class MoreJwtDecoders {
      * @param restOperations RestOperations A pre-configured RestOperations instance, most likely an
      *     instance of {@link RestTemplateBuilder#build()}.
      * @param issuerUri String representation of the issuer URI.
-     * @param audiences Collection of allowed audience values.
+     * @param audiences List of allowed audience values.
      * @param additionalJwtDecoderCustomizer Consumer to customize the NimbusJwtDecoderBuilder. E.g.
      *     to set {@link JwkSetUriJwtDecoderBuilder#validateType(boolean)}
      * @return JwtDecoder instance.
@@ -93,7 +92,7 @@ public final class MoreJwtDecoders {
     public static JwtDecoder issuerAndAudienceValidatingAtJwtDecoder(
             final RestOperations restOperations,
             final String issuerUri,
-            final Collection<String> audiences,
+            final List<String> audiences,
             final Consumer<JwkSetUriJwtDecoderBuilder> additionalJwtDecoderCustomizer) {
 
         final Consumer<JwkSetUriJwtDecoderBuilder> noJwtTypeVerifier = b -> b.validateType(false);
@@ -113,7 +112,7 @@ public final class MoreJwtDecoders {
      * @param restOperations RestOperations A pre-configured RestOperations instance, most likely an
      *     instance of {@link RestTemplateBuilder#build()}.
      * @param issuerUri String representation of the issuer URI.
-     * @param audiences Collection of allowed audience values.
+     * @param audiences List of allowed audience values.
      * @param additionalTokenValidators Additional OAuth2TokenValidators to apply.
      * @param additionalJwtDecoderCustomizer Consumer to customize the NimbusJwtDecoderBuilder. E.g.
      *     to set {@link JwkSetUriJwtDecoderBuilder#validateType(boolean)}
@@ -122,8 +121,8 @@ public final class MoreJwtDecoders {
     public static JwtDecoder issuerAndAudienceValidatingJwtDecoder(
             final RestOperations restOperations,
             final String issuerUri,
-            final @Nullable Collection<String> audiences,
-            final Collection<OAuth2TokenValidator<Jwt>> additionalTokenValidators,
+            final @Nullable List<String> audiences,
+            final List<OAuth2TokenValidator<Jwt>> additionalTokenValidators,
             final Consumer<JwkSetUriJwtDecoderBuilder> additionalJwtDecoderCustomizer) {
 
         final var jwtValidators = new ArrayList<OAuth2TokenValidator<Jwt>>();
