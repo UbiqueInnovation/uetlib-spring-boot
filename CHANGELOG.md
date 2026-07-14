@@ -1,8 +1,12 @@
 # CHANGELOG
 
+## 2.6.1
+
+- Allow multiple authorization header prefixes in `ApiKeyAuthenticationFilter`
+
 ## 2.6.0
 
-- New builder style for `MorejetDecoders`
+- New builder style for `MoreJwtDecoders`
 - Deprecate old overloaded methods for removal in `3.0.0`
 
 ## 2.5.0
