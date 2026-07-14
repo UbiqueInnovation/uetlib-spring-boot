@@ -5,8 +5,8 @@ import org.jspecify.annotations.Nullable;
 import org.springframework.security.oauth2.core.OAuth2TokenValidator;
 import org.springframework.security.oauth2.jwt.*;
 
-import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 public final class MoreJwtValidators {
 
