@@ -23,9 +23,8 @@ import org.springframework.web.client.RestOperations;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-@SuppressWarnings("SameParameterValue")
+@SuppressWarnings({"SameParameterValue", "removal"})
 class MoreJwtDecodersTest {
 
     @SuppressWarnings("unchecked")
@@ -53,7 +52,7 @@ class MoreJwtDecodersTest {
                         Map.of("issuer", issuer, "jwks_uri", issuer + "/jwks"), HttpStatus.OK);
 
         final var jwksResponse =
-                new ResponseEntity<String>(
+                new ResponseEntity<>(
                         "{\"keys\":[{\"kty\":\"EC\",\"crv\":\"P-256\",\"x\":\"f83OJ3D2xF1Bg8vub9tLe1gHMzV76e8Tus9uPHvRVEU\",\"y\":\"x_FEzRu9m36HLN_tue659LNpXW6pCyStikYjKIWI5a0\",\"kid\":\"example-key-id\",\"use\":\"sig\",\"alg\":\"ES256\"}]}",
                         HttpStatus.OK);
 
@@ -84,6 +83,62 @@ class MoreJwtDecodersTest {
         return validators.stream()
                 .anyMatch(v -> v.getClass().getSimpleName().equals(simpleClassName));
     }
+
+    // ======== Builder tests ========
+
+    @Test
+    void builder_withAudiences_configuresDecoderCorrectly() throws Exception {
+        final var issuer = "https://example.com/issuer";
+        final var audiences = List.of("aud1", "aud2");
+        final var restOperations = mockRestOperations(issuer);
+
+        final var jwtDecoder =
+                MoreJwtDecoders.builder(restOperations, issuer).audiences(audiences).build();
+
+        assertThat(jwtDecoder).isNotNull().isInstanceOf(NimbusJwtDecoder.class);
+
+        final var validator = getJwtValidator(jwtDecoder);
+        assertThat(validator).isNotNull().isInstanceOf(DelegatingOAuth2TokenValidator.class);
+
+        final var subValidators = getTokenValidators(validator);
+        assertThat(subValidators).hasSize(5);
+        assertThat(hasValidatorOfClass(subValidators, JwtTimestampValidator.class)).isTrue();
+        assertThat(hasValidatorOfClass(subValidators, JwtIssuerValidator.class)).isTrue();
+        assertThat(hasValidatorOfClass(subValidators, JwtClaimValidator.class)).isTrue();
+        assertThat(hasValidatorOfClass(subValidators, JwtTypeValidator.class)).isTrue();
+        assertThat(hasValidatorOfClassName(subValidators, "X509CertificateThumbprintValidator"))
+                .isTrue();
+    }
+
+    @Test
+    void builder_withCustomValidTypes_configuresDecoderCorrectly() throws Exception {
+        final var issuer = "https://example.com/issuer";
+        final var audiences = List.of("aud1");
+        final var restOperations = mockRestOperations(issuer);
+        final var validTypes = List.of("custom-typ");
+
+        final var jwtDecoder =
+                MoreJwtDecoders.builder(restOperations, issuer)
+                        .audiences(audiences)
+                        .validTypes(validTypes)
+                        .build();
+
+        assertThat(jwtDecoder).isNotNull();
+
+        final var validator = getJwtValidator(jwtDecoder);
+        assertThat(validator).isNotNull();
+
+        final var subValidators = getTokenValidators(validator);
+        assertThat(subValidators).hasSize(5);
+        assertThat(hasValidatorOfClass(subValidators, JwtTimestampValidator.class)).isTrue();
+        assertThat(hasValidatorOfClass(subValidators, JwtIssuerValidator.class)).isTrue();
+        assertThat(hasValidatorOfClass(subValidators, JwtClaimValidator.class)).isTrue();
+        assertThat(hasValidatorOfClass(subValidators, JwtTypeValidator.class)).isTrue();
+        assertThat(hasValidatorOfClassName(subValidators, "X509CertificateThumbprintValidator"))
+                .isTrue();
+    }
+
+    // ======== Deprecated static method tests ========
 
     @Test
     void issuerAndAudienceValidatingJwtDecoder_withAudiences_configuresDecoderCorrectly()
@@ -136,33 +191,6 @@ class MoreJwtDecodersTest {
     }
 
     @Test
-    void issuerAndAudienceValidatingJwtDecoder_withValidTypes_configuresDecoderCorrectly()
-            throws Exception {
-        final var issuer = "https://example.com/issuer";
-        final var audiences = List.of("aud1");
-        final var restOperations = mockRestOperations(issuer);
-        final var validTypes = Set.of("custom-typ");
-
-        final var jwtDecoder =
-                MoreJwtDecoders.issuerAndAudienceValidatingJwtDecoder(
-                        restOperations, issuer, audiences, validTypes, b -> {});
-
-        assertThat(jwtDecoder).isNotNull();
-
-        final var validator = getJwtValidator(jwtDecoder);
-        assertThat(validator).isNotNull();
-
-        final var subValidators = getTokenValidators(validator);
-        assertThat(subValidators).hasSize(5);
-        assertThat(hasValidatorOfClass(subValidators, JwtTimestampValidator.class)).isTrue();
-        assertThat(hasValidatorOfClass(subValidators, JwtIssuerValidator.class)).isTrue();
-        assertThat(hasValidatorOfClass(subValidators, JwtClaimValidator.class)).isTrue();
-        assertThat(hasValidatorOfClass(subValidators, JwtTypeValidator.class)).isTrue();
-        assertThat(hasValidatorOfClassName(subValidators, "X509CertificateThumbprintValidator"))
-                .isTrue();
-    }
-
-    @Test
     void issuerAndAudienceValidatingAtJwtDecoder_configuresDecoderCorrectly() throws Exception {
         final var issuer = "https://example.com/issuer";
         final var audiences = List.of("aud1");
@@ -185,5 +213,51 @@ class MoreJwtDecodersTest {
         assertThat(hasValidatorOfClass(subValidators, JwtTypeValidator.class)).isTrue();
         assertThat(hasValidatorOfClassName(subValidators, "X509CertificateThumbprintValidator"))
                 .isTrue();
+    }
+
+    @Test
+    void builder_withCustomJwtTypeValidator_doesNotAddDefaultTypeValidator() throws Exception {
+        final var issuer = "https://example.com/issuer";
+        final var audiences = List.of("aud1");
+        final var restOperations = mockRestOperations(issuer);
+        final var customTypeValidator = new JwtTypeValidator("custom-type");
+
+        final var jwtDecoder =
+                MoreJwtDecoders.builder(restOperations, issuer)
+                        .audiences(audiences)
+                        .addTokenValidator(customTypeValidator)
+                        .build();
+
+        final var validator = getJwtValidator(jwtDecoder);
+        final var subValidators = getTokenValidators(validator);
+
+        // Should have exactly 1 JwtTypeValidator (the custom one), not 2
+        final var typeValidatorCount =
+                subValidators.stream().filter(JwtTypeValidator.class::isInstance).count();
+        assertThat(typeValidatorCount).isEqualTo(1);
+        assertThat(subValidators).contains(customTypeValidator);
+    }
+
+    @Test
+    void builder_withCustomJwtIssuerValidator_doesNotAddDefaultIssuerValidator() throws Exception {
+        final var issuer = "https://example.com/issuer";
+        final var audiences = List.of("aud1");
+        final var restOperations = mockRestOperations(issuer);
+        final var customIssuerValidator = new JwtIssuerValidator(issuer);
+
+        final var jwtDecoder =
+                MoreJwtDecoders.builder(restOperations, issuer)
+                        .audiences(audiences)
+                        .addTokenValidator(customIssuerValidator)
+                        .build();
+
+        final var validator = getJwtValidator(jwtDecoder);
+        final var subValidators = getTokenValidators(validator);
+
+        // Should have exactly 1 JwtIssuerValidator (the custom one), not 2
+        final var issuerValidatorCount =
+                subValidators.stream().filter(JwtIssuerValidator.class::isInstance).count();
+        assertThat(issuerValidatorCount).isEqualTo(1);
+        assertThat(subValidators).contains(customIssuerValidator);
     }
 }
