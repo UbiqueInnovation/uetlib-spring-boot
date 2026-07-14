@@ -27,7 +27,7 @@ public final class MoreJwtValidators {
     }
 
     @Contract("null, _ -> false; _, null -> false")
-    private static boolean nullSafeNotDisjoint(
+    static boolean nullSafeNotDisjoint(
             final @Nullable Collection<String> c1, final @Nullable Collection<String> c2) {
         return c1 != null && c2 != null && !Collections.disjoint(c1, c2);
     }
