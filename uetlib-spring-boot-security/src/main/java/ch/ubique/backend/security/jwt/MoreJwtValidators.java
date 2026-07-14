@@ -16,19 +16,17 @@ public final class MoreJwtValidators {
         return new JwtTypeValidator("at+jwt");
     }
 
-    public static JwtClaimValidator<Collection<String>> audienceValidator(
-            final Collection<String> audiences) {
+    public static JwtClaimValidator<List<String>> audienceValidator(final List<String> audiences) {
         return new JwtClaimValidator<>(
-                JwtClaimNames.AUD, aud -> nullSafeNotDisjoint(aud, audiences));
+                JwtClaimNames.AUD, claim -> hasElementsInCommon(claim, audiences));
     }
 
     public static OAuth2TokenValidator<Jwt> issuerValidator(final String issuer) {
         return new JwtIssuerValidator(issuer);
     }
 
-    @Contract("null, _ -> false; _, null -> false")
-    static boolean nullSafeNotDisjoint(
-            final @Nullable Collection<String> c1, final @Nullable Collection<String> c2) {
-        return c1 != null && c2 != null && !Collections.disjoint(c1, c2);
+    @Contract("null, _ -> false")
+    static <E> boolean hasElementsInCommon(@Nullable final List<E> c1, final List<E> c2) {
+        return c1 != null && !Collections.disjoint(c1, c2);
     }
 }
