@@ -1,7 +1,5 @@
 package ch.ubique.backend.security.filter;
 
-import static org.apache.commons.lang3.StringUtils.isNotEmpty;
-
 import static java.util.Objects.requireNonNull;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,7 +24,7 @@ import org.springframework.security.web.authentication.preauth.AbstractPreAuthen
 public class ApiKeyAuthenticationFilter extends AbstractPreAuthenticatedProcessingFilter {
 
     private final String authorizationHeaderName;
-    private final @Nullable String authorizationHeaderKeyPrefix;
+    private final String @Nullable [] authorizationHeaderPrefixes;
 
     /**
      * Creates a new filter using {@link HttpHeaders#AUTHORIZATION} as the header name. Expects
@@ -56,7 +54,7 @@ public class ApiKeyAuthenticationFilter extends AbstractPreAuthenticatedProcessi
                 authenticationManager,
                 authorizationHeaderName,
                 HttpHeaders.AUTHORIZATION.equalsIgnoreCase(authorizationHeaderName)
-                        ? "ApiKey "
+                        ? new String[] {"ApiKey "}
                         : null);
     }
 
@@ -69,32 +67,33 @@ public class ApiKeyAuthenticationFilter extends AbstractPreAuthenticatedProcessi
      *
      * @param authenticationManager the authentication manager
      * @param authorizationHeaderName the name of the header to check
-     * @param authorizationHeaderKeyPrefix the expected prefix for the key (e.g. {@code "ApiKey "})
+     * @param authorizationHeaderPrefixes the expected prefixes for the key (e.g. {@code "ApiKey "})
      */
     public ApiKeyAuthenticationFilter(
             final AuthenticationManager authenticationManager,
             final String authorizationHeaderName,
-            final @Nullable String authorizationHeaderKeyPrefix) {
+            final String @Nullable ... authorizationHeaderPrefixes) {
         this.authorizationHeaderName =
                 requireNonNull(authorizationHeaderName, "headerName must not be null");
-        this.authorizationHeaderKeyPrefix = authorizationHeaderKeyPrefix;
+        this.authorizationHeaderPrefixes = authorizationHeaderPrefixes;
         setAuthenticationManager(authenticationManager);
     }
 
     @Override
     protected @Nullable Object getPreAuthenticatedPrincipal(final HttpServletRequest request) {
         final var headerValue = request.getHeader(authorizationHeaderName);
-        if (headerValue == null) {
-            return null;
+        if (headerValue == null || authorizationHeaderPrefixes == null) {
+            return headerValue;
         }
-        if (isNotEmpty(authorizationHeaderKeyPrefix)) {
+
+        for (final var authorizationHeaderKeyPrefix : authorizationHeaderPrefixes) {
             final var prefixLength = authorizationHeaderKeyPrefix.length();
             if (headerValue.regionMatches(true, 0, authorizationHeaderKeyPrefix, 0, prefixLength)) {
                 return headerValue.substring(prefixLength);
             }
-            return null;
         }
-        return headerValue;
+
+        return null;
     }
 
     @Override
