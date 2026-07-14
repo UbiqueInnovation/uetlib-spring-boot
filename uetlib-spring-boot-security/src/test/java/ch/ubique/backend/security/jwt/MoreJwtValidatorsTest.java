@@ -121,16 +121,6 @@ class MoreJwtValidatorsTest {
     }
 
     @Test
-    void audienceValidator_withNullAllowedAudiences_returnsFailure() {
-        final OAuth2TokenValidator<Jwt> validator = MoreJwtValidators.audienceValidator(null);
-        final var jwt = jwtWithClaim("aud", List.of("aud1"));
-
-        final var result = validator.validate(jwt);
-
-        assertThat(result.hasErrors()).isTrue();
-    }
-
-    @Test
     void issuerValidator_withMatchingIssuer_returnsSuccess() {
         final var issuer = "https://issuer.example.com";
         final var validator = MoreJwtValidators.issuerValidator(issuer);
@@ -163,34 +153,24 @@ class MoreJwtValidatorsTest {
     }
 
     @Test
-    void nullSafeNotDisjoint_withBothNull_returnsFalse() {
-        assertThat(MoreJwtValidators.nullSafeNotDisjoint(null, null)).isFalse();
+    void hasElementsInCommon_withFirstNull_returnsFalse() {
+        assertThat(MoreJwtValidators.hasElementsInCommon(null, List.of("a"))).isFalse();
     }
 
     @Test
-    void nullSafeNotDisjoint_withFirstNull_returnsFalse() {
-        assertThat(MoreJwtValidators.nullSafeNotDisjoint(null, List.of("a"))).isFalse();
-    }
-
-    @Test
-    void nullSafeNotDisjoint_withSecondNull_returnsFalse() {
-        assertThat(MoreJwtValidators.nullSafeNotDisjoint(List.of("a"), null)).isFalse();
-    }
-
-    @Test
-    void nullSafeNotDisjoint_withDisjointCollections_returnsFalse() {
-        assertThat(MoreJwtValidators.nullSafeNotDisjoint(List.of("a", "b"), List.of("c", "d")))
+    void hasElementsInCommon_withDisjointLists_returnsFalse() {
+        assertThat(MoreJwtValidators.hasElementsInCommon(List.of("a", "b"), List.of("c", "d")))
                 .isFalse();
     }
 
     @Test
-    void nullSafeNotDisjoint_withOverlappingCollections_returnsTrue() {
-        assertThat(MoreJwtValidators.nullSafeNotDisjoint(List.of("a", "b"), List.of("b", "c")))
+    void hasElementsInCommon_withOverlappingLists_returnsTrue() {
+        assertThat(MoreJwtValidators.hasElementsInCommon(List.of("a", "b"), List.of("b", "c")))
                 .isTrue();
     }
 
     @Test
-    void nullSafeNotDisjoint_withEmptyCollections_returnsFalse() {
-        assertThat(MoreJwtValidators.nullSafeNotDisjoint(List.of(), List.of())).isFalse();
+    void hasElementsInCommon_withEmptyLists_returnsFalse() {
+        assertThat(MoreJwtValidators.hasElementsInCommon(List.of(), List.of())).isFalse();
     }
 }

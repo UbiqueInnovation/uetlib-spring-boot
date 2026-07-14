@@ -21,7 +21,6 @@ import org.springframework.security.oauth2.jwt.JwtTypeValidator;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.web.client.RestOperations;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -37,11 +36,11 @@ class MoreJwtDecodersTest {
     }
 
     @SuppressWarnings("unchecked")
-    private Collection<OAuth2TokenValidator<Jwt>> getTokenValidators(
+    private List<OAuth2TokenValidator<Jwt>> getTokenValidators(
             final OAuth2TokenValidator<Jwt> validator) throws Exception {
         final var field = DelegatingOAuth2TokenValidator.class.getDeclaredField("tokenValidators");
         field.setAccessible(true);
-        return (Collection<OAuth2TokenValidator<Jwt>>) field.get(validator);
+        return (List<OAuth2TokenValidator<Jwt>>) field.get(validator);
     }
 
     @SuppressWarnings("unchecked")
@@ -75,7 +74,7 @@ class MoreJwtDecodersTest {
     }
 
     private boolean hasValidatorOfClass(
-            final Collection<OAuth2TokenValidator<Jwt>> validators, final Class<?> clazz) {
+            final List<OAuth2TokenValidator<Jwt>> validators, final Class<?> clazz) {
         return validators.stream().anyMatch(clazz::isInstance);
     }
 
@@ -83,7 +82,7 @@ class MoreJwtDecodersTest {
     void issuerAndAudienceValidatingJwtDecoder_withAudiences_configuresDecoderCorrectly()
             throws Exception {
         final var issuer = "https://example.com/issuer";
-        final Collection<String> audiences = List.of("aud1", "aud2");
+        final var audiences = List.of("aud1", "aud2");
         final var restOperations = mockRestOperations(issuer);
 
         final var jwtDecoder =
@@ -128,7 +127,7 @@ class MoreJwtDecodersTest {
     @Test
     void issuerAndAudienceValidatingAtJwtDecoder_configuresDecoderCorrectly() throws Exception {
         final var issuer = "https://example.com/issuer";
-        final Collection<String> audiences = List.of("aud1");
+        final var audiences = List.of("aud1");
         final var restOperations = mockRestOperations(issuer);
 
         final var jwtDecoder =
