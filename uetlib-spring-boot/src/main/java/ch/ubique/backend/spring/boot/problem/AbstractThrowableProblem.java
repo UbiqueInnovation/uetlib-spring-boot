@@ -66,54 +66,45 @@ public abstract class AbstractThrowableProblem extends RuntimeException
 
     /**
      * In implementing classes, you can override this method to return the actual error type by
-     * casting. This will always succeed since the only way to set the error type is via our own
-     * constructor:
-     *
-     * <p>
-     *
-     * {@snippet lang = java:
-     * @Override
-     * public  MyProblemErrorType errorType() {
-     *     return (MyProblemErrorType) super.errorType();
-     * }
-     * }
+     * casting or just cast in usages. This will always succeed since the only way to set the error
+     * type is via our own constructor.
      */
     @Override
-    public ProblemErrorType errorType() {
+    public final ProblemErrorType errorType() {
         return errorType;
     }
 
     @Override
-    public URI type() {
-        return errorType.type();
-    }
-
-    @Override
-    public HttpStatusCode status() {
+    public final HttpStatusCode status() {
         return status;
     }
 
     @Override
-    public String title() {
+    public final String title() {
         return title;
     }
 
     @Override
-    public String detail() {
+    public final String detail() {
         return detail;
     }
 
     @Override
-    public String problemCode() {
-        return errorType.problemCode();
+    @Nullable
+    public final URI instance() {
+        return instance;
     }
 
+    /**
+     * Override this method to add proeprties for your specific {@link ProblemDetail} to the
+     * generated in {@link #toProblemDetail(String, String)} and returned to a client.
+     */
     public Map<String, Object> additionalProperties() {
         return Map.of();
     }
 
     @JsonIgnore
-    public ProblemDetail toProblemDetail(
+    public final ProblemDetail toProblemDetail(
             final @Nullable String localizedTitle, final @Nullable String localizedDetail) {
         final var problemDetail = ProblemDetail.forStatus(status);
         problemDetail.setType(errorType.type());
@@ -137,11 +128,11 @@ public abstract class AbstractThrowableProblem extends RuntimeException
     @Override
     @JsonIgnore
     public String getMessage() {
-        return String.join(": ", title, detail);
+        return title + ": " + detail;
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(final @Nullable Object o) {
         if (this == o) {
             return true;
         }
@@ -176,12 +167,11 @@ public abstract class AbstractThrowableProblem extends RuntimeException
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
                 .appendSuper(super.toString())
-                .append("type", errorType.type())
+                .append("errorType", errorType)
                 .append("status", status)
                 .append("title", title)
                 .append("detail", detail)
                 .append("instance", instance)
-                .append("problemCode", errorType.problemCode())
                 .toString();
     }
 
