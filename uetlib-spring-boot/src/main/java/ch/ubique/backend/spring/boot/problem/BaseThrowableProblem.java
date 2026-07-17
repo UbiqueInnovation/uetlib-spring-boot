@@ -2,8 +2,6 @@ package ch.ubique.backend.spring.boot.problem;
 
 import ch.ubique.backend.spring.boot.problem.errortype.ProblemErrorType;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import org.jspecify.annotations.Nullable;
 import org.springframework.http.HttpStatusCode;
 
@@ -11,13 +9,15 @@ import java.net.URI;
 
 /**
  * This interface exists solely because a generic class cannot extend {@link RuntimeException}. Do
- * not use anywhere else apart from the existing usage in this module. Please.
+ * not use anywhere else apart from the existing usage in this module.
  */
-public interface BaseThrowableProblem {
+interface BaseThrowableProblem {
 
     ProblemErrorType errorType();
 
-    URI type();
+    default URI type() {
+        return errorType().type();
+    }
 
     HttpStatusCode status();
 
@@ -30,6 +30,7 @@ public interface BaseThrowableProblem {
         return null;
     }
 
-    @JsonIgnore
-    String problemCode();
+    default String problemCode() {
+        return errorType().problemCode();
+    }
 }

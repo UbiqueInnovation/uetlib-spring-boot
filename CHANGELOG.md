@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.6.2
+
+- Minor Changes to the throwable problem for easier usage
+
 ## 2.6.1
 
 - Allow multiple authorization header prefixes in `ApiKeyAuthenticationFilter`
