@@ -13,7 +13,7 @@
 
     <artifactId>uetlib-spring-boot-coverage</artifactId>
 
-        <dependencyManagement>
+    <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>ch.ubique</groupId>
@@ -33,7 +33,7 @@
         </dependencies>
     </dependencyManagement>
 
-<dependencies>
+    <dependencies>
         <dependency>
             <groupId>ch.ubique</groupId>
             <artifactId>uetlib-spring-boot</artifactId>
