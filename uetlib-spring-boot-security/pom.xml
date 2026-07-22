@@ -18,7 +18,7 @@
         <westemeyer-version-package-name>ch.ubique.backend.spring.boot.security.version</westemeyer-version-package-name>
     </properties>
 
-        <dependencyManagement>
+    <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>ch.ubique</groupId>
@@ -28,7 +28,7 @@
         </dependencies>
     </dependencyManagement>
 
-<dependencies>
+    <dependencies>
         <!-- Core -->
         <dependency>
             <groupId>ch.ubique</groupId>
