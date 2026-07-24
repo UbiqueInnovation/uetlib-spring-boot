@@ -1,5 +1,51 @@
 # CHANGELOG
 
+## 3.0.0
+
+### Changes / Improvements
+
+- Replaced the `SpringDocConfig` setup with the new Spring Boot auto-configuration based SpringDoc setup.
+- `SpringDoc` defaults are now configured automatically when the dependency is present; explicit static initialization
+  is no longer required.
+- Added automatic SpringDoc/OpenAPI configuration for JTS geometry types.
+- JTS Geometry models are now documented as GeoJSON schemas automatically when the geo SpringDoc auto-configuration is
+  active.
+
+### Migration
+
+If `SpringDocConfig` was only used like this:
+
+```java
+static {
+    SpringDocConfig.setDefaultConfig();
+}
+```
+
+delete the whole static block. No replacement is required because the new auto-configuration applies the default
+SpringDoc setup automatically.
+
+Additional schemas can still be added manually:
+```java
+@Configuration
+class MySpringDocConfiguration {
+    
+    static {
+        SpringDocUtils.getConfig().replaceWithSchema(MyType.class, ref("MyType"));
+    }
+
+    @Bean
+    GlobalOpenApiCustomizer myOpenApiCustomizer() {
+        return openApi -> {
+            openApi.getComponents().addSchemas("MyType", ref("MyType"));
+        };
+    }
+
+    private static Schema<?> ref(final String schemaName) {
+        return new Schema<>().$ref("#/components/schemas/" + schemaName);
+    }
+}
+```
+
 ## 2.6.2
 
 - Minor Changes to the throwable problem for easier usage
