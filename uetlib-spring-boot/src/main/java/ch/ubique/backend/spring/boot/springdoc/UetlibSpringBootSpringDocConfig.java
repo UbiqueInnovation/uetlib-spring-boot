@@ -3,13 +3,10 @@ package ch.ubique.backend.spring.boot.springdoc;
 import static ch.ubique.backend.core.utils.TimeUtils.TIME_UTILS_EUROPE_ZURICH;
 import static ch.ubique.backend.core.utils.TimeUtils.toMillis;
 
-import ch.ubique.backend.core.localized.LocalizedValue;
-
 import com.github.zafarkhaja.semver.Version;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.media.MapSchema;
 import io.swagger.v3.oas.models.media.NumberSchema;
 import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.media.StringSchema;
@@ -23,10 +20,8 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalTime;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Map;
 
-@SuppressWarnings({"unused", "unchecked"})
+@SuppressWarnings("unused")
 public final class UetlibSpringBootSpringDocConfig {
 
     private UetlibSpringBootSpringDocConfig() {}
@@ -39,7 +34,6 @@ public final class UetlibSpringBootSpringDocConfig {
                         .replaceWithSchema(ZonedDateTime.class, ref("ZonedDateTimeMillis"))
                         .replaceWithSchema(LocalTime.class, ref("IsoLocalTime"))
                         .replaceWithSchema(Duration.class, ref("DurationMillis"))
-                        .replaceWithSchema(LocalizedValue.class, ref("LocalizedValue"))
                         .replaceWithSchema(Version.class, ref("Version"));
 
         return openApi -> {
@@ -51,7 +45,7 @@ public final class UetlibSpringBootSpringDocConfig {
     public static void addDefaultSchemas(final Components components) {
         final var nowEuZh = TIME_UTILS_EUROPE_ZURICH.now();
         final var nowEuZhMillis = BigDecimal.valueOf(toMillis(nowEuZh));
-        final var nowEuZhLocalTimeFormatted = nowEuZh.format(DateTimeFormatter.ISO_LOCAL_TIME);
+        final var nowEuZhLocalTimeFormatted = nowEuZh.toLocalTime().toString();
         final var durationToday =
                 BigDecimal.valueOf(
                         Duration.between(TIME_UTILS_EUROPE_ZURICH.startOfToday(), nowEuZh)
@@ -64,14 +58,14 @@ public final class UetlibSpringBootSpringDocConfig {
                 "InstantMillis",
                 new NumberSchema()
                         .description("Instant represented as Unix epoch milliseconds.")
-                        ._default(nowEuZhMillis));
+                        .example(nowEuZhMillis));
 
         addSchemaIfMissing(
                 components,
                 "ZonedDateTimeMillis",
                 new NumberSchema()
                         .description("ZonedDateTime represented as Unix epoch milliseconds.")
-                        ._default(nowEuZhMillis));
+                        .example(nowEuZhMillis));
 
         addSchemaIfMissing(
                 components,
@@ -79,46 +73,21 @@ public final class UetlibSpringBootSpringDocConfig {
                 new StringSchema()
                         .description(
                                 "Local time in ISO format, usually HH:mm:ss, optionally with fractional seconds.")
-                        ._default(nowEuZhLocalTimeFormatted)
-                        .example("13:45:30"));
+                        .example(nowEuZhLocalTimeFormatted));
 
         addSchemaIfMissing(
                 components,
                 "DurationMillis",
                 new NumberSchema()
                         .description("Duration represented as milliseconds.")
-                        ._default(durationToday));
-
-        addSchemaIfMissing(
-                components,
-                "LocalizedValue",
-                new MapSchema()
-                        .description(
-                                "UB LocalizedValue. Can only be null or non-empty, but never empty.")
-                        ._default(
-                                Map.ofEntries(
-                                        Map.entry(
-                                                "de",
-                                                "de value of the correct type (string/int/object/etc.)"),
-                                        Map.entry(
-                                                "it",
-                                                "it value of the correct type (string/int/object/etc.)"),
-                                        Map.entry(
-                                                "fr",
-                                                "fr value of the correct type (string/int/object/etc.)"),
-                                        Map.entry(
-                                                "en",
-                                                "en value of the correct type (string/int/object/etc.)")))
-                        .$comment(
-                                "UB LocalizedValue: Can only be null or non-empty"
-                                        + " (check the actual type usage), but never empty!"));
+                        .example(durationToday));
 
         addSchemaIfMissing(
                 components,
                 "Version",
                 new StringSchema()
                         .description("Semantic version string.")
-                        ._default(
+                        .example(
                                 random.randomInt(0, 10)
                                         + "."
                                         + random.randomInt(1, 100)
