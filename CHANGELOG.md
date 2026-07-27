@@ -4,16 +4,16 @@
 
 ### Changes / Improvements
 
-- Replaced the `SpringDocConfig` setup with the new Spring Boot auto-configuration based SpringDoc setup.
-- `SpringDoc` defaults are now configured automatically when the dependency is present; explicit static initialization
-  is no longer required.
-- Added automatic SpringDoc/OpenAPI configuration for JTS geometry types.
-- JTS Geometry models are now documented as GeoJSON schemas automatically when the geo SpringDoc auto-configuration is
+* Replaced the `SpringDocConfig` setup with Spring Boot auto-configuration for SpringDoc.
+* SpringDoc defaults are now configured automatically when the dependency is present; explicit static initialization is
+  no longer required.
+* Added automatic SpringDoc/OpenAPI configuration for JTS geometry types.
+* JTS geometry models are now documented automatically as GeoJSON schemas when the geo SpringDoc auto-configuration is
   active.
 
 ### Migration
 
-If `SpringDocConfig` was only used like this:
+If `SpringDocConfig` was used only as follows:
 
 ```java
 static {
@@ -21,27 +21,31 @@ static {
 }
 ```
 
-delete the whole static block. No replacement is required because the new auto-configuration applies the default
-SpringDoc setup automatically.
+delete the entire static block. No replacement is required because the default SpringDoc configuration is now applied
+automatically.
 
-Additional schemas can still be added manually:
+Additional schemas can still be registered manually:
+
 ```java
+import static ch.ubique.backend.spring.boot.springdoc.UetlibSpringBootSpringDocConfig.ref;
+
 @Configuration
 class MySpringDocConfiguration {
-    
+
     static {
-        SpringDocUtils.getConfig().replaceWithSchema(MyType.class, ref("MyType"));
+        SpringDocUtils.getConfig()
+                .replaceWithSchema(MyType.class, ref("MyType"));
     }
 
     @Bean
     GlobalOpenApiCustomizer myOpenApiCustomizer() {
-        return openApi -> {
-            openApi.getComponents().addSchemas("MyType", ref("MyType"));
-        };
+        return openApi -> openApi.getComponents()
+                .addSchemas("MyType", createMyTypeSchema());
     }
 
-    private static Schema<?> ref(final String schemaName) {
-        return new Schema<>().$ref("#/components/schemas/" + schemaName);
+    private static Schema<?> createMyTypeSchema() {
+        return new ObjectSchema()
+                .addProperty("value", new StringSchema());
     }
 }
 ```
