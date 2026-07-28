@@ -6,7 +6,6 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
@@ -72,36 +71,21 @@ public final class UetlibSpringBootLogbookProperties {
         public static class BodyReplacers {
             @Schema(
                     description = "Configure additional body replacers by content type",
-                    defaultValue =
-                            "text/html,text/css,text/javascript,font/*,image/*,application/protobuf")
-            private List<MediaType> contentTypes =
+                    defaultValue = "text/html,text/css,text/javascript,font/*,application/protobuf")
+            private List<String> contentTypes =
                     List.of(
-                            MediaType.TEXT_HTML,
-                            MediaType.valueOf("text/css"),
-                            MediaType.valueOf("text/javascript"),
-                            MediaType.valueOf("font/*"),
-                            MediaType.valueOf("image/*"),
-                            MediaType.valueOf("application/protobuf"));
+                            "text/html",
+                            "text/css",
+                            "text/javascript",
+                            "font/*",
+                            "application/protobuf");
 
-            @Schema(
-                    description = "Configure additional body replacers by content encoding",
-                    defaultValue = "gzip")
-            private List<String> contentEncodings = List.of("gzip");
-
-            public List<MediaType> getContentTypes() {
+            public List<String> getContentTypes() {
                 return contentTypes;
             }
 
-            public void setContentTypes(final List<MediaType> contentTypes) {
+            public void setContentTypes(final List<String> contentTypes) {
                 this.contentTypes = contentTypes;
-            }
-
-            public List<String> getContentEncodings() {
-                return contentEncodings;
-            }
-
-            public void setContentEncodings(final List<String> contentEncodings) {
-                this.contentEncodings = contentEncodings;
             }
         }
     }
