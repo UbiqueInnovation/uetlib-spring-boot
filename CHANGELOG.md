@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 3.0.1
+
+- Remove the logbook body filter by the content-encoding header as this is mostly incorrect anyway, as content-types
+  like
+  application-json can be encoded but still logged in plain. Rely on content-type only. The following properties have no
+  effect any more and can be removed.
+  ```diff
+  - ch.ubique.backend.spring.boot.logbook.response-filter.body-replacers.content-encodings=...
+  ```
+
 ## 3.0.0
 
 ### Changes / Improvements

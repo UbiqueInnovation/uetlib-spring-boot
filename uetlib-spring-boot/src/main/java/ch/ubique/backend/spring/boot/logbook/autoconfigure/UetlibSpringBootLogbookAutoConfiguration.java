@@ -6,7 +6,6 @@ import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpHeaders;
 import org.zalando.logbook.BodyFilter;
 import org.zalando.logbook.ResponseFilter;
 import org.zalando.logbook.autoconfigure.LogbookProperties;
@@ -46,31 +45,28 @@ public class UetlibSpringBootLogbookAutoConfiguration {
         final var responseFilter = uetlibSpringBootLogbookProperties.getResponseFilter();
         final var bodyReplacers = responseFilter.getBodyReplacers();
         final var contentTypes = bodyReplacers.getContentTypes();
-        final var contentEncodings = bodyReplacers.getContentEncodings();
 
         final var defaultValue = ResponseFilters.replaceBody(BodyReplacers.defaultValue());
 
-        final var contentTypeFilters =
-                contentTypes.stream()
-                        .map(
-                                contentType ->
-                                        ResponseFilters.replaceBody(
-                                                BodyReplacers.replaceBody(
-                                                        Conditions.contentType(
-                                                                contentType.toString()),
-                                                        "<replaced " + contentType + ">")));
-        final var contentEncodingsFilters =
-                contentEncodings.stream()
-                        .map(
-                                contentEncoding ->
-                                        ResponseFilters.replaceBody(
-                                                BodyReplacers.replaceBody(
-                                                        Conditions.header(
-                                                                HttpHeaders.CONTENT_ENCODING,
-                                                                contentEncoding),
-                                                        "<replaced " + contentEncoding + ">")));
+        // Conditions::contentType has an awkward signature, so we need to use these three cases
+        final ResponseFilter contentTypeFilter;
+        if (contentTypes.isEmpty()) {
+            contentTypeFilter = response -> response;
+        } else if (contentTypes.size() == 1) {
+            contentTypeFilter =
+                    ResponseFilters.replaceBody(
+                            BodyReplacers.replaceBody(
+                                    Conditions.contentType(contentTypes.getFirst()), "<binary>"));
+        } else {
+            contentTypeFilter =
+                    ResponseFilters.replaceBody(
+                            BodyReplacers.replaceBody(
+                                    Conditions.contentType(
+                                            contentTypes.getFirst(),
+                                            contentTypes.stream().skip(1).toArray(String[]::new)),
+                                    "<binary>"));
+        }
 
-        return Stream.concat(contentTypeFilters, contentEncodingsFilters)
-                .reduce(defaultValue, ResponseFilter::merge);
+        return ResponseFilter.merge(defaultValue, contentTypeFilter);
     }
 }
