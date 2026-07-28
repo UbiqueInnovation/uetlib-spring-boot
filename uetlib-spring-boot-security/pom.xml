@@ -7,7 +7,7 @@
     <parent>
         <groupId>ch.ubique</groupId>
         <artifactId>uetlib-spring-boot-parent</artifactId>
-        <version>3.0.0-SNAPSHOT</version>
+        <version>4.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>uetlib-spring-boot-security</artifactId>
