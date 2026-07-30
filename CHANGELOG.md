@@ -1,9 +1,17 @@
 # CHANGELOG
 
+## 3.0.3
+
+- updated actions to not run tests twice for sonar
+
 ## 3.0.2
 
 - If `SpringDocConfig` (or any other `ObjectMapperProvider` bean) is not loaded, `UetlibSpringBootAutoConfiguration`
   will not create a `localizedValueModelConverter` Bean.
+
+## 3.0.2
+
+- Only add Springdoc converter on SpringdocConfiguration
 
 ## 3.0.1
 
