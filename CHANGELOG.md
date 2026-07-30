@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 3.0.2
+
+- If `SpringDocConfig` (or any other `ObjectMapperProvider` bean) is not loaded, `UetlibSpringBootAutoConfiguration`
+  will not create a `localizedValueModelConverter` Bean.
+
 ## 3.0.1
 
 - Remove the logbook body filter by the content-encoding header as this is mostly incorrect anyway, as content-types

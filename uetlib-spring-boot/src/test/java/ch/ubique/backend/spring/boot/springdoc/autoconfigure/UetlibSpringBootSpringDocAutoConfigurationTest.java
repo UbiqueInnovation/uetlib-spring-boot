@@ -41,4 +41,19 @@ class UetlibSpringBootSpringDocAutoConfigurationTest {
                                     .isSameAs(customConverter);
                         });
     }
+
+    @Test
+    void doesNotFailWhenObjectMapperProviderIsMissing() {
+        final var contextRunnerWithoutWebContext =
+                new ApplicationContextRunner()
+                        .withConfiguration(
+                                AutoConfigurations.of(
+                                        UetlibSpringBootSpringDocAutoConfiguration.class));
+
+        contextRunnerWithoutWebContext.run(
+                context -> {
+                    assertThat(context).hasNotFailed();
+                    assertThat(context).doesNotHaveBean(LocalizedValueModelConverter.class);
+                });
+    }
 }
