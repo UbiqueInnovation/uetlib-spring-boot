@@ -3,6 +3,7 @@
 ## 3.0.3
 
 - updated actions to not run tests twice for sonar
+- update uetlib version
 
 ## 3.0.2
 
