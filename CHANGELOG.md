@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 3.0.4
+
+- Include `org.zalando:logbook-httpclient5`
+- Update uetlib parent and versions
+- Update actions
+
 ## 3.0.3
 
 - updated actions to not run tests twice for sonar
@@ -13,9 +19,8 @@
 ## 3.0.1
 
 - Remove the logbook body filter by the content-encoding header as this is mostly incorrect anyway, as content-types
-  like
-  application-json can be encoded but still logged in plain. Rely on content-type only. The following properties have no
-  effect any more and can be removed.
+  like application-json can be encoded but still logged in plain. Rely on content-type only. The following properties
+  have no effect any more and can be removed.
   ```diff
   - ch.ubique.backend.spring.boot.logbook.response-filter.body-replacers.content-encodings=...
   ```
@@ -102,9 +107,9 @@ class MySpringDocConfiguration {
     - `image/*`
     - `application/protobuf`
 - New `ApiKeyAuthenticationFilter` in `uetlib-spring-boot-security` to extend Spring Security's
-  `AbstractPreAuthenticatedProcessingFilter` and
-  extract headers. It defaults to the `Authorization` header where it expects the value format `ApiKey {key}`. It
-  provides constructors to customize the header name (e.g., `X-API-KEY`), and optionally a custom prefix format (or
+  `AbstractPreAuthenticatedProcessingFilter` and extract headers. It defaults to the `Authorization` header where it
+  expects the value format `ApiKey {key}`. It provides constructors to customize the header name (e.g., `X-API-KEY`),
+  and optionally a custom prefix format (or
   `null`/empty for raw value extraction). This effectively replaces `ApiKeyAuthenticationFilter` in
   `uetlib-spring-boot` (will be removed in `3.0.0`).
 - Introduce `ApiKeyAuthenticationManager` which handles timing-safe verification of API keys and can be initialized with
@@ -188,10 +193,9 @@ class MySpringDocConfiguration {
 ### Improvements
 
 - Constraint violations from `ResponseValidationException`, `ConstraintViolationException`, `BindException`, and
-  `MethodArgumentNotValidException` are now included as structured `violations` in the problem
-  detail response body when `ch.ubique.backend.spring.boot.problem.include-constraint-violations=true`.
-  This property defaults to `false` and should remain disabled in production environments to avoid
-  leaking internal validation details.
+  `MethodArgumentNotValidException` are now included as structured `violations` in the problem detail response body when
+  `ch.ubique.backend.spring.boot.problem.include-constraint-violations=true`. This property defaults to `false` and
+  should remain disabled in production environments to avoid leaking internal validation details.
 
 ## 2.0.5
 
@@ -229,13 +233,13 @@ class MySpringDocConfiguration {
       - import ch.ubique.backend.problem.springdoc.SpringDocProblem;
       + import ch.ubique.backend.spring.boot.problem.springdoc.SpringDocProblem;
       ```
-    - Make custom problem extend `ch.ubique.backend.spring.boot.problem.AbstractThrowableProblem` instead of
-      zalando's `AbstractThrowableProblem`.
+    - Make custom problem extend `ch.ubique.backend.spring.boot.problem.AbstractThrowableProblem` instead of zalando's
+      `AbstractThrowableProblem`.
     - To document a response that returns a generic `ProblemDetail`, use
       `@Schema(implementation = ProblemDetail.class)` directly instead of
       `@Schema(implementation = SpringDocRfc9457Problem.class)` or similar.
-    - Replace any `SpringDocConfig.setDefaultConfigWith()`, unless you have some custom overrides, as this applied
-      via autoconfiguration anyway.
+    - Replace any `SpringDocConfig.setDefaultConfigWith()`, unless you have some custom overrides, as this applied via
+      autoconfiguration anyway.
     - Remove **ANY** dependency on `zalando/problem*` in your project. All the functionality is now provided by
       `uetlib-spring-boot`.
     - Move all `MoreJwtValidators#*JwtDecoder(...)` methods to new class `MoreJwtDecoders` in
@@ -263,8 +267,8 @@ class MySpringDocConfiguration {
         - All `MoreJwtDecoders#*JwtDecoder(...)` methods now require a pre-configured `RestOperations` as the first
           argument. Most likely, this should be an instance of `restTemplateBuilder#build()`, where
           `restTemplateBuilder` is the Spring Boot autoconfigured `RestTemplateBuilder`.
-    - default user agent for all http clients (`RestClient` and `RestTemplate`) is now autoconfigured. You have to
-      adapt (or add if you did not yet do this) your property for the default user-agent:
+    - default user agent for all http clients (`RestClient` and `RestTemplate`) is now autoconfigured. You have to adapt
+      (or add if you did not yet do this) your property for the default user-agent:
       ```diff
       - ch.ubique.infobox.backend.external-api.default-user-agent=ub-infobox-ws-prod/${build-properties.version}
       + ch.ubique.backend.spring.boot.http.default-user-agent=ub-infobox-ws-prod/${build-properties.version}
