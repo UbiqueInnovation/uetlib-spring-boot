@@ -2,7 +2,9 @@
 
 ## 3.0.4
 
-- Include `org.zalando:logbook-httpclient5`
+- Include `org.zalando:logbook-httpclient5`, `org.springframework.boot:spring-boot-starter-logging`, and
+  `org.springframework.boot:spring-boot-starter-opentelemetry` without
+  `io.micrometer:micrometer-registry-otlp`, and
 - Update uetlib parent and versions
 - Update actions
 

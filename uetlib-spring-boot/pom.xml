@@ -37,6 +37,25 @@
             <artifactId>httpclient5</artifactId>
         </dependency>
 
+        <!-- Logging -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-logging</artifactId>
+        </dependency>
+
+        <!-- Tracing -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-opentelemetry</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>io.micrometer</groupId>
+                    <artifactId>micrometer-registry-otlp</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- logbook -->
         <dependency>
             <groupId>org.zalando</groupId>
             <artifactId>logbook-spring</artifactId>
