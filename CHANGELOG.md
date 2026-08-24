@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 3.0.5
+
+- latest uetlib parent
+- version updates
+
 ## 3.0.4
 
 - Include `org.zalando:logbook-httpclient5`, `org.springframework.boot:spring-boot-starter-logging`, and
