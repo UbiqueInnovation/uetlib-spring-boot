@@ -13,11 +13,6 @@
     <artifactId>uetlib-spring-boot-security</artifactId>
     <packaging>jar</packaging>
 
-    <properties>
-        <!-- westemeyer version config -->
-        <westemeyer-version-package-name>ch.ubique.backend.spring.boot.security.version</westemeyer-version-package-name>
-    </properties>
-
     <dependencyManagement>
         <dependencies>
             <dependency>
