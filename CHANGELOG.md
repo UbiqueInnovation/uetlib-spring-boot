@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.1.0
+
+- Add `retryable` (nullable, default null) in `AbstractThrowableProblem`
+
 ## 3.0.5
 
 - latest uetlib parent
