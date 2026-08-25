@@ -26,6 +26,7 @@ public abstract class AbstractThrowableProblem extends RuntimeException
     private final String title;
     private final String detail;
     @Nullable private final URI instance;
+    @Nullable private final Boolean retryable;
 
     protected AbstractThrowableProblem(
             final ProblemErrorType errorType, final String title, final HttpStatus status) {
@@ -56,12 +57,24 @@ public abstract class AbstractThrowableProblem extends RuntimeException
             final String detail,
             @Nullable final URI instance,
             @Nullable final AbstractThrowableProblem cause) {
+        this(errorType, title, status, detail, instance, cause, null);
+    }
+
+    protected AbstractThrowableProblem(
+            final ProblemErrorType errorType,
+            final String title,
+            final HttpStatusCode status,
+            final String detail,
+            @Nullable final URI instance,
+            @Nullable final AbstractThrowableProblem cause,
+            @Nullable final Boolean retryable) {
         super(cause);
         this.errorType = errorType;
         this.title = title;
         this.status = status;
         this.detail = detail;
         this.instance = instance;
+        this.retryable = retryable;
     }
 
     /**
@@ -96,7 +109,7 @@ public abstract class AbstractThrowableProblem extends RuntimeException
     }
 
     /**
-     * Override this method to add proeprties for your specific {@link ProblemDetail} to the
+     * Override this method to add properties for your specific {@link ProblemDetail} to the
      * generated in {@link #toProblemDetail(String, String)} and returned to a client.
      */
     public Map<String, Object> additionalProperties() {
@@ -119,6 +132,9 @@ public abstract class AbstractThrowableProblem extends RuntimeException
         }
         if (localizedDetail != null) {
             properties.put("localizedDetail", localizedDetail);
+        }
+        if (retryable != null) {
+            properties.put("retryable", retryable);
         }
         problemDetail.setProperties(Map.copyOf(properties));
 
