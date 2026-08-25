@@ -33,4 +33,9 @@ interface BaseThrowableProblem {
     default String problemCode() {
         return errorType().problemCode();
     }
+
+    @Nullable
+    default Boolean retryable() {
+        return null;
+    }
 }
