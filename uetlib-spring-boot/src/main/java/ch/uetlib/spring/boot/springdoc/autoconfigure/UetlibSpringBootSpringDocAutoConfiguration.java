@@ -1,6 +1,7 @@
 package ch.uetlib.spring.boot.springdoc.autoconfigure;
 
 import ch.uetlib.spring.boot.springdoc.LocalizedValueModelConverter;
+import ch.uetlib.spring.boot.springdoc.OpenEnumModelConverter;
 import ch.uetlib.spring.boot.springdoc.UetlibSpringBootSpringDocConfig;
 
 import org.springdoc.core.configuration.SpringDocConfiguration;
@@ -28,5 +29,12 @@ public class UetlibSpringBootSpringDocAutoConfiguration {
             final ObjectMapperProvider objectMapperProvider) {
 
         return new LocalizedValueModelConverter(objectMapperProvider);
+    }
+
+    @Bean
+    @ConditionalOnBean(ObjectMapperProvider.class)
+    @ConditionalOnMissingBean
+    OpenEnumModelConverter openEnumModelConverter(final ObjectMapperProvider objectMapperProvider) {
+        return new OpenEnumModelConverter(objectMapperProvider);
     }
 }
