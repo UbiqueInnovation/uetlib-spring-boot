@@ -4,6 +4,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * A utility class for converting Java objects (including records) into query parameters. This
@@ -53,6 +54,7 @@ public final class RestClientUtils {
      * @param object the object to convert into query parameters
      * @return a {@link MultiValueMap} containing the query parameters as key-value pairs
      */
+    @SuppressWarnings("java:S3011")
     public static MultiValueMap<String, String> getQueryParamsFromRecord(final Record object) {
         final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
 
@@ -78,9 +80,9 @@ public final class RestClientUtils {
                 // If the field is a Collection (e.g., List, Set), iterate over its elements and add
                 // each one separately
                 if (value instanceof final Collection<?> collection) {
-                    for (final var item : collection) {
-                        queryParams.add(field.getName(), item.toString());
-                    }
+                    collection.stream()
+                            .filter(Objects::nonNull)
+                            .forEach(item -> queryParams.add(field.getName(), item.toString()));
                 } else {
                     // Otherwise, add the field as a single query param
                     queryParams.add(field.getName(), value.toString());
