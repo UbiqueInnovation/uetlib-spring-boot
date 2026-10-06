@@ -86,7 +86,9 @@ public interface ViolationAdviceTrait extends UetlibExceptionHandlerSkeletonTrai
                         "Request validation failed for {}: {}",
                         ex.getParameter().getExecutable().toGenericString(),
                         violations.stream()
-                                .map(violation -> violation.fieldName() + ": " + violation.message())
+                                .map(
+                                        violation ->
+                                                violation.fieldName() + ": " + violation.message())
                                 .toList());
 
         return newConstraintViolationProblemDetail(
