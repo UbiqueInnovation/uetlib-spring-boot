@@ -27,7 +27,7 @@ public record Violation(
     // compare by field name, message, rejected value (nulls first)
     private static final Comparator<Violation> COMPARATOR =
             comparing(Violation::fieldName)
-                    .thenComparing(Violation::message)
+                    .thenComparing(nullsFirst(comparing(Violation::message)))
                     .thenComparing(
                             t ->
                                     ofNullable(t.rejectedValue())
