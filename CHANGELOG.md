@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 3.2.0
+
+- Log method argument violations on either `INFO` or `WARN` based on the value of
+  `ch.ubique.backend.spring.boot.problem.include-constraint-violations` (`true` -> `WARN`)
+- Version updates
+
 ## 3.1.0
 
 - Add `retryable` (nullable, default null) in `AbstractThrowableProblem`
