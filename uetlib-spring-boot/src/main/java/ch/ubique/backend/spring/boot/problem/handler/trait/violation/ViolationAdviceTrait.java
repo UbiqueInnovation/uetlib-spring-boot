@@ -8,6 +8,7 @@ import ch.ubique.backend.spring.validation.ResponseValidationException;
 import jakarta.validation.ConstraintViolationException;
 
 import org.jspecify.annotations.Nullable;
+import org.slf4j.event.Level;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -73,13 +74,27 @@ public interface ViolationAdviceTrait extends UetlibExceptionHandlerSkeletonTrai
             final HttpHeaders headers,
             final HttpStatusCode status,
             final WebRequest request) {
+        final var violations = createViolations(ex.getBindingResult()).toList();
 
         final var includeConstraintViolations =
                 getUetlibSpringBootProblemProperties().isIncludeConstraintViolations();
-        final var violations =
-                includeConstraintViolations ? createViolations(ex.getBindingResult()) : null;
 
-        return newConstraintViolationProblemDetail(ex, headers, status, violations, request);
+        final var requestValidationFailedLogLevel =
+                includeConstraintViolations ? Level.WARN : Level.INFO;
+        logger().atLevel(requestValidationFailedLogLevel)
+                .log(
+                        "Request validation failed for {}: {}",
+                        ex.getParameter().getExecutable().toGenericString(),
+                        violations.stream()
+                                .map(violation -> violation.fieldName() + ": " + violation.message())
+                                .toList());
+
+        return newConstraintViolationProblemDetail(
+                ex,
+                headers,
+                status,
+                includeConstraintViolations ? violations.stream() : null,
+                request);
     }
 
     @Nullable

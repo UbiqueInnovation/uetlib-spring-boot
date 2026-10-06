@@ -14,8 +14,11 @@ import jakarta.validation.constraints.NotBlank;
 
 import org.apache.commons.lang3.compare.ComparableUtils;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.system.CapturedOutput;
+import org.springframework.boot.test.system.OutputCaptureExtension;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -34,6 +37,7 @@ import org.springframework.web.context.request.WebRequest;
 import java.util.List;
 
 @SuppressWarnings({"DataFlowIssue", "unchecked", "unused", "java:S1172"})
+@ExtendWith(OutputCaptureExtension.class)
 @ActiveProfiles("test")
 @SpringBootTest(
         webEnvironment = SpringBootTest.WebEnvironment.MOCK,
@@ -238,6 +242,33 @@ class ViolationAdviceTraitTest {
                             assertThat(v.fieldName()).isEqualTo("username");
                             assertThat(v.message()).isEqualTo("must not be blank");
                         });
+    }
+
+    @Test
+    void handleMethodArgumentNotValid_logsHandlerMethodAndValidationReason(
+            final CapturedOutput output) throws Exception {
+        final var bindingResult = new BeanPropertyBindingResult(new Object(), "requestDto");
+        bindingResult.addError(
+                new FieldError(
+                        "requestDto",
+                        "username",
+                        "sensitive input",
+                        false,
+                        null,
+                        null,
+                        "must not be blank"));
+        final var method =
+                ViolationAdviceTraitTest.class.getDeclaredMethod(
+                        "dummyHandlerMethod", String.class);
+        final var exception =
+                new MethodArgumentNotValidException(new MethodParameter(method, 0), bindingResult);
+
+        handler.handleMethodArgumentNotValid(
+                exception, new HttpHeaders(), HttpStatus.BAD_REQUEST, newRequest());
+
+        assertThat(output.getOut())
+                .contains("dummyHandlerMethod", "username: must not be blank")
+                .doesNotContain("sensitive input");
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────────
