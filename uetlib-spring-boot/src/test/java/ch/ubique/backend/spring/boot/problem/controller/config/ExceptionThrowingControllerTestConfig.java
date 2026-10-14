@@ -1,9 +1,11 @@
 package ch.ubique.backend.spring.boot.problem.controller.config;
 
+import ch.ubique.backend.spring.boot.problem.autoconfigure.UetlibSpringBootProblemAutoConfiguration;
 import ch.ubique.backend.spring.boot.problem.controller.ExceptionThrowingController;
 import ch.ubique.backend.spring.boot.problem.handler.TestUetlibExceptionHandler;
 
 import org.springframework.boot.SpringBootConfiguration;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.support.ResourceBundleMessageSource;
@@ -11,6 +13,7 @@ import org.springframework.context.support.ResourceBundleMessageSource;
 import java.util.Locale;
 
 @SpringBootConfiguration
+@ImportAutoConfiguration(UetlibSpringBootProblemAutoConfiguration.class)
 @Import({ExceptionThrowingController.class, TestUetlibExceptionHandler.class})
 public class ExceptionThrowingControllerTestConfig {
 

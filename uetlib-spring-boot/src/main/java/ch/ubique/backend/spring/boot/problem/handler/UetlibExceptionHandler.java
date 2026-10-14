@@ -11,7 +11,6 @@ import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.MessageSource;
 import org.springframework.http.*;
@@ -21,7 +20,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @SuppressWarnings("unused")
 @NullMarked
-@EnableConfigurationProperties(UetlibSpringBootProblemProperties.class)
 public abstract class UetlibExceptionHandler extends ResponseEntityExceptionHandler
         implements UetlibExceptionHandlerSkeletonTrait,
                 ThrowableProblemAdviceTrait,
