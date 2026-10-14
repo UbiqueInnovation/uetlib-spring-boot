@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 3.2.1
+
+- Move `EnableConfigurationProperties` for `UetlibSpringBootProblemProperties` to new
+  `UetlibSpringBootProblemAutoConfiguration`
+
 ## 3.2.0
 
 - Log method argument violations on either `INFO` or `WARN` based on the value of
