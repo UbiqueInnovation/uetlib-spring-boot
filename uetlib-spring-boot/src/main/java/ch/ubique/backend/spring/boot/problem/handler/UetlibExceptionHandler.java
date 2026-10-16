@@ -48,7 +48,12 @@ public abstract class UetlibExceptionHandler extends ResponseEntityExceptionHand
         this.applicationContext = applicationContext;
 
         uetlibSpringBootProblemProperties =
-                applicationContext.getBean(UetlibSpringBootProblemProperties.class);
+                applicationContext
+                        .getBeanProvider(UetlibSpringBootProblemProperties.class)
+                        // mainly for tests that do not have the autoconfiguration enabled that
+                        // enables configuration properties for that class, we create the default
+                        // properties here
+                        .getIfAvailable(UetlibSpringBootProblemProperties::new);
     }
 
     @Override
