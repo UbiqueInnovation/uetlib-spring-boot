@@ -2,12 +2,17 @@ package ch.ubique.backend.spring.boot.problem.handler;
 
 import static java.util.Objects.requireNonNull;
 
+import jakarta.validation.ConstraintViolationException;
+
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
+import org.slf4j.event.Level;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.MessageSource;
 import org.springframework.http.*;
+import org.springframework.validation.BindException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -24,6 +29,37 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public interface UetlibExceptionHandlerSkeletonTrait extends ApplicationContextAware {
 
     Logger logger();
+
+    /**
+     * Log exceptions, omitting validation exception messages that can contain rejected values.
+     * Override to customize logging for all advice traits. Status is null for unmatched exceptions
+     * whose eventual response status is determined by the container or filters.
+     */
+    default void logException(
+            final Exception ex, final @Nullable HttpStatusCode status, final WebRequest request) {
+        // The violation advice already logs a safe method and field summary for this exception.
+        if (ex instanceof MethodArgumentNotValidException) {
+            return;
+        }
+        if (status == null) {
+            logger().error("Unhandled request exception: {}", request.getDescription(false), ex);
+            return;
+        }
+        final var event = logger().atLevel(status.is5xxServerError() ? Level.ERROR : Level.WARN);
+        if (ex instanceof BindException || ex instanceof ConstraintViolationException) {
+            event.log(
+                    "Request validation failed with HTTP {} ({}): {}",
+                    status.value(),
+                    ex.getClass().getSimpleName(),
+                    request.getDescription(false));
+            return;
+        }
+        event.setCause(ex)
+                .log(
+                        "Request failed with HTTP {}: {}",
+                        status.value(),
+                        request.getDescription(false));
+    }
 
     @Nullable MessageSource getMessageSource();
 

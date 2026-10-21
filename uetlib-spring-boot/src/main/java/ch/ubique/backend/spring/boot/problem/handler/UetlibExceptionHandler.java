@@ -15,6 +15,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.MessageSource;
 import org.springframework.http.*;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -97,7 +98,18 @@ public abstract class UetlibExceptionHandler extends ResponseEntityExceptionHand
             final HttpHeaders headers,
             final HttpStatusCode statusCode,
             final WebRequest request) {
+        logException(ex, statusCode, request);
         return super.handleExceptionInternal(ex, body, headers, statusCode, request);
+    }
+
+    /**
+     * Log unmatched exceptions before leaving their handling to the servlet container or filters.
+     */
+    @ExceptionHandler(Exception.class)
+    public void logUnhandledException(final Exception ex, final WebRequest request)
+            throws Exception {
+        logException(ex, null, request);
+        throw ex;
     }
 
     /**
