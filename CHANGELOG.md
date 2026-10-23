@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## 3.3.0
 
 - Include HTTP method, path, status, and exception type consistently in exception logs; use
   concise `Class#method` handler names for method-argument validation.
