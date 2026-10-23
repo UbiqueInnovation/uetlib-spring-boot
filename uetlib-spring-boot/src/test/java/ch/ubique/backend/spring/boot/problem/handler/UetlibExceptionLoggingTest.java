@@ -26,6 +26,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.context.support.StaticApplicationContext;
+import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -33,6 +34,10 @@ import org.springframework.http.ProblemDetail;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.BindException;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -80,7 +85,9 @@ class UetlibExceptionLoggingTest {
                         new AbstractThrowableProblem(
                                 ERROR_TEST1, "Unavailable", HttpStatus.SERVICE_UNAVAILABLE) {},
                         503),
-                Arguments.of(new ConstraintViolationException(Set.of()), 400),
+                Arguments.of(
+                        new ConstraintViolationException("secret-rejected-value", Set.of()), 400),
+                Arguments.of(new BindException(validationBindingResult()), 400),
                 Arguments.of(new ResponseValidationException(Set.of(), String.class), 500));
     }
 
@@ -112,7 +119,7 @@ class UetlibExceptionLoggingTest {
 
         assertSame(exception, thrown.getCause());
         assertLogged(exception, Level.ERROR);
-        assertThat(appender.list.getFirst().getFormattedMessage()).doesNotContain("HTTP");
+        assertThat(appender.list.getFirst().getFormattedMessage()).contains("status=unknown");
     }
 
     @Test
@@ -155,20 +162,97 @@ class UetlibExceptionLoggingTest {
         assertThat(appender.list).isEmpty();
     }
 
+    @Test
+    void methodArgumentValidationUsesSharedLoggingPolicy() throws Exception {
+        logger.setLevel(Level.INFO);
+        final var exception = methodArgumentValidationException();
+        final var request = new ServletWebRequest(new MockHttpServletRequest("GET", "/fail"));
+
+        handler.handleMethodArgumentNotValid(
+                exception, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+
+        assertThat(appender.list).hasSize(1);
+        final var event = appender.list.getFirst();
+        assertThat(event.getLevel()).isEqualTo(Level.INFO);
+        assertThat(event.getThrowableProxy()).isNull();
+        assertThat(event.getFormattedMessage())
+                .contains(
+                        "status=400 method=GET path=/fail exception=MethodArgumentNotValidException",
+                        "handler=UetlibExceptionLoggingTest#validationEndpoint",
+                        "violations=[username: must not be blank]")
+                .doesNotContain("secret-rejected-value", "message=");
+    }
+
+    @Test
+    void overridingLoggingPolicySuppressesValidationSummary() throws Exception {
+        logger.setLevel(Level.INFO);
+        final var customHandler =
+                new TestUetlibExceptionHandler() {
+                    @Override
+                    public void logException(
+                            final Exception ex,
+                            final @Nullable HttpStatusCode status,
+                            final WebRequest request) {
+                        // Replace all default exception logging, including validation summaries.
+                    }
+                };
+        customHandler.setApplicationContext(context);
+
+        final var response =
+                customHandler.handleMethodArgumentNotValid(
+                        methodArgumentValidationException(),
+                        new HttpHeaders(),
+                        HttpStatus.BAD_REQUEST,
+                        new ServletWebRequest(new MockHttpServletRequest()));
+
+        assertThat(response).isNotNull();
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(appender.list).isEmpty();
+    }
+
+    private MethodArgumentNotValidException methodArgumentValidationException() throws Exception {
+        return new MethodArgumentNotValidException(
+                new MethodParameter(
+                        getClass().getDeclaredMethod("validationEndpoint", String.class), 0),
+                validationBindingResult());
+    }
+
+    private static BeanPropertyBindingResult validationBindingResult() {
+        final var result = new BeanPropertyBindingResult(new Object(), "request");
+        result.addError(
+                new FieldError(
+                        "request",
+                        "username",
+                        "secret-rejected-value",
+                        false,
+                        null,
+                        null,
+                        "must not be blank"));
+        return result;
+    }
+
+    private void validationEndpoint(final String username) {}
+
     private void assertLogged(final Exception exception, final Level expectedLevel) {
         assertThat(appender.list).hasSize(1);
         final var event = appender.list.getFirst();
         assertThat(event.getLevel()).isEqualTo(expectedLevel);
-        if (exception instanceof ConstraintViolationException) {
+        assertThat(event.getFormattedMessage())
+                .contains(
+                        "method=GET path=/fail",
+                        "exception=" + exception.getClass().getSimpleName());
+        if (exception instanceof ConstraintViolationException
+                || exception instanceof BindException) {
             assertThat(event.getThrowableProxy()).isNull();
-            assertThat(event.getFormattedMessage()).contains(exception.getClass().getSimpleName());
+            assertThat(event.getFormattedMessage())
+                    .doesNotContain("message=", "secret-rejected-value");
             return;
         }
+        assertThat(event.getFormattedMessage()).contains("message=" + exception.getMessage());
         assertThat(event.getThrowableProxy()).isNotNull();
         assertThat(event.getThrowableProxy().getClassName())
                 .isEqualTo(exception.getClass().getName());
         assertThat(event.getThrowableProxy().getStackTraceElementProxyArray()).isNotEmpty();
-        assertThat(event.getFormattedMessage()).contains("uri=/fail");
     }
 
     @RestController

@@ -2,6 +2,8 @@ package ch.ubique.backend.spring.boot.problem.handler;
 
 import static java.util.Objects.requireNonNull;
 
+import ch.ubique.backend.spring.boot.problem.handler.trait.violation.Violation;
+
 import jakarta.validation.ConstraintViolationException;
 
 import org.jspecify.annotations.Nullable;
@@ -13,8 +15,11 @@ import org.springframework.context.MessageSource;
 import org.springframework.http.*;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
+import java.util.stream.Stream;
 
 /**
  * To implement exception advice traits that can extend the functionality of the {@link
@@ -32,33 +37,72 @@ public interface UetlibExceptionHandlerSkeletonTrait extends ApplicationContextA
 
     /**
      * Log exceptions, omitting validation exception messages that can contain rejected values.
-     * Override to customize logging for all advice traits. Status is null for unmatched exceptions
-     * whose eventual response status is determined by the container or filters.
+     * Override to customize or suppress logging for all advice traits, including validation.
+     * Handlers delegating to {@link #handleExceptionInternal} are logged automatically; handlers
+     * returning a response directly must call this hook once themselves. Status is null for
+     * unmatched exceptions whose eventual response status is determined by the container or
+     * filters.
      */
     default void logException(
             final Exception ex, final @Nullable HttpStatusCode status, final WebRequest request) {
-        // The violation advice already logs a safe method and field summary for this exception.
-        if (ex instanceof MethodArgumentNotValidException) {
+        final var method =
+                request instanceof final ServletWebRequest servletRequest
+                        ? servletRequest.getRequest().getMethod()
+                        : "unknown";
+        final var path =
+                request instanceof final ServletWebRequest servletRequest
+                        ? servletRequest.getRequest().getRequestURI()
+                        : request.getDescription(false);
+        final var statusValue = status == null ? "unknown" : Integer.toString(status.value());
+        final var exceptionType = ex.getClass().getSimpleName();
+        if (ex instanceof final MethodArgumentNotValidException validationException) {
+            final var result = validationException.getBindingResult();
+            final var violations =
+                    Stream.concat(
+                                    result.getFieldErrors().stream().map(Violation::from),
+                                    result.getGlobalErrors().stream().map(Violation::from))
+                            .map(violation -> violation.fieldName() + ": " + violation.message())
+                            .toList();
+            final var level =
+                    getUetlibSpringBootProblemProperties().isIncludeConstraintViolations()
+                            ? Level.WARN
+                            : Level.INFO;
+            final var executable = validationException.getParameter().getExecutable();
+            final var handler =
+                    executable.getDeclaringClass().getSimpleName() + "#" + executable.getName();
+            logger().atLevel(level)
+                    .log(
+                            "Request failed: status={} method={} path={} exception={} handler={} violations={}",
+                            statusValue,
+                            method,
+                            path,
+                            exceptionType,
+                            handler,
+                            violations);
             return;
         }
-        if (status == null) {
-            logger().error("Unhandled request exception: {}", request.getDescription(false), ex);
-            return;
-        }
-        final var event = logger().atLevel(status.is5xxServerError() ? Level.ERROR : Level.WARN);
+        final var event =
+                logger().atLevel(
+                                status == null || status.is5xxServerError()
+                                        ? Level.ERROR
+                                        : Level.WARN);
         if (ex instanceof BindException || ex instanceof ConstraintViolationException) {
             event.log(
-                    "Request validation failed with HTTP {} ({}): {}",
-                    status.value(),
-                    ex.getClass().getSimpleName(),
-                    request.getDescription(false));
+                    "Request failed: status={} method={} path={} exception={}",
+                    statusValue,
+                    method,
+                    path,
+                    exceptionType);
             return;
         }
         event.setCause(ex)
                 .log(
-                        "Request failed with HTTP {}: {}",
-                        status.value(),
-                        request.getDescription(false));
+                        "Request failed: status={} method={} path={} exception={} message={}",
+                        statusValue,
+                        method,
+                        path,
+                        exceptionType,
+                        ex.getMessage());
     }
 
     @Nullable MessageSource getMessageSource();
@@ -83,7 +127,9 @@ public interface UetlibExceptionHandlerSkeletonTrait extends ApplicationContextA
     /**
      * A method definition of {@link
      * ResponseEntityExceptionHandler#handleExceptionInternal(Exception, Object, HttpHeaders,
-     * HttpStatusCode, WebRequest)}. Signature has to match the definition exactly
+     * HttpStatusCode, WebRequest)}. Delegating custom handlers here applies the shared {@link
+     * #logException} policy automatically; do not also log in the calling handler. Signature has to
+     * match the definition exactly
      */
     @Nullable ResponseEntity<Object> handleExceptionInternal(
             Exception ex,

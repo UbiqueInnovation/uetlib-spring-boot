@@ -106,6 +106,7 @@ public abstract class UetlibExceptionHandler extends ResponseEntityExceptionHand
      * Log unmatched exceptions before leaving their handling to the servlet container or filters.
      */
     @ExceptionHandler(Exception.class)
+    @SuppressWarnings("java:S112")
     public void logUnhandledException(final Exception ex, final WebRequest request)
             throws Exception {
         logException(ex, null, request);

@@ -1,6 +1,6 @@
 package ch.ubique.backend.spring.boot.problem.handler.trait.violation;
 
-import static java.util.Comparator.comparing;
+import static java.util.Comparator.*;
 
 import ch.ubique.backend.spring.boot.problem.handler.UetlibExceptionHandlerSkeletonTrait;
 import ch.ubique.backend.spring.validation.ResponseValidationException;
@@ -8,7 +8,6 @@ import ch.ubique.backend.spring.validation.ResponseValidationException;
 import jakarta.validation.ConstraintViolationException;
 
 import org.jspecify.annotations.Nullable;
-import org.slf4j.event.Level;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -79,18 +78,6 @@ public interface ViolationAdviceTrait extends UetlibExceptionHandlerSkeletonTrai
         final var includeConstraintViolations =
                 getUetlibSpringBootProblemProperties().isIncludeConstraintViolations();
 
-        final var requestValidationFailedLogLevel =
-                includeConstraintViolations ? Level.WARN : Level.INFO;
-        logger().atLevel(requestValidationFailedLogLevel)
-                .log(
-                        "Request validation failed for {}: {}",
-                        ex.getParameter().getExecutable().toGenericString(),
-                        violations.stream()
-                                .map(
-                                        violation ->
-                                                violation.fieldName() + ": " + violation.message())
-                                .toList());
-
         return newConstraintViolationProblemDetail(
                 ex,
                 headers,
@@ -149,7 +136,8 @@ public interface ViolationAdviceTrait extends UetlibExceptionHandlerSkeletonTrai
                             // sorting to make tests deterministic
                             .sorted(
                                     comparing(Violation::fieldName)
-                                            .thenComparing(Violation::message))
+                                            .thenComparing(
+                                                    Violation::message, nullsFirst(naturalOrder())))
                             .toList();
             body.setProperty("violations", violations);
             if (violations.size() > 1) {
