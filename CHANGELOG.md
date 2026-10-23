@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Include HTTP method, path, status, and exception type consistently in exception logs; use
+  concise `Class#method` handler names for method-argument validation.
+
+- Route method-argument validation summaries through the shared `logException` hook so projects
+  can replace or suppress all handler logging. Document logging for project-specific handlers.
+
 - Log exceptions reaching `UetlibExceptionHandler`: handled client errors at WARN and server errors
   at ERROR, including typed problems and extension advice traits. Include stack traces except for
   validation exceptions, whose messages can expose rejected values; preserve safe validation summaries.
