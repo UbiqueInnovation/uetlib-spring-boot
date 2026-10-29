@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import ch.ubique.backend.spring.boot.problem.handler.TestUetlibExceptionHandler;
 import ch.ubique.backend.spring.boot.problem.handler.UetlibSpringBootProblemProperties;
+import ch.ubique.backend.spring.boot.problem.handler.UnhandledExceptionLoggingResolver;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
@@ -47,6 +48,29 @@ class UetlibSpringBootProblemAutoConfigurationTest {
                                                     .getUetlibSpringBootProblemProperties()
                                                     .isIncludeConstraintViolations())
                                     .isTrue();
+                        });
+    }
+
+    @Test
+    void doesNotRegisterResolverWithoutAdvice() {
+        new ApplicationContextRunner()
+                .withConfiguration(
+                        AutoConfigurations.of(UetlibSpringBootProblemAutoConfiguration.class))
+                .run(
+                        context ->
+                                assertThat(context)
+                                        .doesNotHaveBean(UnhandledExceptionLoggingResolver.class));
+    }
+
+    @Test
+    void registersOneResolverWhenMultipleAdviceBeansExist() {
+        contextRunner
+                .withBean("otherExceptionHandler", TestUetlibExceptionHandler.class)
+                .run(
+                        context -> {
+                            assertThat(context).hasNotFailed();
+                            assertThat(context)
+                                    .hasSingleBean(UnhandledExceptionLoggingResolver.class);
                         });
     }
 

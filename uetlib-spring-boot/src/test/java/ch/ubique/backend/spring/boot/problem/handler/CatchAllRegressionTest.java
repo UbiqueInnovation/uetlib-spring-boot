@@ -17,11 +17,11 @@ import org.springframework.web.bind.annotation.*;
 class CatchAllRegressionTest {
     @Test
     void wrappedTypedProblemStillResolves() throws Exception {
-        try (var context = new StaticApplicationContext()) {
+        try (final var context = new StaticApplicationContext()) {
             context.refresh();
-            var handler = new FirstAdvice();
+            final var handler = new FirstAdvice();
             handler.setApplicationContext(context);
-            var mvc =
+            final var mvc =
                     MockMvcBuilders.standaloneSetup(
                                     new FailingController(
                                             new RuntimeException(new TestException(ERROR_TEST1))))
@@ -33,11 +33,11 @@ class CatchAllRegressionTest {
 
     @Test
     void lowerPriorityAdviceStillResolves() throws Exception {
-        try (var context = new StaticApplicationContext()) {
+        try (final var context = new StaticApplicationContext()) {
             context.refresh();
-            var handler = new FirstAdvice();
+            final var handler = new FirstAdvice();
             handler.setApplicationContext(context);
-            var mvc =
+            final var mvc =
                     MockMvcBuilders.standaloneSetup(new FailingController(new ProjectException()))
                             .setControllerAdvice(handler, new SecondAdvice())
                             .build();
@@ -53,7 +53,7 @@ class CatchAllRegressionTest {
     @Order(1)
     static class SecondAdvice {
         @ExceptionHandler(ProjectException.class)
-        ResponseEntity<Void> handle(ProjectException ex) {
+        ResponseEntity<Void> handle(final ProjectException ex) {
             return ResponseEntity.status(409).build();
         }
     }
@@ -64,7 +64,7 @@ class CatchAllRegressionTest {
     static class FailingController {
         private final RuntimeException exception;
 
-        FailingController(RuntimeException exception) {
+        FailingController(final RuntimeException exception) {
             this.exception = exception;
         }
 
