@@ -11,7 +11,7 @@
 - Log exceptions reaching `UetlibExceptionHandler`: handled client errors at WARN and server errors
   at ERROR, including typed problems and extension advice traits. Include stack traces except for
   validation exceptions, whose messages can expose rejected values; preserve safe validation summaries.
-- Log and rethrow unmatched exceptions without changing their response handling. Add an overridable
+- Log unmatched exceptions after MVC advice resolution without changing their response handling. Add an overridable
   `logException` hook for applications to customize the logging policy.
 
 ## 3.2.1
