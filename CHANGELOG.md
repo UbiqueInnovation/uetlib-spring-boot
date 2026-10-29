@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 4.0.0 (unreleased)
+
+### Breaking changes
+
+- Move Maven coordinates from `ch.ubique:uetlib-*` to `ch.ubique.uetlib:uetlib-*`.
+- Align uetlib parent, BOM and library references with the migration releases.
+
 ## 3.3.1
 
 - `getLocalizedProblemField` used `localizedTitleArgs` also for localized detail field in problem response
