@@ -33,6 +33,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindException;
@@ -106,11 +107,12 @@ class UetlibExceptionLoggingTest {
     }
 
     @Test
-    void logsAndRethrowsUnmatchedExceptionWithoutChangingContainerHandling() {
+    void logsUnmatchedExceptionWithoutChangingContainerHandling() {
         final var exception = new NullPointerException();
         final var mvc =
                 MockMvcBuilders.standaloneSetup(new FailingController(exception))
-                        .setControllerAdvice(handler)
+                        .setHandlerExceptionResolvers(
+                                new UnhandledExceptionLoggingResolver(handler))
                         .build();
 
         final var thrown =
@@ -154,11 +156,14 @@ class UetlibExceptionLoggingTest {
         final var exception = new IllegalStateException();
         final var request = new ServletWebRequest(new MockHttpServletRequest("GET", "/fail"));
 
-        assertSame(
-                exception,
-                assertThrows(
-                        IllegalStateException.class,
-                        () -> customHandler.logUnhandledException(exception, request)));
+        final var result =
+                new UnhandledExceptionLoggingResolver(customHandler)
+                        .resolveException(
+                                request.getRequest(),
+                                new MockHttpServletResponse(),
+                                null,
+                                exception);
+        assertThat(result).isNull();
         assertThat(appender.list).isEmpty();
     }
 

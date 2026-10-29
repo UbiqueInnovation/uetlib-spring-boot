@@ -13,14 +13,15 @@ server errors, with the validation exception noted below. This includes Spring M
 `AbstractThrowableProblem`, and advice traits that delegate to `handleExceptionInternal`
 (including the Feign advice trait).
 
-Unmatched exceptions are logged at `ERROR` and rethrown unchanged, so the servlet container and
-security filters retain their existing handling. Exceptions resolved by another controller advice
-or thrown outside Spring MVC are outside this handler's scope. The container may also log a
-rethrown exception.
+With problem auto-configuration enabled, a final MVC exception resolver logs unmatched exceptions
+at `ERROR` after the standard MVC resolvers, including all controller advice. It leaves the exception
+unresolved, so the servlet container and security filters retain their existing handling. Exceptions
+resolved by another controller advice or thrown outside Spring MVC are outside this logging scope.
+The container may also log an unresolved exception.
 
-Applications with their own `@ExceptionHandler(Exception.class)` should override
-`logUnhandledException(Exception, WebRequest)` instead, or remove their catch-all handler to use
-this implementation. Declaring two handlers for `Exception` produces an ambiguous Spring MVC mapping.
+The resolver calls `logException(Exception, HttpStatusCode, WebRequest)` with a null status for
+unmatched exceptions. Override that hook to customize their logging. If multiple
+`UetlibExceptionHandler` advice beans exist, the resolver uses the highest-priority one.
 
 Override `logException(Exception, HttpStatusCode, WebRequest)` to customize the logging policy.
 Binding and constraint violations use safe summaries instead of logging the throwable, whose
@@ -64,7 +65,7 @@ handler follows this pattern to preserve its `ResponseEntity<ProblemDetail>` ret
 Override `logException()` to replace or suppress logging for all these paths, including the
 method-argument validation summary. Call `super.logException(ex, status, request)` when you
 want to retain the default policy for an exception. Unmatched exceptions still invoke the
-hook directly with a null status before being rethrown.
+hook with a null status before leaving the exception unresolved.
 
 To customize logging for one exception type, override the `Exception` signature and check its
 runtime type, delegating other exceptions to the default policy:
