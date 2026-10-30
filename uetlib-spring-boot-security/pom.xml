@@ -13,6 +13,10 @@
     <artifactId>uetlib-spring-boot-security</artifactId>
     <packaging>jar</packaging>
 
+    <name>uetlib-spring-boot-security</name>
+    <description>Spring Boot auto-configuration and backend integrations.</description>
+    <url>https://github.com/UbiqueInnovation/uetlib-spring-boot</url>
+
     <dependencyManagement>
         <dependencies>
             <dependency>

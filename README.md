@@ -89,3 +89,6 @@ the exception as `Exception`, so it will not select the `ProjectException` overl
 
 This logging policy is separate from `spring.mvc.log-resolved-exception`, which controls Spring's
 own resolver WARN logging. That property does not disable uetlib's logging.
+## License
+
+Except where otherwise noted, original uetlib code is licensed under the [Apache License 2.0](LICENSE). Third-party files retain their original license terms; see [NOTICE](NOTICE) and any third-party notices in this repository.
