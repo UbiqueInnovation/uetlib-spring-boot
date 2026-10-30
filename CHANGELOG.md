@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.3.1
+
+- `getLocalizedProblemField` used `localizedTitleArgs` also for localized detail field in problem response
+
 ## 3.3.0
 
 - Include HTTP method, path, status, and exception type consistently in exception logs; use

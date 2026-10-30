@@ -191,11 +191,11 @@ public abstract class AbstractThrowableProblem extends RuntimeException
                 .toString();
     }
 
-    public Object @Nullable [] localizedTitleArgs() {
+    public Object[] localizedTitleArgs() {
         return new Object[0];
     }
 
-    public Object @Nullable [] localizedDetailArgs() {
+    public Object[] localizedDetailArgs() {
         return new Object[0];
     }
 }

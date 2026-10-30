@@ -30,8 +30,10 @@ public interface ThrowableProblemAdviceTrait extends UetlibExceptionHandlerSkele
         logException(problem, problem.status(), request);
 
         final var problemTypeCode = problem.type().toString().replace(":", ".");
-        final var localizedTitle = getLocalizedProblemField(problem, "title", problemTypeCode);
-        final var localizedDetail = getLocalizedProblemField(problem, "detail", problemTypeCode);
+        final var localizedTitle =
+                getLocalizedProblemField("title", problemTypeCode, problem.localizedTitleArgs());
+        final var localizedDetail =
+                getLocalizedProblemField("detail", problemTypeCode, problem.localizedDetailArgs());
 
         final var body = problem.toProblemDetail(localizedTitle, localizedDetail);
 
@@ -43,12 +45,11 @@ public interface ThrowableProblemAdviceTrait extends UetlibExceptionHandlerSkele
     }
 
     private @Nullable String getLocalizedProblemField(
-            final AbstractThrowableProblem problem,
-            final String titleDetail,
-            final String problemTypeCode) {
-        final var localizedTitleCode = "problem." + titleDetail + "." + problemTypeCode;
-        final var localizedTitleArgs = problem.localizedTitleArgs();
-        return localizeMessage(localizedTitleCode, localizedTitleArgs);
+            final String problemField,
+            final String problemTypeCode,
+            final Object[] localizedProblemFieldArgs) {
+        final var localizedMessageCode = "problem." + problemField + "." + problemTypeCode;
+        return localizeMessage(localizedMessageCode, localizedProblemFieldArgs);
     }
 
     /**
@@ -93,7 +94,7 @@ public interface ThrowableProblemAdviceTrait extends UetlibExceptionHandlerSkele
         try {
             return messageSource.getMessage(code, args, null, LocaleContextHolder.getLocale());
         } catch (final NoSuchMessageException e) {
-            logger().warn("Problem message with code '{}' not found", code, e);
+            logger().debug("Problem message with code '{}' not found", code, e);
             return null;
         }
     }
