@@ -3,6 +3,7 @@ package ch.ubique.uetlib.spring.boot.problem.handler.trait;
 import ch.ubique.uetlib.spring.boot.problem.AbstractThrowableProblem;
 import ch.ubique.uetlib.spring.boot.problem.ProblemResponseHeadersProvider;
 import ch.ubique.uetlib.spring.boot.problem.handler.UetlibExceptionHandlerSkeletonTrait;
+
 import org.jspecify.annotations.Nullable;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -53,7 +54,7 @@ public interface ThrowableProblemAdviceTrait extends UetlibExceptionHandlerSkele
 
     /**
      * Always adds the {@link #PROBLEM_CODE_HEADER} to the response headers and adds additional
-     * headers from {@link ProblemResponseHeadersProvider} and from overriden implementations of
+     * headers from {@link ProblemResponseHeadersProvider} and from overridden implementations of
      * {@link #customizeAbstractThrowableProblemHeaders(AbstractThrowableProblem, WebRequest,
      * HttpHeaders)}.
      */

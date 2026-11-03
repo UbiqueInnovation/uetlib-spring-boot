@@ -1,7 +1,7 @@
 package ch.ubique.uetlib.spring.boot.logbook.autoconfigure;
 
 import ch.ubique.uetlib.spring.boot.logbook.UetlibSpringBootLogbookProperties;
-import java.util.stream.Stream;
+
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -13,6 +13,8 @@ import org.zalando.logbook.core.BodyFilters;
 import org.zalando.logbook.core.BodyReplacers;
 import org.zalando.logbook.core.Conditions;
 import org.zalando.logbook.core.ResponseFilters;
+
+import java.util.stream.Stream;
 
 @AutoConfiguration
 @EnableConfigurationProperties(UetlibSpringBootLogbookProperties.class)

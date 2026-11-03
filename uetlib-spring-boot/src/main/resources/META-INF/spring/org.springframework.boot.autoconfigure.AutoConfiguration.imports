@@ -6,4 +6,4 @@ ch.ubique.uetlib.spring.boot.logbook.autoconfigure.UetlibSpringBootLogbookAutoCo
 ch.ubique.uetlib.spring.boot.problem.autoconfigure.UetlibSpringBootProblemAutoConfiguration
 ch.ubique.uetlib.spring.boot.problem.springdoc.autoconfigure.UetlibSpringBootProblemSpringDocAutoConfiguration
 ch.ubique.uetlib.spring.boot.springdoc.autoconfigure.UetlibSpringBootSpringDocAutoConfiguration
-ch.ubique.uetlib.spring.validation.UetlibSpringBootValidationResponseValidationAutoConfiguration
+ch.ubique.uetlib.spring.boot.validation.UetlibSpringBootValidationResponseValidationAutoConfiguration

@@ -2,12 +2,14 @@ package ch.ubique.uetlib.spring.boot.problem.handler.config;
 
 import ch.ubique.uetlib.spring.boot.problem.autoconfigure.UetlibSpringBootProblemAutoConfiguration;
 import ch.ubique.uetlib.spring.boot.problem.handler.TestUetlibExceptionHandler;
-import java.util.Locale;
+
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.support.ResourceBundleMessageSource;
+
+import java.util.Locale;
 
 @SpringBootConfiguration
 @ImportAutoConfiguration(UetlibSpringBootProblemAutoConfiguration.class)

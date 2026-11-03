@@ -1,7 +1,9 @@
 package ch.ubique.uetlib.spring.boot.geo.jackson;
 
 import ch.ubique.uetlib.geo.jackson.JsonMapperJtsUtils;
+
 import org.springframework.boot.jackson.autoconfigure.JsonMapperBuilderCustomizer;
+
 import tools.jackson.databind.json.JsonMapper;
 
 @SuppressWarnings("unused")

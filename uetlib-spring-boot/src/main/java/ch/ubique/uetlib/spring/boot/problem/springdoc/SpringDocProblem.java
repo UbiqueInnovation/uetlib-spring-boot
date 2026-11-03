@@ -4,10 +4,14 @@ import ch.ubique.uetlib.spring.boot.problem.AbstractThrowableProblem;
 import ch.ubique.uetlib.spring.boot.problem.ThrowableProblem;
 import ch.ubique.uetlib.spring.boot.problem.errortype.ProblemErrorType;
 import ch.ubique.uetlib.spring.boot.problem.springdoc.autoconfigure.UetlibSpringBootProblemSpringDocAutoConfiguration;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.net.URI;
+
 import org.springframework.http.ProblemDetail;
+
+import java.net.URI;
 
 /**
  * This interface only exists for springdoc documentation purposes. All custom problems should be

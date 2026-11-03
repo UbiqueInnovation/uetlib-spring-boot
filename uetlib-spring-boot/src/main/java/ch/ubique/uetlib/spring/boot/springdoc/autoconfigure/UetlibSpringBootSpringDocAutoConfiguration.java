@@ -2,6 +2,7 @@ package ch.ubique.uetlib.spring.boot.springdoc.autoconfigure;
 
 import ch.ubique.uetlib.spring.boot.springdoc.LocalizedValueModelConverter;
 import ch.ubique.uetlib.spring.boot.springdoc.UetlibSpringBootSpringDocConfig;
+
 import org.springdoc.core.configuration.SpringDocConfiguration;
 import org.springdoc.core.customizers.GlobalOpenApiCustomizer;
 import org.springdoc.core.providers.ObjectMapperProvider;

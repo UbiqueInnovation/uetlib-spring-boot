@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
 import ch.ubique.uetlib.spring.boot.springdoc.LocalizedValueModelConverter;
+
 import org.junit.jupiter.api.Test;
 import org.springdoc.core.providers.ObjectMapperProvider;
 import org.springframework.boot.autoconfigure.AutoConfigurations;

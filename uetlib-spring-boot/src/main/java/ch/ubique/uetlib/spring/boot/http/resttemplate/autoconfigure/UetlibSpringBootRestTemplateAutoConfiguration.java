@@ -4,6 +4,7 @@ import ch.ubique.uetlib.spring.boot.http.autoconfigure.UetlibSpringBootHttpClien
 import ch.ubique.uetlib.spring.boot.http.resttemplate.HttpClientRestTemplateCustomizer;
 import ch.ubique.uetlib.spring.boot.http.resttemplate.LogbookRestTemplateCustomizer;
 import ch.ubique.uetlib.spring.boot.http.resttemplate.UserAgentRestTemplateCustomizer;
+
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Import;

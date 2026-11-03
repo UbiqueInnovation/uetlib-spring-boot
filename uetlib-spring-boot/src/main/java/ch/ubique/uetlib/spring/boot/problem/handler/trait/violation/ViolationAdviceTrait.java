@@ -3,10 +3,10 @@ package ch.ubique.uetlib.spring.boot.problem.handler.trait.violation;
 import static java.util.Comparator.*;
 
 import ch.ubique.uetlib.spring.boot.problem.handler.UetlibExceptionHandlerSkeletonTrait;
-import ch.ubique.uetlib.spring.validation.ResponseValidationException;
+import ch.ubique.uetlib.spring.boot.validation.ResponseValidationException;
+
 import jakarta.validation.ConstraintViolationException;
-import java.net.URI;
-import java.util.stream.Stream;
+
 import org.jspecify.annotations.Nullable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -18,6 +18,9 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
+import java.net.URI;
+import java.util.stream.Stream;
 
 /** Advice trait to handle any validation exceptions */
 public interface ViolationAdviceTrait extends UetlibExceptionHandlerSkeletonTrait {

@@ -4,18 +4,21 @@ import static java.util.Objects.requireNonNull;
 
 import ch.ubique.uetlib.spring.boot.problem.errortype.ProblemErrorType;
 import ch.ubique.uetlib.spring.boot.problem.errortype.ProblemType;
+
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.media.StringSchema;
-import java.lang.reflect.ParameterizedType;
-import java.net.URI;
-import java.util.Arrays;
-import java.util.Set;
+
 import org.jspecify.annotations.Nullable;
 import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
 import org.reflections.util.ClasspathHelper;
 import org.springdoc.core.customizers.OpenApiCustomizer;
+
+import java.lang.reflect.ParameterizedType;
+import java.net.URI;
+import java.util.Arrays;
+import java.util.Set;
 
 /**
  * Customises the OpenAPI specification for the application by dynamically adding example values for

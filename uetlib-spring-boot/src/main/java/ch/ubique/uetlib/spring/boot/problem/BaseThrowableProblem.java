@@ -1,9 +1,11 @@
 package ch.ubique.uetlib.spring.boot.problem;
 
 import ch.ubique.uetlib.spring.boot.problem.errortype.ProblemErrorType;
-import java.net.URI;
+
 import org.jspecify.annotations.Nullable;
 import org.springframework.http.HttpStatusCode;
+
+import java.net.URI;
 
 /**
  * This interface exists solely because a generic class cannot extend {@link RuntimeException}. Do

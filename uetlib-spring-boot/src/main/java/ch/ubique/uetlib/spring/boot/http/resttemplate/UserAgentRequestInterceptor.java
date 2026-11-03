@@ -2,11 +2,12 @@ package ch.ubique.uetlib.spring.boot.http.resttemplate;
 
 import static org.springframework.http.HttpHeaders.USER_AGENT;
 
-import java.io.IOException;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
+
+import java.io.IOException;
 
 public class UserAgentRequestInterceptor implements ClientHttpRequestInterceptor {
     private final String defaultUserAgent;

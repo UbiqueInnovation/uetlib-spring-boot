@@ -4,6 +4,7 @@ import static ch.ubique.uetlib.core.localized.annotation.JsonLocalizedValue.Seri
 
 import ch.ubique.uetlib.core.localized.LocalizedValue;
 import ch.ubique.uetlib.core.localized.annotation.JsonLocalizedValue;
+
 import java.io.Serializable;
 
 @SuppressWarnings("unused") // used for tests

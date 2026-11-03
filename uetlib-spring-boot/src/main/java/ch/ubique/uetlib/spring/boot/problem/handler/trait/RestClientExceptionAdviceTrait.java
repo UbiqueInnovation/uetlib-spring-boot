@@ -3,6 +3,7 @@ package ch.ubique.uetlib.spring.boot.problem.handler.trait;
 import static java.util.Objects.requireNonNullElse;
 
 import ch.ubique.uetlib.spring.boot.problem.handler.UetlibExceptionHandlerSkeletonTrait;
+
 import org.jspecify.annotations.Nullable;
 import org.springframework.context.MessageSource;
 import org.springframework.http.*;
