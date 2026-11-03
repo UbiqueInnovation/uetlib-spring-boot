@@ -2,6 +2,8 @@
 
 ## 4.0.0 (unreleased)
 
+- Align Spring Boot helper, validation and security packages under `ch.ubique.uetlib.spring.boot.*`; keep configuration-property names unchanged.
+
 ### Breaking changes
 
 - Move Java packages from `ch.ubique.backend` to `ch.ubique.uetlib`, including class-name resources. Existing Spring configuration property keys are unchanged.

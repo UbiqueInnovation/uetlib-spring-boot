@@ -5,12 +5,13 @@ import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
 import ch.ubique.uetlib.spring.boot.problem.handler.TestUetlibExceptionHandler;
 import ch.ubique.uetlib.spring.boot.problem.handler.config.UetlibExceptionHandlerTestConfig;
+
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
-import java.util.List;
+
 import org.apache.commons.lang3.compare.ComparableUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,6 +33,8 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
+
+import java.util.List;
 
 @SuppressWarnings({"DataFlowIssue", "unchecked", "unused", "java:S1172"})
 @ExtendWith(OutputCaptureExtension.class)

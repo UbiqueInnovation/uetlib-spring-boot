@@ -1,6 +1,7 @@
 package ch.ubique.uetlib.spring.boot.http.resttemplate;
 
 import ch.ubique.uetlib.spring.boot.http.UetlibSpringBootHttpProperties;
+
 import org.springframework.boot.restclient.RestTemplateCustomizer;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;

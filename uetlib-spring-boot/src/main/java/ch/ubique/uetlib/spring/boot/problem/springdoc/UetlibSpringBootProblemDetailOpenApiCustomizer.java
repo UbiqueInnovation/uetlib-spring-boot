@@ -4,6 +4,7 @@ import static java.util.Objects.requireNonNull;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.media.Schema;
+
 import org.springdoc.core.customizers.OpenApiCustomizer;
 import org.springframework.http.ProblemDetail;
 

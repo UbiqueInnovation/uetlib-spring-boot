@@ -14,7 +14,7 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.read.ListAppender;
 import ch.ubique.uetlib.spring.boot.problem.AbstractThrowableProblem;
 import ch.ubique.uetlib.spring.boot.problem.TestException;
-import ch.ubique.uetlib.spring.validation.ResponseValidationException;
+import ch.ubique.uetlib.spring.boot.validation.ResponseValidationException;
 
 import jakarta.validation.ConstraintViolationException;
 

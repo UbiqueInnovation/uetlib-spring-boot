@@ -1,10 +1,9 @@
 package ch.ubique.uetlib.spring.boot.problem;
 
 import ch.ubique.uetlib.spring.boot.problem.errortype.ProblemErrorType;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -13,6 +12,10 @@ import org.jspecify.annotations.Nullable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ProblemDetail;
+
+import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class AbstractThrowableProblem extends RuntimeException
         implements BaseThrowableProblem {

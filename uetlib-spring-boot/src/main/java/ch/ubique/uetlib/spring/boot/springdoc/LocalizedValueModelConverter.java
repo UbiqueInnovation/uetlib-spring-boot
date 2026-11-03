@@ -2,17 +2,21 @@ package ch.ubique.uetlib.spring.boot.springdoc;
 
 import ch.ubique.uetlib.core.localized.LocalizedValue;
 import ch.ubique.uetlib.core.localized.annotation.JsonLocalizedValue;
+
 import com.fasterxml.jackson.databind.JavaType;
+
 import io.swagger.v3.core.converter.AnnotatedType;
 import io.swagger.v3.core.converter.ModelConverter;
 import io.swagger.v3.core.converter.ModelConverterContext;
 import io.swagger.v3.oas.models.media.MapSchema;
 import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.media.StringSchema;
-import java.util.Iterator;
-import java.util.Objects;
+
 import org.jspecify.annotations.Nullable;
 import org.springdoc.core.providers.ObjectMapperProvider;
+
+import java.util.Iterator;
+import java.util.Objects;
 
 public final class LocalizedValueModelConverter implements ModelConverter {
 

@@ -17,6 +17,10 @@
     <description>Spring Boot auto-configuration and backend integrations.</description>
     <url>https://github.com/UbiqueInnovation/uetlib-spring-boot</url>
 
+    <properties>
+        <central.publishing.skip>true</central.publishing.skip>
+    </properties>
+
     <dependencyManagement>
         <dependencies>
             <dependency>

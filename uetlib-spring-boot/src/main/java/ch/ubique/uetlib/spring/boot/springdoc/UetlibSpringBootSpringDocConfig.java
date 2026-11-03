@@ -4,19 +4,22 @@ import static ch.ubique.uetlib.core.utils.TimeUtils.TIME_UTILS_EUROPE_ZURICH;
 import static ch.ubique.uetlib.core.utils.TimeUtils.toMillis;
 
 import com.github.zafarkhaja.semver.Version;
+
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.media.NumberSchema;
 import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.media.StringSchema;
+
+import org.apache.commons.lang3.RandomUtils;
+import org.springdoc.core.customizers.GlobalOpenApiCustomizer;
+import org.springdoc.core.utils.SpringDocUtils;
+
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalTime;
 import java.time.ZonedDateTime;
-import org.apache.commons.lang3.RandomUtils;
-import org.springdoc.core.customizers.GlobalOpenApiCustomizer;
-import org.springdoc.core.utils.SpringDocUtils;
 
 @SuppressWarnings("unused")
 public final class UetlibSpringBootSpringDocConfig {

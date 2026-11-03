@@ -3,6 +3,7 @@ package ch.ubique.uetlib.spring.boot.jackson.autoconfigure;
 import ch.ubique.uetlib.spring.boot.jackson.UetlibJacksonDateTimeJsonMapperBuilderCustomizer;
 import ch.ubique.uetlib.spring.boot.jackson.UetlibJacksonEnumJsonMapperBuilderCustomizer;
 import ch.ubique.uetlib.spring.boot.jackson.UetlibJacksonVersionJsonMapperBuilderCustomizer;
+
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.jackson.autoconfigure.JacksonAutoConfiguration;
 import org.springframework.context.annotation.Import;

@@ -2,18 +2,20 @@ package ch.ubique.uetlib.spring.boot.problem.handler;
 
 import static ch.ubique.uetlib.spring.boot.problem.errortype.TestErrorType.ERROR_TEST1;
 import static ch.ubique.uetlib.spring.boot.problem.handler.trait.ThrowableProblemAdviceTrait.PROBLEM_CODE_HEADER;
-import static java.util.Objects.requireNonNull;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import static java.util.Objects.requireNonNull;
 
 import ch.ubique.uetlib.spring.boot.problem.AbstractThrowableProblem;
 import ch.ubique.uetlib.spring.boot.problem.TestException;
 import ch.ubique.uetlib.spring.boot.problem.TestExceptionWithHeaders;
 import ch.ubique.uetlib.spring.boot.problem.errortype.TestErrorType;
 import ch.ubique.uetlib.spring.boot.problem.handler.config.UetlibExceptionHandlerTestConfig;
+
 import com.google.common.base.CaseFormat;
-import java.util.Locale;
-import java.util.NoSuchElementException;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,9 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
+
+import java.util.Locale;
+import java.util.NoSuchElementException;
 
 @ActiveProfiles("test")
 @SpringBootTest(

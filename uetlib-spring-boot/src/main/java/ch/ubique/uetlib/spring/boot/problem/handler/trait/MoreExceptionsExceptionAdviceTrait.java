@@ -4,13 +4,15 @@ import static java.util.Objects.requireNonNullElse;
 
 import ch.ubique.uetlib.core.exception.ResourceNotFoundException;
 import ch.ubique.uetlib.spring.boot.problem.handler.UetlibExceptionHandlerSkeletonTrait;
-import java.util.NoSuchElementException;
+
 import org.jspecify.annotations.Nullable;
 import org.springframework.context.MessageSource;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
+import java.util.NoSuchElementException;
 
 public interface MoreExceptionsExceptionAdviceTrait extends UetlibExceptionHandlerSkeletonTrait {
 

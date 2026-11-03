@@ -1,12 +1,15 @@
 package ch.ubique.uetlib.spring.boot.logbook;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import java.util.List;
-import java.util.Set;
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
+
+import java.util.List;
+import java.util.Set;
 
 /** Configuration properties for logbook configuration . */
 @ConfigurationProperties(prefix = "ch.ubique.backend.spring.boot.logbook")

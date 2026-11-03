@@ -3,6 +3,7 @@ package ch.ubique.uetlib.spring.boot.http.restclient;
 import static org.springframework.http.HttpHeaders.USER_AGENT;
 
 import ch.ubique.uetlib.spring.boot.http.UetlibSpringBootHttpProperties;
+
 import org.springframework.boot.restclient.RestClientCustomizer;
 import org.springframework.web.client.RestClient;
 

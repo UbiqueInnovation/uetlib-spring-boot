@@ -5,11 +5,13 @@ import static ch.ubique.uetlib.spring.boot.springdoc.UetlibSpringBootSpringDocCo
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.media.*;
-import java.util.List;
-import java.util.function.Consumer;
+
 import org.locationtech.jts.geom.*;
 import org.springdoc.core.customizers.GlobalOpenApiCustomizer;
 import org.springdoc.core.utils.SpringDocUtils;
+
+import java.util.List;
+import java.util.function.Consumer;
 
 @SuppressWarnings({"unused", "unchecked"})
 public final class UetlibSpringBootGeoSpringDocConfig {

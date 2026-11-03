@@ -1,6 +1,7 @@
 package ch.ubique.uetlib.spring.boot.problem.errortype;
 
 import com.google.common.base.CaseFormat;
+
 import java.io.Serializable;
 import java.net.URI;
 
