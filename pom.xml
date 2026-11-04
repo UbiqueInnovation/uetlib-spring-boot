@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>ch.ubique.uetlib</groupId>
+        <groupId>ch.uetlib</groupId>
         <artifactId>uetlib-parent</artifactId>
         <version>2026.11.0</version>
         <relativePath/>
@@ -51,7 +51,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>ch.ubique.uetlib</groupId>
+            <groupId>ch.uetlib</groupId>
             <artifactId>uetlib-test</artifactId>
             <scope>test</scope>
         </dependency>
@@ -71,17 +71,17 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>ch.ubique.uetlib</groupId>
+                <groupId>ch.uetlib</groupId>
                 <artifactId>uetlib-test</artifactId>
                 <version>3.0.0</version>
             </dependency>
             <dependency>
-                <groupId>ch.ubique.uetlib</groupId>
+                <groupId>ch.uetlib</groupId>
                 <artifactId>uetlib-core</artifactId>
                 <version>3.0.0</version>
             </dependency>
             <dependency>
-                <groupId>ch.ubique.uetlib</groupId>
+                <groupId>ch.uetlib</groupId>
                 <artifactId>uetlib-geo</artifactId>
                 <version>4.0.0</version>
             </dependency>
