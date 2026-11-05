@@ -89,6 +89,12 @@ the exception as `Exception`, so it will not select the `ProjectException` overl
 
 This logging policy is separate from `spring.mvc.log-resolved-exception`, which controls Spring's
 own resolver WARN logging. That property does not disable uetlib's logging.
+## Geo integration
+
+Use `ch.uetlib:uetlib-geo-spring-boot` from the geo repository for geospatial JSON and Springdoc integration.
+The former `uetlib-spring-boot-geo` module has moved there, under `ch.uetlib.geo.spring.boot`.
+The base Spring Boot reactor no longer depends on geo.
+
 ## License
 
 Except where otherwise noted, original uetlib code is licensed under the [Apache License 2.0](LICENSE). Third-party files retain their original license terms; see [NOTICE](NOTICE) and any third-party notices in this repository.
