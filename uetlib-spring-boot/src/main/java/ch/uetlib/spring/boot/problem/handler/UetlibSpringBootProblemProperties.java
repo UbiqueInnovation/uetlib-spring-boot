@@ -6,7 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
 /** Configuration properties for http client configuration . */
-@ConfigurationProperties(prefix = "ch.ubique.backend.spring.boot.problem")
+@ConfigurationProperties(prefix = "ch.uetlib.spring.boot.problem")
 @Validated
 public final class UetlibSpringBootProblemProperties {
     @Schema(

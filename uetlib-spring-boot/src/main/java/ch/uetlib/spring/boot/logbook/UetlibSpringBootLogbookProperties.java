@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Set;
 
 /** Configuration properties for logbook configuration . */
-@ConfigurationProperties(prefix = "ch.ubique.backend.spring.boot.logbook")
+@ConfigurationProperties(prefix = "ch.uetlib.spring.boot.logbook")
 @Validated
 public final class UetlibSpringBootLogbookProperties {
     @Schema(description = "Configure logbook obfuscation")

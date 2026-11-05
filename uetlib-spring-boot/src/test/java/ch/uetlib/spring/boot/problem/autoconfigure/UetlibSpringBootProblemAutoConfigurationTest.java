@@ -39,7 +39,7 @@ class UetlibSpringBootProblemAutoConfigurationTest {
     void bindsPropertiesForAdviceCreatedByBeanMethod() {
         contextRunner
                 .withPropertyValues(
-                        "ch.ubique.backend.spring.boot.problem.include-constraint-violations=true")
+                        "ch.uetlib.spring.boot.problem.include-constraint-violations=true")
                 .run(
                         context -> {
                             assertThat(context).hasNotFailed();

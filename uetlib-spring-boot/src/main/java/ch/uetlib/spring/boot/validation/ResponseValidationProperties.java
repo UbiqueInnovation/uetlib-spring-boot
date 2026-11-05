@@ -9,7 +9,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
 /** Configuration properties for response validation. */
-@ConfigurationProperties(prefix = "ch.ubique.backend.spring.validation.response.fail")
+@ConfigurationProperties(prefix = "ch.uetlib.spring.boot.validation.response.fail")
 @Validated
 public final class ResponseValidationProperties {
     @Schema(

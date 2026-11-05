@@ -3,14 +3,14 @@ package ch.uetlib.spring.boot.validation;
 /**
  * Actions to take when response validation fails.
  *
- * <p>Configure via {@code ch.uetlib.spring.validation.response.fail.action}. Default is {@link
+ * <p>Configure via {@code ch.uetlib.spring.boot.validation.response.fail.action}. Default is {@link
  * #DISABLE} for performance.
  *
  * <h3>Configuration:</h3>
  *
  * <pre>{@code
  * # application.properties
- * ch.uetlib.spring.validation.response.fail.action=THROW
+ * ch.uetlib.spring.boot.validation.response.fail.action=THROW
  * }</pre>
  *
  * @see ResponseValidationAdvice
@@ -22,7 +22,7 @@ public enum ResponseValidationAction {
 
     /**
      * Log validation failures without throwing exceptions. Uses configured log level from {@code
-     * ch.uetlib.spring.validation.response.fail.log-level}.
+     * ch.uetlib.spring.boot.validation.response.fail.log-level}.
      */
     LOG,
 
