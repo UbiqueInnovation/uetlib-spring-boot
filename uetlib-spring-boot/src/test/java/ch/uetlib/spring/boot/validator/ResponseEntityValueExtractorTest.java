@@ -133,7 +133,7 @@ final class ResponseEntityValueExtractorTest {
 
     private record StringBodyBean(ResponseEntity<@NotBlank String> body) {}
 
-    private record UserBodyBean(@Valid ResponseEntity<User> body) {}
+    private record UserBodyBean(ResponseEntity<@Valid User> body) {}
 
     private record User(@NotBlank String name) {}
 }
