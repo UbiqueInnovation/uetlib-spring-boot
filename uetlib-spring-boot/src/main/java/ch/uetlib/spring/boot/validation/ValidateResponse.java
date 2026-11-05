@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
  *
  * <p>Can be applied to controller classes (all methods) or individual methods. Response objects are
  * validated using Jakarta Bean Validation before serialization. Behavior controlled by {@code
- * ch.uetlib.spring.validation.response.fail.action}.
+ * ch.uetlib.spring.boot.validation.response.fail.action}.
  *
  * @see ResponseValidationAdvice
  * @see ResponseValidationException
