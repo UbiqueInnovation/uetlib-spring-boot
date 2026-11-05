@@ -25,11 +25,6 @@
         <dependencies>
             <dependency>
                 <groupId>ch.uetlib</groupId>
-                <artifactId>uetlib-spring-boot-geo</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>ch.uetlib</groupId>
                 <artifactId>uetlib-spring-boot-security</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -49,10 +44,6 @@
         <dependency>
             <groupId>ch.uetlib</groupId>
             <artifactId>uetlib-spring-boot-security</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>ch.uetlib</groupId>
-            <artifactId>uetlib-spring-boot-geo</artifactId>
         </dependency>
     </dependencies>
 </project>

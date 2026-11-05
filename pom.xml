@@ -44,7 +44,6 @@
 
     <modules>
         <module>uetlib-spring-boot</module>
-        <module>uetlib-spring-boot-geo</module>
         <module>uetlib-spring-boot-security</module>
         <module>uetlib-spring-boot-coverage</module>
     </modules>
@@ -79,11 +78,6 @@
                 <groupId>ch.uetlib</groupId>
                 <artifactId>uetlib-core</artifactId>
                 <version>3.0.0</version>
-            </dependency>
-            <dependency>
-                <groupId>ch.uetlib</groupId>
-                <artifactId>uetlib-geo</artifactId>
-                <version>4.0.0</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
