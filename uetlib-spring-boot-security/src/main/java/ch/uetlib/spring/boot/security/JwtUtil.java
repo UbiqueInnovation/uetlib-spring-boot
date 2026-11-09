@@ -1,0 +1,192 @@
+package ch.uetlib.spring.boot.security;
+
+import static java.util.Objects.requireNonNull;
+
+import org.jspecify.annotations.Nullable;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
+
+import java.time.Instant;
+import java.util.List;
+import java.util.function.Function;
+import java.util.function.Supplier;
+
+@SuppressWarnings("unused")
+public final class JwtUtil {
+
+    private JwtUtil() {}
+
+    public static Jwt getJwt() {
+        if (SecurityContextHolder.getContext().getAuthentication()
+                        instanceof final Authentication authentication
+                && authentication.getPrincipal() instanceof final Jwt jwt) {
+            return jwt;
+        }
+
+        throw new BadCredentialsException("Unable to retrieve JWT");
+    }
+
+    public static String getClaimAsString(final String claimName) {
+        return notNullOrThrow(getJwt().getClaimAsString(claimName), claimName);
+    }
+
+    public static String getClaimAsString(final String claimName, final String fallbackClaimName) {
+        return notNullOrFallback(
+                getJwt().getClaimAsString(claimName), () -> getClaimAsString(fallbackClaimName));
+    }
+
+    public static List<String> getClaimAsStringList(final String claimName) {
+        return notNullOrThrow(getJwt().getClaimAsStringList(claimName), claimName);
+    }
+
+    public static List<String> getClaimAsStringList(
+            final String claimName, final String fallbackClaimName) {
+        return notNullOrFallback(
+                getJwt().getClaimAsStringList(claimName),
+                () -> getClaimAsStringList(fallbackClaimName));
+    }
+
+    public static Boolean getClaimAsBoolean(final String claimName) {
+        return notNullOrThrow(getJwt().getClaimAsBoolean(claimName), claimName);
+    }
+
+    public static Boolean getClaimAsBoolean(
+            final String claimName, final String fallbackClaimName) {
+        return notNullOrFallback(
+                getJwt().getClaimAsBoolean(claimName), () -> getClaimAsBoolean(fallbackClaimName));
+    }
+
+    public static Instant getClaimAsInstant(final String claimName) {
+        return notNullOrThrow(getJwt().getClaimAsInstant(claimName), claimName);
+    }
+
+    public static Instant getClaimAsInstant(
+            final String claimName, final String fallbackClaimName) {
+        return notNullOrFallback(
+                getJwt().getClaimAsInstant(claimName), () -> getClaimAsInstant(fallbackClaimName));
+    }
+
+    public static long getClaimAsLong(final String claimName) {
+        return notNullOrThrow(claimAsLong(getJwt().getClaim(claimName)), claimName);
+    }
+
+    public static long getClaimAsLong(final String claimName, final String fallbackClaimName) {
+        return notNullOrFallback(
+                claimAsLong(getJwt().getClaim(claimName)), () -> getClaimAsLong(fallbackClaimName));
+    }
+
+    public static List<Long> getClaimAsLongList(final String claimName) {
+        return claimAsList(claimName, JwtUtil::claimAsLong);
+    }
+
+    public static List<Long> getClaimAsLongList(
+            final String claimName, final String fallbackClaimName) {
+        return claimAsList(claimName, fallbackClaimName, JwtUtil::claimAsLong);
+    }
+
+    public static double getClaimAsDouble(final String claimName) {
+        return notNullOrThrow(claimAsDouble(getJwt().getClaim(claimName)), claimName);
+    }
+
+    public static double getClaimAsDouble(final String claimName, final String fallbackClaimName) {
+        return notNullOrFallback(
+                claimAsDouble(getJwt().getClaim(claimName)),
+                () -> getClaimAsDouble(fallbackClaimName));
+    }
+
+    public static List<Double> getClaimAsDoubleList(final String claimName) {
+        return claimAsList(claimName, JwtUtil::claimAsDouble);
+    }
+
+    public static List<Double> getClaimAsDoubleList(
+            final String claimName, final String fallbackClaimName) {
+        return claimAsList(claimName, fallbackClaimName, JwtUtil::claimAsDouble);
+    }
+
+    private static <T> List<T> claimAsList(
+            final String claimName, final Function<Object, @Nullable T> claimConverter) {
+        final var claim = requireNonNull(getJwt().getClaims().get(claimName));
+        return claimAsList(claim, claimName, claimConverter);
+    }
+
+    private static <T> List<T> claimAsList(
+            final String claimName,
+            final String fallbackClaimName,
+            final Function<Object, @Nullable T> claimConverter) {
+        final var claim = getJwt().getClaims().get(claimName);
+        if (claim != null) {
+            return claimAsList(claim, claimName, claimConverter);
+        }
+        return claimAsList(fallbackClaimName, claimConverter);
+    }
+
+    @SuppressWarnings("java:S3740")
+    private static <T> List<T> claimAsList(
+            final Object claim,
+            final String claimName,
+            final Function<Object, @Nullable T> claimConverter) {
+        //noinspection rawtypes
+        if (claim instanceof final List claimList) {
+            //noinspection unchecked
+            return ((List<Object>) claimList)
+                    .stream()
+                            .map(
+                                    claimObject ->
+                                            notNullOrThrow(
+                                                    claimConverter.apply(claimObject), claimName))
+                            .toList();
+        }
+        return List.of(notNullOrThrow(claimConverter.apply(claim), claimName));
+    }
+
+    private static <T> T notNullOrThrow(final @Nullable T claimValue, final String claimName) {
+        if (claimValue != null) {
+            return claimValue;
+        }
+
+        throw claimNotFoundException(claimName);
+    }
+
+    private static <T> T notNullOrFallback(
+            final @Nullable T claimValue, final Supplier<T> fallbackClaimSupplier) {
+        if (claimValue != null) {
+            return claimValue;
+        }
+        return fallbackClaimSupplier.get();
+    }
+
+    private static @Nullable Long claimAsLong(final @Nullable Object claimObject) {
+        try {
+            return switch (claimObject) {
+                case null -> null;
+                case final String claim -> Long.parseLong(claim);
+                default -> ((Number) claimObject).longValue();
+            };
+        } catch (final NullPointerException | NumberFormatException exception) {
+            return null;
+        }
+    }
+
+    private static @Nullable Double claimAsDouble(final @Nullable Object claimObject) {
+        try {
+            return switch (claimObject) {
+                case null -> null;
+                case final String claim -> Double.parseDouble(claim);
+                default -> ((Number) claimObject).doubleValue();
+            };
+        } catch (final NullPointerException | NumberFormatException exception) {
+            return null;
+        }
+    }
+
+    public static String getTokenValue() {
+        return getJwt().getTokenValue();
+    }
+
+    private static AccessDeniedException claimNotFoundException(final String claimName) {
+        return new AccessDeniedException("Claim '" + claimName + "' not found in JWT");
+    }
+}
