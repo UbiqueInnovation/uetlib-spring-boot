@@ -6,27 +6,30 @@
     <packaging>jar</packaging>
 
     <parent>
-        <groupId>ch.ubique</groupId>
+        <groupId>ch.uetlib</groupId>
         <artifactId>uetlib-spring-boot-parent</artifactId>
-        <version>4.0.0-SNAPSHOT</version>
+        <version>5.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>uetlib-spring-boot-coverage</artifactId>
 
+    <name>uetlib-spring-boot-coverage</name>
+    <description>Spring Boot auto-configuration and backend integrations.</description>
+    <url>https://github.com/UbiqueInnovation/uetlib-spring-boot</url>
+
+    <properties>
+        <central.publishing.skip>true</central.publishing.skip>
+    </properties>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>ch.ubique</groupId>
-                <artifactId>uetlib-spring-boot-geo</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>ch.ubique</groupId>
+                <groupId>ch.uetlib</groupId>
                 <artifactId>uetlib-spring-boot-security</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>ch.ubique</groupId>
+                <groupId>ch.uetlib</groupId>
                 <artifactId>uetlib-spring-boot</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -35,16 +38,12 @@
 
     <dependencies>
         <dependency>
-            <groupId>ch.ubique</groupId>
+            <groupId>ch.uetlib</groupId>
             <artifactId>uetlib-spring-boot</artifactId>
         </dependency>
         <dependency>
-            <groupId>ch.ubique</groupId>
+            <groupId>ch.uetlib</groupId>
             <artifactId>uetlib-spring-boot-security</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>ch.ubique</groupId>
-            <artifactId>uetlib-spring-boot-geo</artifactId>
         </dependency>
     </dependencies>
 </project>

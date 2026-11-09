@@ -1,5 +1,51 @@
 # CHANGELOG
 
+## 4.0.2
+
+- Update shared Maven build and publish workflows to v0.2.4.
+
+## 4.0.1
+
+- Move Java packages and class references from `ch.ubique.uetlib` to `ch.uetlib`.
+
+- Align Spring Boot helper, validation and security packages under `ch.uetlib.spring.boot.*`; migrate known
+  configuration-property names to `ch.uetlib.*`.
+
+### Breaking changes
+
+- Rename uetlib configuration keys and property references to `ch.uetlib.*`, including Spring bindings, `@Value`,
+  conditions, scheduling expressions and configuration files. Migrate external deployment configuration as well.
+
+- Move `uetlib-spring-boot-geo` to the geo repository as `uetlib-geo-spring-boot`, with packages under
+  `ch.uetlib.geo.spring.boot`. This resolves the repo-level release-order cycle
+  `uetlib-geo → uetlib-job → uetlib-spring-boot → uetlib-geo`; the artifact dependencies themselves were acyclic.
+  Update dependencies and imports, or use the OpenRewrite and Renovate migrations.
+
+- Move Java packages from `ch.ubique.backend` to `ch.uetlib`, including class-name resources. The combined OpenRewrite
+  migration also renames known Spring configuration keys to `ch.uetlib.*`.
+- Remove the inherited Ubique Artifactory repository and deployment destination; private consumers must configure their
+  own registry.
+- Add Apache-2.0 licensing for original code, preserve third-party licenses, and add public project metadata and
+  contribution/security guidance.
+
+- Move Maven coordinates from `ch.ubique:uetlib-*` to `ch.uetlib:uetlib-*`.
+- Align uetlib parent, BOM and library references with the migration releases.
+
+### Migration
+
+After the migration releases and `uetlib-rewrite` are published, run this from the consuming project, then review the
+diff and run its tests:
+
+```sh
+mvn -U org.openrewrite.maven:rewrite-maven-plugin:6.46.1:run \
+  -Drewrite.recipeArtifactCoordinates=ch.uetlib:uetlib-rewrite:RELEASE \
+  -Drewrite.activeRecipes=ch.uetlib.MigrateToPublicUetlib
+```
+
+The recipe updates Maven coordinates/versions, Java references and known class-name resources. Review application-owned
+packages under the old namespace, Kotlin, reflection patterns, native-access module flags and persisted class names
+separately. Use `:dryRun` instead of `:run` to preview a patch.
+
 ## 3.3.1
 
 - `getLocalizedProblemField` used `localizedTitleArgs` also for localized detail field in problem response

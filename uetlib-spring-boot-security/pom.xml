@@ -5,18 +5,22 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>ch.ubique</groupId>
+        <groupId>ch.uetlib</groupId>
         <artifactId>uetlib-spring-boot-parent</artifactId>
-        <version>4.0.0-SNAPSHOT</version>
+        <version>5.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>uetlib-spring-boot-security</artifactId>
     <packaging>jar</packaging>
 
+    <name>uetlib-spring-boot-security</name>
+    <description>Spring Boot auto-configuration and backend integrations.</description>
+    <url>https://github.com/UbiqueInnovation/uetlib-spring-boot</url>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>ch.ubique</groupId>
+                <groupId>ch.uetlib</groupId>
                 <artifactId>uetlib-spring-boot</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -26,7 +30,7 @@
     <dependencies>
         <!-- Core -->
         <dependency>
-            <groupId>ch.ubique</groupId>
+            <groupId>ch.uetlib</groupId>
             <artifactId>uetlib-spring-boot</artifactId>
         </dependency>
 

@@ -5,15 +5,37 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>ch.ubique</groupId>
+        <groupId>ch.uetlib</groupId>
         <artifactId>uetlib-parent</artifactId>
-        <version>2026.10.1</version>
+        <version>2026.11.1</version>
         <relativePath/>
     </parent>
 
     <artifactId>uetlib-spring-boot-parent</artifactId>
-    <version>4.0.0-SNAPSHOT</version>
+    <version>5.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
+
+    <name>uetlib-spring-boot-parent</name>
+    <description>Spring Boot auto-configuration and backend integrations.</description>
+    <url>https://github.com/UbiqueInnovation/uetlib-spring-boot</url>
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <organization>
+        <name>Ubique Innovation AG</name>
+        <url>https://www.ubique.ch</url>
+    </organization>
+    <developers>
+        <developer>
+            <name>Ubique Innovation AG</name>
+            <organization>Ubique Innovation AG</organization>
+            <organizationUrl>https://www.ubique.ch</organizationUrl>
+        </developer>
+    </developers>
 
     <properties>
         <sonar.projectName>uetlib-spring-boot</sonar.projectName>
@@ -22,14 +44,13 @@
 
     <modules>
         <module>uetlib-spring-boot</module>
-        <module>uetlib-spring-boot-geo</module>
         <module>uetlib-spring-boot-security</module>
         <module>uetlib-spring-boot-coverage</module>
     </modules>
 
     <dependencies>
         <dependency>
-            <groupId>ch.ubique</groupId>
+            <groupId>ch.uetlib</groupId>
             <artifactId>uetlib-test</artifactId>
             <scope>test</scope>
         </dependency>
@@ -49,42 +70,23 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>ch.ubique</groupId>
+                <groupId>ch.uetlib</groupId>
                 <artifactId>uetlib-test</artifactId>
-                <version>2.2.2</version>
+                <version>3.0.1</version>
             </dependency>
             <dependency>
-                <groupId>ch.ubique</groupId>
+                <groupId>ch.uetlib</groupId>
                 <artifactId>uetlib-core</artifactId>
-                <version>2.7.0</version>
-            </dependency>
-            <dependency>
-                <groupId>ch.ubique</groupId>
-                <artifactId>uetlib-geo</artifactId>
-                <version>3.4.0</version>
+                <version>3.0.1</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
 
-    <repositories>
-        <!-- ubique artifactory are necessary for resolution of the parent. -->
-        <!-- Other repositories are resolved in the parent repositories. -->
-        <repository>
-            <id>ubique-artifactory-virtual</id>
-            <name>ubique</name>
-            <url>https://artifactory.ubique.ch/artifactory/ubique</url>
-        </repository>
-    </repositories>
 
-    <distributionManagement>
-        <repository>
-            <id>ubique-artifactory-virtual</id>
-            <name>ubique</name>
-            <url>https://artifactory.ubique.ch/artifactory/ubique</url>
-        </repository>
-    </distributionManagement>
 
-    <scm child.scm.url.inherit.append.path="false">
+    <scm child.scm.url.inherit.append.path="false" child.scm.connection.inherit.append.path="false" child.scm.developerConnection.inherit.append.path="false">
+        <connection>scm:git:https://github.com/UbiqueInnovation/uetlib-spring-boot.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/UbiqueInnovation/uetlib-spring-boot.git</developerConnection>
         <url>https://github.com/UbiqueInnovation/uetlib-spring-boot</url>
     </scm>
 </project>
