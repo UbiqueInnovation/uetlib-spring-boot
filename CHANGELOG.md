@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 4.0.3
+
+- Document known open enum values in OpenAPI schemas and register the Jackson module for lossless unknown values.
+
 ## 4.0.2
 
 - Move Java packages and class references from `ch.ubique.uetlib` to `ch.uetlib`.
