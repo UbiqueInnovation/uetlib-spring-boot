@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 4.0.4
+
+- Use shared Maven build and publish workflows at `v1.0.0` to enforce formatting checks in CI.
+
 ## 4.0.3
 
 - Document known open enum values in OpenAPI schemas and register the Jackson module for lossless unknown values.
