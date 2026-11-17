@@ -17,11 +17,14 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.springframework.context.support.StaticApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.*;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.mock.http.MockHttpInputMessage;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 
@@ -40,6 +43,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Stream;
 
+@SpringJUnitConfig(UetlibExceptionHandlerDeserializationTest.TestConfig.class)
 class UetlibExceptionHandlerDeserializationTest {
 
     private final JsonMapper mapper =
@@ -47,6 +51,8 @@ class UetlibExceptionHandlerDeserializationTest {
                     .enable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
                     .enable(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES)
                     .build();
+
+    @Autowired private TestHandler handler;
 
     static Stream<Arguments> invalidInputs() {
         return Stream.of(
@@ -273,12 +279,11 @@ class UetlibExceptionHandlerDeserializationTest {
                 new HttpMessageNotReadableException(
                         "Failed to read request", cause, new MockHttpInputMessage(new byte[0]));
         final var response =
-                new TestHandler()
-                        .handleHttpMessageNotReadable(
-                                exception,
-                                HttpHeaders.EMPTY,
-                                HttpStatus.BAD_REQUEST,
-                                new ServletWebRequest(new MockHttpServletRequest()));
+                handler.handleHttpMessageNotReadable(
+                        exception,
+                        HttpHeaders.EMPTY,
+                        HttpStatus.BAD_REQUEST,
+                        new ServletWebRequest(new MockHttpServletRequest()));
         assertNotNull(response);
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertEquals(List.of(new Violation(field, message)), response.getBody());
@@ -295,12 +300,11 @@ class UetlibExceptionHandlerDeserializationTest {
                 new HttpMessageNotReadableException(
                         "Failed to read request", mismatch, new MockHttpInputMessage(new byte[0]));
         final var response =
-                new TestHandler()
-                        .handleHttpMessageNotReadable(
-                                exception,
-                                HttpHeaders.EMPTY,
-                                HttpStatus.BAD_REQUEST,
-                                new ServletWebRequest(new MockHttpServletRequest()));
+                handler.handleHttpMessageNotReadable(
+                        exception,
+                        HttpHeaders.EMPTY,
+                        HttpStatus.BAD_REQUEST,
+                        new ServletWebRequest(new MockHttpServletRequest()));
         assertNotNull(response);
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertEquals(List.of(new Violation("value", "invalid value")), response.getBody());
@@ -322,22 +326,33 @@ class UetlibExceptionHandlerDeserializationTest {
         final var exception =
                 new HttpMessageNotReadableException(
                         "Failed to read request", cause, new MockHttpInputMessage(new byte[0]));
-        final var handler = new UetlibExceptionHandler() {};
-        try (final var context = new StaticApplicationContext()) {
-            handler.setApplicationContext(context);
-            final var response =
-                    handler.handleHttpMessageNotReadable(
-                            exception,
-                            HttpHeaders.EMPTY,
-                            HttpStatus.BAD_REQUEST,
-                            new ServletWebRequest(new MockHttpServletRequest()));
-            assertNotNull(response);
-            assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-            final var problem = assertInstanceOf(ProblemDetail.class, response.getBody());
-            assertEquals("Failed to read request", problem.getDetail());
-            assertTrue(
-                    problem.getProperties() == null
-                            || !problem.getProperties().containsKey("violations"));
+        final var response =
+                handler.handleHttpMessageNotReadable(
+                        exception,
+                        HttpHeaders.EMPTY,
+                        HttpStatus.BAD_REQUEST,
+                        new ServletWebRequest(new MockHttpServletRequest()));
+        assertNotNull(response);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        final var problem = assertInstanceOf(ProblemDetail.class, response.getBody());
+        assertEquals("Failed to read request", problem.getDetail());
+        assertTrue(
+                problem.getProperties() == null
+                        || !problem.getProperties().containsKey("violations"));
+    }
+
+    @Configuration(proxyBeanMethods = false)
+    static class TestConfig {
+        @Bean
+        TestHandler handler() {
+            return new TestHandler();
+        }
+
+        @Bean
+        UetlibSpringBootProblemProperties problemProperties() {
+            final var properties = new UetlibSpringBootProblemProperties();
+            properties.setIncludeConstraintViolations(true);
+            return properties;
         }
     }
 

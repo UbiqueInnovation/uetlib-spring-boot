@@ -1,7 +1,4 @@
-package ch.uetlib.spring.boot.problem.handler.trait;
-
-import ch.uetlib.spring.boot.problem.handler.trait.violation.Violation;
-import ch.uetlib.spring.boot.problem.handler.trait.violation.ViolationProblemDetailTrait;
+package ch.uetlib.spring.boot.problem.handler.trait.violation;
 
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
@@ -28,7 +25,6 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -47,11 +43,16 @@ public interface JacksonDeserializationAdviceTrait extends ViolationProblemDetai
             final HttpHeaders headers,
             final HttpStatusCode status,
             final WebRequest request) {
-        if (ex.getCause() instanceof final MismatchedInputException mismatch) {
+
+        final var includeConstraintViolations =
+                getUetlibSpringBootProblemProperties().isIncludeConstraintViolations();
+
+        if (includeConstraintViolations
+                && ex.getCause() instanceof final MismatchedInputException mismatch) {
             final var violation = createDeserializationViolation(mismatch);
-            if (violation.isPresent()) {
+            if (violation != null) {
                 return newConstraintViolationProblemDetail(
-                        ex, headers, status, Stream.of(violation.get()), request);
+                        ex, headers, status, Stream.of(violation), request);
             }
         }
         final var body =
@@ -59,7 +60,7 @@ public interface JacksonDeserializationAdviceTrait extends ViolationProblemDetai
         return handleExceptionInternal(ex, body, headers, status, request);
     }
 
-    default Optional<Violation> createDeserializationViolation(
+    default @Nullable Violation createDeserializationViolation(
             final MismatchedInputException mismatch) {
         final var fieldName = new StringBuilder();
         for (final var reference : mismatch.getPath()) {
@@ -74,9 +75,8 @@ public interface JacksonDeserializationAdviceTrait extends ViolationProblemDetai
             }
         }
         return fieldName.isEmpty()
-                ? Optional.empty()
-                : Optional.of(
-                        new Violation(fieldName.toString(), deserializationMessage(mismatch)));
+                ? null
+                : new Violation(fieldName.toString(), deserializationMessage(mismatch));
     }
 
     default String deserializationMessage(final MismatchedInputException mismatch) {
