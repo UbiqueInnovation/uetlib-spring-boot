@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 4.1.0
+
+- Dedicated violation problem responses for JSON deserialization errors
+
 ## 4.0.4
 
 - Build pull requests, including forks, and pushes to `main` instead of every branch push; use shared Maven

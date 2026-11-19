@@ -5,6 +5,7 @@ import static java.util.Objects.requireNonNull;
 import ch.uetlib.spring.boot.problem.handler.trait.MoreExceptionsExceptionAdviceTrait;
 import ch.uetlib.spring.boot.problem.handler.trait.RestClientExceptionAdviceTrait;
 import ch.uetlib.spring.boot.problem.handler.trait.ThrowableProblemAdviceTrait;
+import ch.uetlib.spring.boot.problem.handler.trait.violation.JacksonDeserializationAdviceTrait;
 import ch.uetlib.spring.boot.problem.handler.trait.violation.ViolationAdviceTrait;
 
 import org.jspecify.annotations.NullMarked;
@@ -14,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.MessageSource;
 import org.springframework.http.*;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -24,6 +26,7 @@ public abstract class UetlibExceptionHandler extends ResponseEntityExceptionHand
         implements UetlibExceptionHandlerSkeletonTrait,
                 ThrowableProblemAdviceTrait,
                 ViolationAdviceTrait,
+                JacksonDeserializationAdviceTrait,
                 MoreExceptionsExceptionAdviceTrait,
                 RestClientExceptionAdviceTrait {
 
@@ -113,6 +116,16 @@ public abstract class UetlibExceptionHandler extends ResponseEntityExceptionHand
             final HttpStatusCode status,
             final WebRequest request) {
         return ViolationAdviceTrait.super.handleMethodArgumentNotValid(
+                ex, headers, status, request);
+    }
+
+    @Override
+    public @Nullable ResponseEntity<Object> handleHttpMessageNotReadable(
+            final HttpMessageNotReadableException ex,
+            final HttpHeaders headers,
+            final HttpStatusCode status,
+            final WebRequest request) {
+        return JacksonDeserializationAdviceTrait.super.handleHttpMessageNotReadable(
                 ex, headers, status, request);
     }
 }
