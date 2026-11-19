@@ -3,8 +3,7 @@
 ## UNRELEASED
 
 - Dedicated violation problem responses for JSON deserialization errors
-- Fix the warnings of Error Prone's default checks: `AbstractThrowableProblem` no longer overrides `equals` and
-  `hashCode` (they were identity-based already), API keys are compared as UTF-8 bytes, `JwtUtil.getJwt()` checks
+- Fix the warnings of Error Prone's default checks: API keys are compared as UTF-8 bytes, `JwtUtil.getJwt()` checks
   for a missing authentication explicitly, and Javadoc fixes.
 
 ## 4.0.4
