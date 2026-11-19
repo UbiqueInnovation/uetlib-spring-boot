@@ -17,6 +17,9 @@ import tools.jackson.databind.exc.UnrecognizedPropertyException;
 
 import java.net.URI;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.OffsetTime;
 import java.time.ZoneId;
 import java.time.temporal.TemporalAccessor;
 import java.time.temporal.TemporalAmount;
@@ -104,6 +107,11 @@ public interface JacksonDeserializationAdviceTrait extends ViolationProblemDetai
             // Java constant names need not match Jackson's accepted values (@JsonProperty,
             // @JsonValue, naming strategies, or custom deserializers).
             case final Class<?> type when type.isEnum() -> "must be a valid enum value";
+            case final Class<?> type when invalidFormat && type == LocalDate.class ->
+                    "must be a valid date";
+            case final Class<?> type
+                    when invalidFormat && (type == LocalTime.class || type == OffsetTime.class) ->
+                    "must be a valid time";
             case final Class<?> type
                     when invalidFormat
                             && (TemporalAccessor.class.isAssignableFrom(type)
@@ -121,8 +129,8 @@ public interface JacksonDeserializationAdviceTrait extends ViolationProblemDetai
                     "must be a valid URI";
             case final Class<?> type when invalidFormat && type == URL.class ->
                     "must be a valid URL";
-            case final Class<?> type when invalidFormat && type == byte[].class ->
-                    "must be a valid Base64 string";
+            case final Class<?> type when type == byte[].class ->
+                    "must be a valid Base64 string or an array of byte values";
             case final Class<?> type
                     when type.isArray() || Collection.class.isAssignableFrom(type) ->
                     "must be an array";
@@ -140,7 +148,7 @@ public interface JacksonDeserializationAdviceTrait extends ViolationProblemDetai
                             || type == long.class
                             || type == float.class
                             || type == double.class ->
-                    "must be a number";
+                    "must be a valid number within the supported range";
             case null, default -> "invalid value";
         };
     }

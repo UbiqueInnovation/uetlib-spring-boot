@@ -36,6 +36,9 @@ import tools.jackson.databind.json.JsonMapper;
 import java.net.URI;
 import java.net.URL;
 import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.OffsetTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -56,6 +59,30 @@ class UetlibExceptionHandlerDeserializationTest {
 
     static Stream<Arguments> invalidInputs() {
         return Stream.of(
+                Arguments.of(
+                        "{\"flag\":true,\"localDate\":\"invalid\"}",
+                        "localDate",
+                        "must be a valid date"),
+                Arguments.of(
+                        "{\"flag\":true,\"localTime\":\"invalid\"}",
+                        "localTime",
+                        "must be a valid time"),
+                Arguments.of(
+                        "{\"flag\":true,\"offsetTime\":\"invalid\"}",
+                        "offsetTime",
+                        "must be a valid time"),
+                Arguments.of(
+                        "{\"flag\":true,\"number\":\"2147483648\"}",
+                        "number",
+                        "must be a valid number within the supported range"),
+                Arguments.of(
+                        "{\"flag\":true,\"number\":{}}",
+                        "number",
+                        "must be a valid number within the supported range"),
+                Arguments.of(
+                        "{\"flag\":true,\"bytes\":{}}",
+                        "bytes",
+                        "must be a valid Base64 string or an array of byte values"),
                 Arguments.of(
                         /* language=JSON */
                         """
@@ -157,7 +184,7 @@ class UetlibExceptionHandlerDeserializationTest {
                         }
                         """,
                         "bytes",
-                        "must be a valid Base64 string"),
+                        "must be a valid Base64 string or an array of byte values"),
                 Arguments.of(
                         /* language=JSON */
                         """
@@ -167,7 +194,7 @@ class UetlibExceptionHandlerDeserializationTest {
                         }
                         """,
                         "number",
-                        "must be a number"),
+                        "must be a valid number within the supported range"),
                 Arguments.of(
                         /* language=JSON */
                         """
@@ -287,6 +314,14 @@ class UetlibExceptionHandlerDeserializationTest {
         assertNotNull(response);
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertEquals(List.of(new Violation(field, message)), response.getBody());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"\"AQI=\"", "[1,2]"})
+    void acceptsBothByteArrayRepresentations(final String json) {
+        final var payload =
+                mapper.readValue("{\"flag\":true,\"bytes\":" + json + "}", Payload.class);
+        assertArrayEquals(new byte[] {1, 2}, payload.bytes());
     }
 
     @Test
@@ -411,6 +446,9 @@ class UetlibExceptionHandlerDeserializationTest {
     record Payload(
             Option option,
             ZonedDateTime date,
+            LocalDate localDate,
+            LocalTime localTime,
+            OffsetTime offsetTime,
             Duration duration,
             UUID uuid,
             ZoneId zone,
