@@ -2,10 +2,10 @@ package ch.uetlib.spring.boot.problem.handler;
 
 import static java.util.Objects.requireNonNull;
 
-import ch.uetlib.spring.boot.problem.handler.trait.violation.JacksonDeserializationAdviceTrait;
 import ch.uetlib.spring.boot.problem.handler.trait.MoreExceptionsExceptionAdviceTrait;
 import ch.uetlib.spring.boot.problem.handler.trait.RestClientExceptionAdviceTrait;
 import ch.uetlib.spring.boot.problem.handler.trait.ThrowableProblemAdviceTrait;
+import ch.uetlib.spring.boot.problem.handler.trait.violation.JacksonDeserializationAdviceTrait;
 import ch.uetlib.spring.boot.problem.handler.trait.violation.ViolationAdviceTrait;
 
 import org.jspecify.annotations.NullMarked;
