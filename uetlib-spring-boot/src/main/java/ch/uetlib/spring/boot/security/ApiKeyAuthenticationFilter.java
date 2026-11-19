@@ -1,5 +1,7 @@
 package ch.uetlib.spring.boot.security;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -41,7 +43,7 @@ public class ApiKeyAuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         final var requestApiKey = request.getHeader("X-API-KEY");
-        if (MessageDigest.isEqual(appApiKey.getBytes(), requestApiKey.getBytes())) {
+        if (MessageDigest.isEqual(appApiKey.getBytes(UTF_8), requestApiKey.getBytes(UTF_8))) {
             logger.debug(
                     MessageFormat.format(
                             "Authorized for servletPath: {0}", request.getServletPath()));

@@ -13,7 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-@SuppressWarnings({"unused", "java:S1133", "DeprecatedIsStillUsed"})
+// InlineMeSuggester: the deprecated delegates stay plain until they are removed; no @InlineMe
+// dependency.
+@SuppressWarnings({"unused", "java:S1133", "DeprecatedIsStillUsed", "InlineMeSuggester"})
 public final class MoreJwtDecoders {
 
     private MoreJwtDecoders() {}
@@ -58,8 +60,8 @@ public final class MoreJwtDecoders {
      * Creates a JwtDecoder that validates issuer and audience claims.
      *
      * @param restOperations RestOperations A pre-configured RestOperations instance, most likely an
-     *     instance of {@link RestTemplateBuilder#build()}. * @param issuerUri String representation
-     *     of the issuer URI.
+     *     instance of {@link RestTemplateBuilder#build()}.
+     * @param issuerUri String representation of the issuer URI.
      * @param audiences List of allowed audience values or null to allow any audience.
      * @param jwtDecoderCustomizer Consumer to customize the NimbusJwtDecoderBuilder. E.g. to set
      *     {@link JwkSetUriJwtDecoderBuilder#validateType(boolean)}

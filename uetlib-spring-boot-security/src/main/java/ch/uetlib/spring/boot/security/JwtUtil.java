@@ -5,7 +5,6 @@ import static java.util.Objects.requireNonNull;
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 
@@ -20,9 +19,8 @@ public final class JwtUtil {
     private JwtUtil() {}
 
     public static Jwt getJwt() {
-        if (SecurityContextHolder.getContext().getAuthentication()
-                        instanceof final Authentication authentication
-                && authentication.getPrincipal() instanceof final Jwt jwt) {
+        final var authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof final Jwt jwt) {
             return jwt;
         }
 

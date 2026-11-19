@@ -48,7 +48,7 @@ public final class HeaderUtility {
                         .cacheControl(CacheControl.maxAge(maxAge))
                         .header(NEXT_REFRESH, createNextRefreshHeaderValue(nextRefresh));
         if (backoff != null) {
-            builder.header(BACKOFF, String.valueOf(backoff.getSeconds()));
+            builder.header(BACKOFF, String.valueOf(backoff.toSeconds()));
         }
         return builder.body(body);
     }
@@ -87,7 +87,7 @@ public final class HeaderUtility {
                         .cacheControl(CacheControl.maxAge(maxAge))
                         .header(NEXT_REFRESH, createNextRefreshHeaderValue(nextRefresh));
         if (backoff != null) {
-            builder.header(BACKOFF, String.valueOf(backoff.getSeconds()));
+            builder.header(BACKOFF, String.valueOf(backoff.toSeconds()));
         }
         return builder.build();
     }
@@ -114,7 +114,7 @@ public final class HeaderUtility {
                         .header(NEXT_REFRESH, createNextRefreshHeaderValue(nextRefresh))
                         .cacheControl(CacheControl.maxAge(maxAge));
         if (backoff != null) {
-            builder.header(BACKOFF, String.valueOf(backoff.getSeconds()));
+            builder.header(BACKOFF, String.valueOf(backoff.toSeconds()));
         }
         return builder.build();
     }

@@ -4,8 +4,6 @@ import ch.uetlib.spring.boot.problem.errortype.ProblemErrorType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.jspecify.annotations.Nullable;
@@ -145,38 +143,6 @@ public abstract class AbstractThrowableProblem extends RuntimeException
     @JsonIgnore
     public String getMessage() {
         return title + ": " + detail;
-    }
-
-    @Override
-    public boolean equals(final @Nullable Object o) {
-        if (this == o) {
-            return true;
-        }
-
-        if (!(o instanceof final AbstractThrowableProblem that)) {
-            return false;
-        }
-
-        return new EqualsBuilder()
-                .appendSuper(super.equals(o))
-                .append(errorType, that.errorType)
-                .append(status, that.status)
-                .append(title, that.title)
-                .append(detail, that.detail)
-                .append(instance, that.instance)
-                .isEquals();
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .appendSuper(super.hashCode())
-                .append(errorType)
-                .append(status)
-                .append(title)
-                .append(detail)
-                .append(instance)
-                .toHashCode();
     }
 
     @Override

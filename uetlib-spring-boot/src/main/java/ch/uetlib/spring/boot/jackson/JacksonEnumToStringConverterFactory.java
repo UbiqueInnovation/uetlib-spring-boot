@@ -36,6 +36,7 @@ public class JacksonEnumToStringConverterFactory implements ConverterFactory<Enu
             this.objectMapper = objectMapper;
         }
 
+        @Override
         public String convert(final T source) {
             return objectMapper.convertValue(source, String.class);
         }

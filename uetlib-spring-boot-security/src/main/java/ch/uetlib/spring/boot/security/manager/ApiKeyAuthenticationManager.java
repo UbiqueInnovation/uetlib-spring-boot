@@ -1,7 +1,6 @@
 package ch.uetlib.spring.boot.security.manager;
 
-import static ch.uetlib.core.utils.MapCollectors.entriesToMap;
-
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Map.entry;
 import static java.util.Objects.requireNonNull;
 
@@ -21,7 +20,9 @@ import java.util.Map.Entry;
 
 public class ApiKeyAuthenticationManager implements AuthenticationManager {
 
-    private final Map<byte[], ? extends Collection<? extends GrantedAuthority>> apiKeyMap;
+    // A list, not a map: arrays have identity equals, and keys are compared with
+    // MessageDigest.isEqual.
+    private final List<Entry<byte[], Collection<? extends GrantedAuthority>>> apiKeys;
 
     public ApiKeyAuthenticationManager(final String appApiKey, final String authority) {
         this(
@@ -35,7 +36,7 @@ public class ApiKeyAuthenticationManager implements AuthenticationManager {
     public ApiKeyAuthenticationManager(
             final Map<String, ? extends Collection<? extends GrantedAuthority>> apiKeyMap) {
         requireNonNull(apiKeyMap, "apiKeyMap must not be null");
-        this.apiKeyMap =
+        this.apiKeys =
                 apiKeyMap.entrySet().stream()
                         .map(
                                 entry -> {
@@ -43,14 +44,16 @@ public class ApiKeyAuthenticationManager implements AuthenticationManager {
                                             requireNonNull(
                                                             entry.getKey(),
                                                             "API key must not be null")
-                                                    .getBytes();
+                                                    .getBytes(UTF_8);
                                     final var authorities =
                                             requireNonNull(
                                                     entry.getValue(),
                                                     "authorities must not be null");
-                                    return entry(apiKeyBytes, authorities);
+                                    return Map
+                                            .<byte[], Collection<? extends GrantedAuthority>>entry(
+                                                    apiKeyBytes, authorities);
                                 })
-                        .collect(entriesToMap());
+                        .toList();
     }
 
     @Override
@@ -58,10 +61,10 @@ public class ApiKeyAuthenticationManager implements AuthenticationManager {
             throws AuthenticationException {
         final var principal = authentication.getPrincipal();
         if (principal instanceof final String requestApiKey) {
-            final var requestApiKeyBytes = requestApiKey.getBytes();
+            final var requestApiKeyBytes = requestApiKey.getBytes(UTF_8);
 
             final var matchedAuthorities =
-                    apiKeyMap.entrySet().stream()
+                    apiKeys.stream()
                             .filter(
                                     entry ->
                                             MessageDigest.isEqual(
