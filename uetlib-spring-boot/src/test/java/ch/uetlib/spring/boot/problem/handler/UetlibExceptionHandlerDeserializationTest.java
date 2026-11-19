@@ -87,7 +87,7 @@ class UetlibExceptionHandlerDeserializationTest {
                         }
                         """,
                         "option",
-                        "must be one of [FIRST, SECOND]"),
+                        "must be a valid enum value"),
                 Arguments.of(
                         /* language=JSON */
                         """
@@ -289,6 +289,40 @@ class UetlibExceptionHandlerDeserializationTest {
         assertEquals(List.of(new Violation(field, message)), response.getBody());
     }
 
+    @Test
+    void acceptsJsonPropertyEnumNames() {
+        assertEquals(
+                new RenamedPayload(RenamedOption.FIRST),
+                mapper.readValue("{\"option\":\"first\"}", RenamedPayload.class));
+        assertEquals(
+                new RenamedPayload(RenamedOption.SECOND),
+                mapper.readValue("{\"option\":\"second\"}", RenamedPayload.class));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"FIRST", "SECOND", "unknown"})
+    void renamedEnumsDoNotSuggestRejectedConstantNames(final String value) {
+        final var cause =
+                assertThrows(
+                        MismatchedInputException.class,
+                        () ->
+                                mapper.readValue(
+                                        "{\"option\":\"" + value + "\"}", RenamedPayload.class));
+        final var exception =
+                new HttpMessageNotReadableException(
+                        "Failed to read request", cause, new MockHttpInputMessage(new byte[0]));
+        final var response =
+                handler.handleHttpMessageNotReadable(
+                        exception,
+                        HttpHeaders.EMPTY,
+                        HttpStatus.BAD_REQUEST,
+                        new ServletWebRequest(new MockHttpServletRequest()));
+        assertNotNull(response);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals(
+                List.of(new Violation("option", "must be a valid enum value")), response.getBody());
+    }
+
     @ParameterizedTest
     @NullSource
     @ValueSource(classes = Payload.class)
@@ -355,6 +389,15 @@ class UetlibExceptionHandlerDeserializationTest {
             return properties;
         }
     }
+
+    enum RenamedOption {
+        @JsonProperty("first")
+        FIRST,
+        @JsonProperty("second")
+        SECOND
+    }
+
+    record RenamedPayload(RenamedOption option) {}
 
     enum Option {
         FIRST,

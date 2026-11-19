@@ -20,7 +20,6 @@ import java.net.URL;
 import java.time.ZoneId;
 import java.time.temporal.TemporalAccessor;
 import java.time.temporal.TemporalAmount;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -102,11 +101,9 @@ public interface JacksonDeserializationAdviceTrait extends ViolationProblemDetai
     private static String deserializationTypeMessage(
             final @Nullable Class<?> targetType, final boolean invalidFormat) {
         return switch (targetType) {
-            case final Class<?> type when type.isEnum() ->
-                    "must be one of "
-                            + Arrays.stream(type.getEnumConstants())
-                                    .map(value -> ((Enum<?>) value).name())
-                                    .toList();
+            // Java constant names need not match Jackson's accepted values (@JsonProperty,
+            // @JsonValue, naming strategies, or custom deserializers).
+            case final Class<?> type when type.isEnum() -> "must be a valid enum value";
             case final Class<?> type
                     when invalidFormat
                             && (TemporalAccessor.class.isAssignableFrom(type)
