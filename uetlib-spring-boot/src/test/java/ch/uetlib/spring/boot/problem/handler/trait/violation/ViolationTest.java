@@ -66,4 +66,14 @@ class ViolationTest {
         final var bField = new Violation("b", "a message");
         assertThat(ComparableUtils.is(aField).lessThan(bField)).isTrue();
     }
+
+    @Test
+    void compareTo_sameFieldName_nullMessageSortsFirst() {
+        final var withoutMessage = new Violation("field", null);
+        final var withMessage = new Violation("field", "message");
+        assertThat(ComparableUtils.is(withoutMessage).lessThan(withMessage)).isTrue();
+        assertThat(ComparableUtils.is(withMessage).greaterThan(withoutMessage)).isTrue();
+        assertThat(ComparableUtils.is(withoutMessage).equalTo(new Violation("field", null)))
+                .isTrue();
+    }
 }

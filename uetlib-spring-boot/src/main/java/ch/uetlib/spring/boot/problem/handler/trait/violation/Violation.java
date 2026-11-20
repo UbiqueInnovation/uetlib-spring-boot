@@ -20,19 +20,18 @@ import java.util.Comparator;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record Violation(
         @JsonProperty(required = true) @NotBlank String fieldName,
-        @Nullable @NullOrNotBlank String message,
+        @NullOrNotBlank String message,
         @Nullable Object rejectedValue)
         implements Comparable<Violation> {
 
     // compare by field name, message, rejected value (nulls first)
     private static final Comparator<Violation> COMPARATOR =
             comparing(Violation::fieldName)
-                    .thenComparing(nullsFirst(comparing(Violation::message)))
-                    .thenComparing(
-                            t ->
-                                    ofNullable(t.rejectedValue())
-                                            .map(Object::hashCode)
-                                            .orElse(Integer.MIN_VALUE));
+                    .thenComparing(Violation::message, nullsFirst(naturalOrder()))
+                    .thenComparing(t ->
+                            ofNullable(t.rejectedValue())
+                                    .map(Object::hashCode)
+                                    .orElse(Integer.MIN_VALUE));
 
     public Violation(final String fieldName, final @Nullable String message) {
         this(fieldName, message, null);
