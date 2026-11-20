@@ -50,32 +50,29 @@ class UnhandledExceptionLoggingResolverTest {
     }
 
     private void assertResolved(final Exception exception, final int expectedStatus) {
-        contextRunner.run(
-                context -> {
-                    context.getBean(FailingController.class).exception = exception;
-                    final var mvc = MockMvcBuilders.webAppContextSetup(context).build();
+        contextRunner.run(context -> {
+            context.getBean(FailingController.class).exception = exception;
+            final var mvc = MockMvcBuilders.webAppContextSetup(context).build();
 
-                    mvc.perform(get("/fail")).andExpect(status().is(expectedStatus));
+            mvc.perform(get("/fail")).andExpect(status().is(expectedStatus));
 
-                    assertThat(context.getBean(LoggingAdvice.class).unhandled).isEmpty();
-                });
+            assertThat(context.getBean(LoggingAdvice.class).unhandled).isEmpty();
+        });
     }
 
     @Test
     void unmatchedExceptionRemainsUnresolvedAndIsLoggedOnce() {
-        contextRunner.run(
-                context -> {
-                    final var exception = new IllegalStateException("unmatched");
-                    context.getBean(FailingController.class).exception = exception;
-                    final var mvc = MockMvcBuilders.webAppContextSetup(context).build();
+        contextRunner.run(context -> {
+            final var exception = new IllegalStateException("unmatched");
+            context.getBean(FailingController.class).exception = exception;
+            final var mvc = MockMvcBuilders.webAppContextSetup(context).build();
 
-                    final var thrown =
-                            assertThrows(ServletException.class, () -> mvc.perform(get("/fail")));
+            final var thrown =
+                    assertThrows(ServletException.class, () -> mvc.perform(get("/fail")));
 
-                    assertThat(thrown.getCause()).isSameAs(exception);
-                    assertThat(context.getBean(LoggingAdvice.class).unhandled)
-                            .containsExactly(exception);
-                });
+            assertThat(thrown.getCause()).isSameAs(exception);
+            assertThat(context.getBean(LoggingAdvice.class).unhandled).containsExactly(exception);
+        });
     }
 
     @Configuration(proxyBeanMethods = false)

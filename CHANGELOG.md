@@ -1,6 +1,14 @@
 # CHANGELOG
 
-## UNRELEASED
+## 4.1.0
+
+- `uetlib-parent` updated to
+  `2026.11.5`: [Changelog/2026.11.5](https://github.com/UbiqueInnovation/uetlib-parent/blob/main/CHANGELOG.md#2026115) [Diff/2026.11.1-2026.11.5](https://github.com/UbiqueInnovation/uetlib-parent/compare/v2026.11.1...v2026.11.5)
+- `uetlib-core` updated to
+  `3.1.0`: [Changelog/3.1.0](https://github.com/UbiqueInnovation/uetlib-core/blob/main/CHANGELOG.md#310) [Diff/3.0.4-3.1.0](https://github.com/UbiqueInnovation/uetlib-core/compare/v3.0.4...v3.1.0)
+- `uetlib-test` updated to
+  `3.1.0`: [Changelog/3.1.0](https://github.com/UbiqueInnovation/uetlib-test/blob/main/CHANGELOG.md#310) [Diff/3.0.1-3.1.0](https://github.com/UbiqueInnovation/uetlib-test/compare/v3.0.1...v3.1.0)
+- Updated dependencies and actions.
 
 - Remove the deprecated `MoreJwtDecoders.issuerAndAudienceValidatingJwtDecoder` and
   `issuerAndAudienceValidatingAtJwtDecoder` methods; use `MoreJwtDecoders.builder(restOperations, issuerUri)`.
@@ -8,6 +16,8 @@
   `ch.uetlib.spring.boot.security.filter.ApiKeyAuthenticationFilter` with `ApiKeyAuthenticationManager` from
   `uetlib-spring-boot-security`.
 - Dedicated violation problem responses for JSON deserialization errors
+- Comparing two `Violation`s of the same field no longer throws a `NullPointerException` when either has no
+  message; violations without a message sort first.
 - Fix the warnings of Error Prone's default checks: `AbstractThrowableProblem` no longer overrides `equals` and
   `hashCode`, which were identity-based already (`super.equals` is `Object.equals`). API keys are compared as
   UTF-8 bytes, `JwtUtil.getJwt()` checks for a missing authentication explicitly, and Javadoc fixes.

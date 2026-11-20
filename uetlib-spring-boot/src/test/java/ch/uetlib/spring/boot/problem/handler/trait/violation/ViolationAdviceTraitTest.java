@@ -237,11 +237,10 @@ class ViolationAdviceTraitTest {
         assertThat(violations)
                 .hasSize(1)
                 .first()
-                .satisfies(
-                        v -> {
-                            assertThat(v.fieldName()).isEqualTo("username");
-                            assertThat(v.message()).isEqualTo("must not be blank");
-                        });
+                .satisfies(v -> {
+                    assertThat(v.fieldName()).isEqualTo("username");
+                    assertThat(v.message()).isEqualTo("must not be blank");
+                });
     }
 
     @Test

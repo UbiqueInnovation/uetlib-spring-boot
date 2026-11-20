@@ -121,12 +121,11 @@ class UetlibExceptionHandlerTest {
         assertThat(response.getStatusCode().value()).isEqualTo(404);
         assertThat(response.getBody())
                 .isInstanceOf(ProblemDetail.class)
-                .satisfies(
-                        body -> {
-                            final var pd = requireNonNull((ProblemDetail) body);
-                            assertThat(pd.getStatus()).isEqualTo(404);
-                            assertThat(pd.getDetail()).isEqualTo("Element 17 not found");
-                        });
+                .satisfies(body -> {
+                    final var pd = requireNonNull((ProblemDetail) body);
+                    assertThat(pd.getStatus()).isEqualTo(404);
+                    assertThat(pd.getDetail()).isEqualTo("Element 17 not found");
+                });
     }
 
     @Test
@@ -153,10 +152,9 @@ class UetlibExceptionHandlerTest {
                 .containsExactly("provider-extra-value");
         assertThat(response.getBody())
                 .isNotNull()
-                .satisfies(
-                        pd ->
-                                assertThat(requireNonNull(pd).getProperties())
-                                        .containsEntry("problemCode", "UT|ET1"));
+                .satisfies(pd ->
+                        assertThat(requireNonNull(pd).getProperties())
+                                .containsEntry("problemCode", "UT|ET1"));
     }
 
     @Test

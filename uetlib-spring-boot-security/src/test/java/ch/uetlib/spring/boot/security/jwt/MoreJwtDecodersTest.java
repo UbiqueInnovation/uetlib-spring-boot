@@ -57,18 +57,17 @@ class MoreJwtDecodersTest {
                         HttpStatus.OK);
 
         when(restOperations.exchange(any(RequestEntity.class), any(Class.class)))
-                .thenAnswer(
-                        invocation -> {
-                            final Class<?> responseType = invocation.getArgument(1);
-                            if (responseType == String.class) {
-                                return jwksResponse;
-                            }
-                            return configResponse;
-                        });
+                .thenAnswer(invocation -> {
+                    final Class<?> responseType = invocation.getArgument(1);
+                    if (responseType == String.class) {
+                        return jwksResponse;
+                    }
+                    return configResponse;
+                });
 
         when(restOperations.exchange(
                         any(RequestEntity.class), any(ParameterizedTypeReference.class)))
-                .thenAnswer(invocation -> configResponse);
+                .thenAnswer(_ -> configResponse);
 
         return restOperations;
     }

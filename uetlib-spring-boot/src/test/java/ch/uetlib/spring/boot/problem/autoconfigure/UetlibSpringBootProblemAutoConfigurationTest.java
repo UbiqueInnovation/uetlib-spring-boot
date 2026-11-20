@@ -22,17 +22,16 @@ class UetlibSpringBootProblemAutoConfigurationTest {
 
     @Test
     void registersPropertiesForAdviceCreatedByBeanMethod() {
-        contextRunner.run(
-                context -> {
-                    assertThat(context).hasNotFailed();
-                    assertThat(context).hasSingleBean(UetlibSpringBootProblemProperties.class);
-                    final var properties = context.getBean(UetlibSpringBootProblemProperties.class);
-                    assertThat(properties.isIncludeConstraintViolations()).isFalse();
-                    assertThat(
-                                    context.getBean(TestUetlibExceptionHandler.class)
-                                            .getUetlibSpringBootProblemProperties())
-                            .isSameAs(properties);
-                });
+        contextRunner.run(context -> {
+            assertThat(context).hasNotFailed();
+            assertThat(context).hasSingleBean(UetlibSpringBootProblemProperties.class);
+            final var properties = context.getBean(UetlibSpringBootProblemProperties.class);
+            assertThat(properties.isIncludeConstraintViolations()).isFalse();
+            assertThat(
+                            context.getBean(TestUetlibExceptionHandler.class)
+                                    .getUetlibSpringBootProblemProperties())
+                    .isSameAs(properties);
+        });
     }
 
     @Test
@@ -40,15 +39,14 @@ class UetlibSpringBootProblemAutoConfigurationTest {
         contextRunner
                 .withPropertyValues(
                         "ch.uetlib.spring.boot.problem.include-constraint-violations=true")
-                .run(
-                        context -> {
-                            assertThat(context).hasNotFailed();
-                            assertThat(
-                                            context.getBean(TestUetlibExceptionHandler.class)
-                                                    .getUetlibSpringBootProblemProperties()
-                                                    .isIncludeConstraintViolations())
-                                    .isTrue();
-                        });
+                .run(context -> {
+                    assertThat(context).hasNotFailed();
+                    assertThat(
+                                    context.getBean(TestUetlibExceptionHandler.class)
+                                            .getUetlibSpringBootProblemProperties()
+                                            .isIncludeConstraintViolations())
+                            .isTrue();
+                });
     }
 
     @Test
@@ -56,22 +54,19 @@ class UetlibSpringBootProblemAutoConfigurationTest {
         new ApplicationContextRunner()
                 .withConfiguration(
                         AutoConfigurations.of(UetlibSpringBootProblemAutoConfiguration.class))
-                .run(
-                        context ->
-                                assertThat(context)
-                                        .doesNotHaveBean(UnhandledExceptionLoggingResolver.class));
+                .run(context ->
+                        assertThat(context)
+                                .doesNotHaveBean(UnhandledExceptionLoggingResolver.class));
     }
 
     @Test
     void registersOneResolverWhenMultipleAdviceBeansExist() {
         contextRunner
                 .withBean("otherExceptionHandler", TestUetlibExceptionHandler.class)
-                .run(
-                        context -> {
-                            assertThat(context).hasNotFailed();
-                            assertThat(context)
-                                    .hasSingleBean(UnhandledExceptionLoggingResolver.class);
-                        });
+                .run(context -> {
+                    assertThat(context).hasNotFailed();
+                    assertThat(context).hasSingleBean(UnhandledExceptionLoggingResolver.class);
+                });
     }
 
     @Configuration(proxyBeanMethods = false)
