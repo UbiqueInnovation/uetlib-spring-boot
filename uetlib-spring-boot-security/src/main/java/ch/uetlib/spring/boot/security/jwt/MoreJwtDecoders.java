@@ -6,14 +6,13 @@ import org.jspecify.annotations.Nullable;
 import org.springframework.boot.restclient.RestTemplateBuilder;
 import org.springframework.security.oauth2.core.OAuth2TokenValidator;
 import org.springframework.security.oauth2.jwt.*;
-import org.springframework.security.oauth2.jwt.NimbusJwtDecoder.JwkSetUriJwtDecoderBuilder;
 import org.springframework.web.client.RestOperations;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-@SuppressWarnings({"unused", "java:S1133", "DeprecatedIsStillUsed"})
+@SuppressWarnings("unused")
 public final class MoreJwtDecoders {
 
     private MoreJwtDecoders() {}
@@ -28,162 +27,6 @@ public final class MoreJwtDecoders {
      */
     public static Builder builder(final RestOperations restOperations, final String issuerUri) {
         return new Builder(restOperations, issuerUri);
-    }
-
-    /**
-     * Creates a JwtDecoder that validates issuer and audience claims.
-     *
-     * @param restOperations RestOperations A pre-configured RestOperations instance, most likely an
-     *     instance of {@link RestTemplateBuilder#build()}.
-     * @param issuerUri String representation of the issuer URI.
-     * @param audiences List of allowed audience values or null to allow any audience.
-     * @return JwtDecoder instance.
-     * @deprecated since 2.x, for removal in 3.0.0. Use:
-     *     {@snippet :
-     *     MoreJwtDecoders.builder(restOperations, issuerUri)
-     *             .audiences(audiences)
-     *             .build();
-     *     }
-     */
-    // TODO remove in 3.0.0
-    @Deprecated(forRemoval = true)
-    public static JwtDecoder issuerAndAudienceValidatingJwtDecoder(
-            final RestOperations restOperations,
-            final String issuerUri,
-            final @Nullable List<String> audiences) {
-        return builder(restOperations, issuerUri).audiences(audiences).build();
-    }
-
-    /**
-     * Creates a JwtDecoder that validates issuer and audience claims.
-     *
-     * @param restOperations RestOperations A pre-configured RestOperations instance, most likely an
-     *     instance of {@link RestTemplateBuilder#build()}. * @param issuerUri String representation
-     *     of the issuer URI.
-     * @param audiences List of allowed audience values or null to allow any audience.
-     * @param jwtDecoderCustomizer Consumer to customize the NimbusJwtDecoderBuilder. E.g. to set
-     *     {@link JwkSetUriJwtDecoderBuilder#validateType(boolean)}
-     * @return JwtDecoder instance.
-     * @deprecated since 2.x, for removal in 3.0.0. Use:
-     *     {@snippet :
-     *     MoreJwtDecoders.builder(restOperations, issuerUri)
-     *             .audiences(audiences)
-     *             .customizer(jwtDecoderCustomizer)
-     *             .build();
-     *     }
-     */
-    // TODO remove in 3.0.0
-    @Deprecated(forRemoval = true)
-    public static JwtDecoder issuerAndAudienceValidatingJwtDecoder(
-            final RestOperations restOperations,
-            final String issuerUri,
-            final @Nullable List<String> audiences,
-            final Consumer<JwkSetUriJwtDecoderBuilder> jwtDecoderCustomizer) {
-        return builder(restOperations, issuerUri)
-                .audiences(audiences)
-                .customizer(jwtDecoderCustomizer)
-                .build();
-    }
-
-    /**
-     * Creates a JwtDecoder that validates issuer and audience claims and the type {@code at+jwt}.
-     *
-     * @param restOperations RestOperations A pre-configured RestOperations instance, most likely an
-     *     instance of {@link RestTemplateBuilder#build()}.
-     * @param issuerUri String representation of the issuer URI.
-     * @param audiences List of allowed audience values.
-     * @return JwtDecoder instance.
-     * @deprecated since 2.x, for removal in 3.0.0. Use:
-     *     {@snippet :
-     *     MoreJwtDecoders.builder(restOperations, issuerUri)
-     *             .audiences(audiences)
-     *             .validTypes(List.of("at+jwt"))
-     *             .build();
-     *     }
-     */
-    // TODO remove in 3.0.0
-    @Deprecated(forRemoval = true)
-    public static JwtDecoder issuerAndAudienceValidatingAtJwtDecoder(
-            final RestOperations restOperations,
-            final String issuerUri,
-            final List<String> audiences) {
-        return builder(restOperations, issuerUri)
-                .audiences(audiences)
-                .validTypes(List.of("at+jwt"))
-                .build();
-    }
-
-    /**
-     * Creates a JwtDecoder that validates issuer and audience claims and the type {@code at+jwt}.
-     *
-     * @param restOperations RestOperations A pre-configured RestOperations instance, most likely an
-     *     instance of {@link RestTemplateBuilder#build()}.
-     * @param issuerUri String representation of the issuer URI.
-     * @param audiences List of allowed audience values.
-     * @param additionalJwtDecoderCustomizer Consumer to customize the NimbusJwtDecoderBuilder. E.g.
-     *     to set {@link JwkSetUriJwtDecoderBuilder#validateType(boolean)}
-     * @return JwtDecoder instance.
-     * @deprecated since 2.x, for removal in 3.0.0. Use:
-     *     {@snippet :
-     *     MoreJwtDecoders.builder(restOperations, issuerUri)
-     *             .audiences(audiences)
-     *             .validTypes(List.of("at+jwt"))
-     *             .customizer(additionalJwtDecoderCustomizer)
-     *             .build();
-     *     }
-     */
-    // TODO remove in 3.0.0
-    @Deprecated(forRemoval = true)
-    public static JwtDecoder issuerAndAudienceValidatingAtJwtDecoder(
-            final RestOperations restOperations,
-            final String issuerUri,
-            final List<String> audiences,
-            final Consumer<JwkSetUriJwtDecoderBuilder> additionalJwtDecoderCustomizer) {
-        return builder(restOperations, issuerUri)
-                .audiences(audiences)
-                .validTypes(List.of("at+jwt"))
-                .customizer(additionalJwtDecoderCustomizer)
-                .build();
-    }
-
-    /**
-     * Creates a JwtDecoder that validates issuer and audience claims.
-     *
-     * @param restOperations RestOperations A pre-configured RestOperations instance, most likely an
-     *     instance of {@link RestTemplateBuilder#build()}.
-     * @param issuerUri String representation of the issuer URI.
-     * @param audiences List of allowed audience values.
-     * @param additionalTokenValidators Additional OAuth2TokenValidators to apply.
-     * @param additionalJwtDecoderCustomizer Consumer to customize the NimbusJwtDecoderBuilder. E.g.
-     *     to set {@link JwkSetUriJwtDecoderBuilder#validateType(boolean)}
-     * @return JwtDecoder instance.
-     * @deprecated since 2.x, for removal in 3.0.0. Use:
-     *     {@snippet :
-     *     var builder = MoreJwtDecoders.builder(restOperations, issuerUri)
-     *             .audiences(audiences)
-     *             .customizer(additionalJwtDecoderCustomizer);
-     *     for (var validator : additionalTokenValidators) {
-     *         builder.addTokenValidator(validator);
-     *     }
-     *     var decoder = builder.build();
-     *     }
-     */
-    // TODO remove in 3.0.0
-    @Deprecated(forRemoval = true)
-    public static JwtDecoder issuerAndAudienceValidatingJwtDecoder(
-            final RestOperations restOperations,
-            final String issuerUri,
-            final @Nullable List<String> audiences,
-            final List<OAuth2TokenValidator<Jwt>> additionalTokenValidators,
-            final Consumer<JwkSetUriJwtDecoderBuilder> additionalJwtDecoderCustomizer) {
-        final var builder =
-                builder(restOperations, issuerUri)
-                        .audiences(audiences)
-                        .customizer(additionalJwtDecoderCustomizer);
-        for (final var validator : additionalTokenValidators) {
-            builder.addTokenValidator(validator);
-        }
-        return builder.build();
     }
 
     public static final class Builder {

@@ -37,7 +37,6 @@ import java.net.URI;
  *
  * @see ThrowableProblem
  * @see <a href="https://datatracker.ietf.org/doc/html/rfc9457">RFC-9457</a>
- * @param <E>
  */
 @Schema(
         description =

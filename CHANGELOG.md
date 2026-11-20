@@ -1,8 +1,16 @@
 # CHANGELOG
 
-## 4.1.0
+## UNRELEASED
 
+- Remove the deprecated `MoreJwtDecoders.issuerAndAudienceValidatingJwtDecoder` and
+  `issuerAndAudienceValidatingAtJwtDecoder` methods; use `MoreJwtDecoders.builder(restOperations, issuerUri)`.
+- Remove the deprecated `ch.uetlib.spring.boot.security.ApiKeyAuthenticationFilter`; use
+  `ch.uetlib.spring.boot.security.filter.ApiKeyAuthenticationFilter` with `ApiKeyAuthenticationManager` from
+  `uetlib-spring-boot-security`.
 - Dedicated violation problem responses for JSON deserialization errors
+- Fix the warnings of Error Prone's default checks: `AbstractThrowableProblem` no longer overrides `equals` and
+  `hashCode`, which were identity-based already (`super.equals` is `Object.equals`). API keys are compared as
+  UTF-8 bytes, `JwtUtil.getJwt()` checks for a missing authentication explicitly, and Javadoc fixes.
 
 ## 4.0.4
 
