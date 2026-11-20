@@ -131,10 +131,8 @@ public final class JwtUtil {
             //noinspection unchecked
             return ((List<Object>) claimList)
                     .stream()
-                            .map(
-                                    claimObject ->
-                                            notNullOrThrow(
-                                                    claimConverter.apply(claimObject), claimName))
+                            .map(claimObject ->
+                                    notNullOrThrow(claimConverter.apply(claimObject), claimName))
                             .toList();
         }
         return List.of(notNullOrThrow(claimConverter.apply(claim), claimName));

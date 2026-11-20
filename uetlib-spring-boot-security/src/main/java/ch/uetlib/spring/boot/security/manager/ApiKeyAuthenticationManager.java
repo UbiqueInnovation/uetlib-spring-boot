@@ -1,7 +1,6 @@
 package ch.uetlib.spring.boot.security.manager;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static java.util.Map.entry;
 import static java.util.Objects.requireNonNull;
 
 import org.springframework.security.authentication.AuthenticationManager;
@@ -38,21 +37,16 @@ public class ApiKeyAuthenticationManager implements AuthenticationManager {
         requireNonNull(apiKeyMap, "apiKeyMap must not be null");
         this.apiKeys =
                 apiKeyMap.entrySet().stream()
-                        .map(
-                                entry -> {
-                                    final var apiKeyBytes =
-                                            requireNonNull(
-                                                            entry.getKey(),
-                                                            "API key must not be null")
-                                                    .getBytes(UTF_8);
-                                    final var authorities =
-                                            requireNonNull(
-                                                    entry.getValue(),
-                                                    "authorities must not be null");
-                                    return Map
-                                            .<byte[], Collection<? extends GrantedAuthority>>entry(
-                                                    apiKeyBytes, authorities);
-                                })
+                        .map(entry -> {
+                            final var apiKeyBytes =
+                                    requireNonNull(entry.getKey(), "API key must not be null")
+                                            .getBytes(UTF_8);
+                            final var authorities =
+                                    requireNonNull(
+                                            entry.getValue(), "authorities must not be null");
+                            return Map.<byte[], Collection<? extends GrantedAuthority>>entry(
+                                    apiKeyBytes, authorities);
+                        })
                         .toList();
     }
 
@@ -65,10 +59,8 @@ public class ApiKeyAuthenticationManager implements AuthenticationManager {
 
             final var matchedAuthorities =
                     apiKeys.stream()
-                            .filter(
-                                    entry ->
-                                            MessageDigest.isEqual(
-                                                    entry.getKey(), requestApiKeyBytes))
+                            .filter(entry ->
+                                    MessageDigest.isEqual(entry.getKey(), requestApiKeyBytes))
                             .map(Entry::getValue)
                             .findFirst();
             if (matchedAuthorities.isPresent()) {

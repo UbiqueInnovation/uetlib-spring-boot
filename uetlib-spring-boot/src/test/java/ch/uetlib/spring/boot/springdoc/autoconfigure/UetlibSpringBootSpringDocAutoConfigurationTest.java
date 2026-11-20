@@ -1,7 +1,6 @@
 package ch.uetlib.spring.boot.springdoc.autoconfigure;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
 import ch.uetlib.spring.boot.springdoc.LocalizedValueModelConverter;
@@ -33,13 +32,12 @@ class UetlibSpringBootSpringDocAutoConfigurationTest {
 
         contextRunner
                 .withBean(LocalizedValueModelConverter.class, () -> customConverter)
-                .run(
-                        context -> {
-                            assertThat(context).hasSingleBean(LocalizedValueModelConverter.class);
+                .run(context -> {
+                    assertThat(context).hasSingleBean(LocalizedValueModelConverter.class);
 
-                            assertThat(context.getBean(LocalizedValueModelConverter.class))
-                                    .isSameAs(customConverter);
-                        });
+                    assertThat(context.getBean(LocalizedValueModelConverter.class))
+                            .isSameAs(customConverter);
+                });
     }
 
     @Test
@@ -50,10 +48,9 @@ class UetlibSpringBootSpringDocAutoConfigurationTest {
                                 AutoConfigurations.of(
                                         UetlibSpringBootSpringDocAutoConfiguration.class));
 
-        contextRunnerWithoutWebContext.run(
-                context -> {
-                    assertThat(context).hasNotFailed();
-                    assertThat(context).doesNotHaveBean(LocalizedValueModelConverter.class);
-                });
+        contextRunnerWithoutWebContext.run(context -> {
+            assertThat(context).hasNotFailed();
+            assertThat(context).doesNotHaveBean(LocalizedValueModelConverter.class);
+        });
     }
 }

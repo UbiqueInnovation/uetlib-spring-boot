@@ -50,13 +50,12 @@ public class LoggingRetryListener implements RetryListener {
         return Arrays.stream(stackTraceElements)
                 .filter(stackTraceElement -> isBasePackage(stackTraceElement.getClassName()))
                 .findFirst()
-                .map(
-                        element ->
-                                element.getClassName()
-                                        + "#"
-                                        + element.getMethodName()
-                                        + "#"
-                                        + element.getLineNumber())
+                .map(element ->
+                        element.getClassName()
+                                + "#"
+                                + element.getMethodName()
+                                + "#"
+                                + element.getLineNumber())
                 .orElse("(unknown)");
     }
 
